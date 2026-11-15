@@ -6,6 +6,14 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🎲 Family Game House · Five Dice with Pip
+
+**Now playable:** An original, free five-dice game with the familiar Yahtzee-style 13-row scorecard. Choose **Mom vs. Pip** (friendly offline computer opponent) or **Mom solo** before a fresh game. Roll five dice up to three times each turn, tap to hold/release individual dice, then choose one available scorecard category. The score preview is shown before committing; choosing a row uses it forever, even when it scores zero.
+
+The rules include ones through sixes, three/four of a kind, full house, small/large straight, Five Dice (five of a kind), and chance. Reach 63 or more in the six upper rows for a 35-point bonus. After the Five Dice row scores 50, further five-of-a-kind rolls earn a 100-point bonus, with the matching-upper-row obligation and Joker full-house/straight scores. No money or timed play. Games save in a validated, independent `cards.dice` slot and work offline once cached. Mom's existing worlds, pets, other card games and garden remain untouched.
+
+On a phone: **☰ Menu → 🃏 Cards → Five Dice with Pip**. Hold a die with one tap, roll again or select an available row. Play solo without needing Pip.
+
 ## ♔ Board Game Nook · Chess with Pip
 
 **Now playable:** Complete offline Chess against Pip, with both sides' legal moves, checks, checkmates, stalemates, safe castling, en passant, four promotion choices and casual draw rules. Select Pip's Gentle or Confident level, use large touch-friendly squares, Hint, Undo Turn and New Game confirmation. Save/resume is independent under `cards.chess`, without changing Mom's garden or any other game. The heuristic bot is not tournament strength.
