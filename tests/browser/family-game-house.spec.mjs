@@ -161,7 +161,7 @@ test("Desktop Solitaire supports dragging a waste Ace onto its matching foundati
   await page.addInitScript(data=>localStorage.setItem("meeklee-adventures-save-v1",JSON.stringify(data)),
     {cards:{solitaire:g}});
   await page.goto("./");
-  await page.getByRole("button",{name:/Cards/}).click();
+  await page.getByRole("button",{name:"🃏 Card Corner"}).click();
   await page.getByRole("button",{name:/Play Klondike Solitaire/}).click();
   const from=page.locator(".solitaire-waste .playing-card");
   const to=page.getByRole("button",{name:/Spades foundation/});
