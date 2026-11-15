@@ -13,6 +13,12 @@ MeekLee began as a gift for Mom. Keep the game **free, cozy, accessible, offline
 
 The key `meeklee-adventures-save-v1` and original four world engines remain unchanged. All new games store separate slots under `saved.cards`. The notebook has an independent local storage key. Completing a picture writes its award in the same state update as the completed puzzle.
 
+## Solitaire Garden: FreeCell Solitaire
+
+**Now playable and offline:** 52 unique cards, all face-up in eight columns (seven in each of the first four, six in the rest), with four single-card free cells and four suit foundations. Tableau builds alternate color and descend by one rank; foundation builds ascend by suit from Ace to King. An exposed card may move to an empty free cell or legal tableau/foundation. Any properly ordered contiguous descending alternate-color sequence may be moved together, with legal capacity `(empty cells + 1) × 2^(usable empty columns)`; the target empty column does not count as workspace. Foundation placements are permanent. Clear all 52 cards into foundations to win.
+
+Support a scrollable tableau plus large move-source and destination buttons for small-phone touch and keyboard access. Include hints, last-20-move undo, confirmed new deal, blocked-state messaging and validated independent `cards.freecell` save. Test capacity bounds, suit foundation legality, sequence transfers, unique 52-card accounting, win and save isolation at level 6001+.
+
 ## Solitaire Garden: Spider Solitaire (one suit)
 
 **Now playable and offline:** 104 distinct card identities across eight identical spade suits, dealt into 10 columns (six cards in each of the first four, five in each remaining column), with the rest as five ten-card stock deals. One top card starts face-up per column. Move descending contiguous runs as a group onto a card one rank higher or into an empty column, reveal concealed cards as exposed, and automatically clear complete 13-card King-to-Ace runs. Win after eight complete runs clear. Stock deals are legal only with a card in every column; no stock recycle.
@@ -59,7 +65,7 @@ Private live family Chess sessions are still future work and require separately 
 
 ## Next: more Solitaire varieties
 
-After draw-one/draw-three Klondike, Pyramid, TriPeaks and one-suit Spider, next: **FreeCell** (then optional two/four-suit Spider difficulties). Give each type its own independent save and legible phone layout, with optional drag or tap.
+Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks, one-suit Spider and FreeCell. Optional later difficulties: two/four-suit Spider, additional Solitaire varieties and accessible drag gestures. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
 ## Next: new worlds and more garden life
 
