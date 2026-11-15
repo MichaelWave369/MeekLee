@@ -162,3 +162,19 @@ The shot counter is always visible, while the earned **🦪 Pearl +3** and **�
 Finishing a level awards **one to three stars** according to unused shots, saved per completed level and displayed under the numbered marker on the **10-stop Adventure Path**. Completing levels 10, 20, 30, etc. also gives **two bonus Pearls when entering the next chapter**. Older Bubble Lagoon local saves are upgraded in place without erasing their bubbles, score, moves, or unlocked level.
 
 Exhausting the shot budget ends the **current attempt**, not the adventure or her account. **Try Again** generates the original deterministic level board with additional balls, at no cost. The initial booster stock is restored on retry. If she has earned an unused Pearl or Rainbow when the last ball is fired, the relevant power-up remains available, so she can still save her attempt.
+
+## Earned special powers in Harvest, Sugar and Critter worlds
+
+All three original tile puzzles now have their own **free, earned power buttons**, without changing the original piece IDs, deterministic level generation, board size, score rules or existing saved game progress.
+
+| World | Pop exactly 3 | Pop 4+ | Pop 5+ |
+| --- | --- | --- | --- |
+| 🌻 Harvest Valley | 🌱 **Seed Sprout**, collects three crops | 🧺 **Harvest Basket**, clears a whole column | Earn both |
+| 🍬 Sugar Mountain | ✨ **Sweet Spark**, collects three candies | 🍭 **Candy Stripe**, clears a whole row | Earn both |
+| 🐾 Critter Rescue | 🐾 **Helping Paw**, rescues three critters | 🦊 **Forest Friend**, rescues the most common critter type | Earn both |
+
+Rewards use the largest connected matching group that *actually popped*, including cascades. A sum of unrelated matches does not count as a 4-piece match. Buttons clearly display saved stock, and unused powers carry into later levels (up to nine per type). Boosts trigger actual pop, gravity and cascade effects with the same relaxed phone animations. Using a power does not consume a turn, and new boards stay playable.
+
+Winning awards **one to three stars** depending on how efficiently the puzzle was finished; the best medal is saved per level and displayed on the ten-stop Adventure Path. Classic 8×8 and large 6×6 medals are saved separately, and previously saved games migrate without being erased. Bubble Lagoon keeps its independently earned Pearl/Rainbow and finite-shot mechanic. The three classic worlds still have no lives, turn limits or payments.
+
+Tests cover real 3/4/5-piece matches, each power's deterministic board changes, actual animation frames, saved boosters, world-specific replay, phone accessibility and star persistence.
