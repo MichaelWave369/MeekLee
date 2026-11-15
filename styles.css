@@ -251,3 +251,19 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 @media (prefers-reduced-motion: reduce) {
   .tile.hint, .easy-see .tile.hint { animation: none; }
 }
+
+
+/* On Mom's small phone, the actual instructions and controls must be readable too. */
+@media (max-width: 600px) {
+  .easy-see .tile { font-size: clamp(1.7rem, 8.4vw, 2.45rem); }
+  .comfort-button { font-size: 1rem; line-height: 1.25; }
+  .comfort-heading span { font-size: .94rem; }
+  .easy-see .instruction { font-size: 1.125rem; }
+  .easy-see .goal-heading { font-size: 1.1rem; }
+  .easy-see .game-bottom { font-size: 1rem; }
+  .easy-see .game-actions .action { font-size: 1.05rem; }
+  .easy-see .message { font-size: 1.1rem; }
+}
+@media (max-width: 350px) {
+  .easy-see .tile { font-size: 1.7rem; }
+}
