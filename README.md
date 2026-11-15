@@ -88,3 +88,20 @@ The display preferences are saved locally on each device. No account or subscrip
 ### Accessibility verification
 
 In addition to puzzle generation tests, the GitHub Actions workflow runs real Chromium tests at **320px** and **390px** screen widths, checks board tile dimensions, lateral overflow, tapping with hints, saving/reloading, switching puzzle size, and the desktop default. They don't replace testing on Mom's actual phone, with her preferred device zoom and accessibility settings.
+
+## Mobile board-first layout and match animations
+
+MeekLee now keeps the **game board near the top of the phone screen**. On phones up to 600px wide, the old full-size hero and expanded settings/world cards collapse into two clearly labeled buttons: **🌍 Worlds** and **🔎 Display**. The display preferences still persist between sessions, and the full controls are available with one tap.
+
+When **Animations** is ON, every legal move plays an actual sequence from the puzzle engine:
+
+- Neighboring pieces slide as they swap.
+- Matching pieces brighten and pop.
+- Existing pieces visibly fall or float into their new positions as appropriate to their world, and new pieces enter from the board edge.
+- Natural cascades display **COMBO ×2**, **COMBO ×3**, and so on, with the actual earned points.
+
+The visual frames come from the deterministic puzzle rules, not from random decoration. Inputs are locked for the short animation to prevent accidental double moves; score and saves commit once the turn completes. Extremely long cascades shorten their presentation so no one is stuck waiting.
+
+The Display menu has an **✨ Animations ON/OFF** option. The preference is saved locally; devices requesting reduced motion default to OFF. Turning it off applies game results immediately without the animated sequence. All animations use CSS and no paid libraries or third-party assets.
+
+The automated Playwright phone tests cover the compact view, board placement, saving/reloading, real match → pop → fall transitions, and reduced motion. Actual device testing is still recommended to confirm comfort and animation timing for Mom.
