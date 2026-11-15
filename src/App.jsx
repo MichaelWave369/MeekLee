@@ -102,7 +102,10 @@ export default function App() {
     }
     if (settings.motion && result.trace?.length) {
       busyRef.current = true;
-      setAnimation({ trace: result.trace, index: 0, result, turnMode: mode, turnGameKey: gameKey, turnProgressKey: progressKey });
+      // Long cascades remain playable without trapping someone in an animation.
+      const trace = result.trace.length > 16 ?
+        [...result.trace.slice(0, 15), { type: "shuffle", board: [...result.game.board] }] : result.trace;
+      setAnimation({ trace, index: 0, result, turnMode: mode, turnGameKey: gameKey, turnProgressKey: progressKey });
     } else {
       commitTurn(result);
     }
@@ -234,7 +237,7 @@ export default function App() {
             <span>Choose what looks best to you.</span>
           </div>
           <div className="comfort-actions">
-            <button type="button" className="comfort-button"
+            <button type="button" className="comfort-button" disabled={busy}
               aria-pressed={settings.easy}
               aria-label={"Big pieces, " + (settings.easy ? "on" : "off") + ". Switch between six by six and eight by eight puzzle boards."}
               onClick={() => {
@@ -243,11 +246,17 @@ export default function App() {
               }}>
               🔎 Big pieces: <strong>{settings.easy ? "ON" : "OFF"}</strong>
             </button>
-            <button type="button" className="comfort-button"
+            <button type="button" className="comfort-button" disabled={busy}
               aria-pressed={settings.highContrast}
               aria-label={"High contrast, " + (settings.highContrast ? "on" : "off")}
               onClick={() => setSaved({ ...saved, settings: { ...settings, highContrast: !settings.highContrast } })}>
               ◐ Clear contrast: <strong>{settings.highContrast ? "ON" : "OFF"}</strong>
+            </button>
+            <button type="button" className="comfort-button" disabled={busy}
+              aria-pressed={settings.motion}
+              aria-label={"Match animations, " + (settings.motion ? "on" : "off")}
+              onClick={() => setSaved({ ...saved, settings: { ...settings, motion: !settings.motion } })}>
+              ✨ Animations: <strong>{settings.motion ? "ON" : "OFF"}</strong>
             </button>
           </div>
         </section>
@@ -256,14 +265,14 @@ export default function App() {
             <h2 id="world-heading">Choose your adventure</h2>
             <span>4 happy worlds</span>
           </div>
-          <button type="button" className="world-chooser" aria-expanded={showWorlds}
+          <button type="button" className="world-chooser" disabled={busy} aria-expanded={showWorlds}
             onClick={() => setShowWorlds(!showWorlds)}>
             {showWorlds ? "Hide other worlds" : "🌎 Change puzzle world"}
           </button>
           {showWorlds && <div className="worlds">
             {WORLDS.map(world => (
               <button key={world.id} type="button"
-                className={"world " + (mode === world.id ? "active" : "")}
+                className={"world " + (mode === world.id ? "active" : "")} disabled={busy}
                 onClick={() => changeWorld(world.id)} aria-pressed={mode === world.id}>
                 <span className="world-icon" aria-hidden="true">{world.icon}</span>
                 <span className="world-text">
@@ -296,25 +305,50 @@ export default function App() {
               <span style={{ width: percent + "%" }}/>
             </div>
             <p className="instruction">{instruction}</p>
-            <div className="board-wrap">
+            <div className={"board-wrap" + (busy ? " is-animating" : "")}>
+              {stage?.type === "pop" && (
+                <div key={"combo-" + animation.index} className={"combo-toast" + (stage.combo >= 2 ? " big-combo" : "")}
+                  aria-hidden="true">
+                  <span>{stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
+                  <small>+{stage.gained} points ✨</small>
+                </div>
+              )}
               <div className={"game-board " + (rules.gravity === "up" ? "floaty" : "")}
                 style={{ "--grid-size": size }}
                 role="group" aria-label={rules.name + " puzzle board, " + size + " by " + size}
+                aria-busy={busy}
                 onPointerUp={onPointerUp} onPointerCancel={() => { pointer.current = null; }}>
-                {game.board.map((piece, index) => (
-                  <button type="button" key={index}
-                    className={"tile " + (selected === index ? "selected " : "") +
-                      (hint.includes(index) ? "hint" : "")}
-                    aria-label={rules.pieces[piece] + ", row " + (Math.floor(index / size) + 1) +
-                      ", column " + (index % size + 1)}
-                    aria-pressed={selected === index}
-                    onPointerDown={event => onPointerDown(event, index)}
-                    onClick={() => {
-                      if (Date.now() >= suppressClickUntil.current) chooseTile(index);
-                    }}>
-                    <span aria-hidden="true">{rules.pieces[piece]}</span>
-                  </button>
-                ))}
+                {shownBoard.map((piece, index) => {
+                  const move = movements.get(index);
+                  const swappedFrom = stage?.type === "swap" && stage.indices?.includes(index) ?
+                    (stage.indices[0] === index ? stage.indices[1] : stage.indices[0]) : null;
+                  const from = move ? move.from : swappedFrom;
+                  const tileStyle = from == null ? undefined : {
+                    "--from-cols": (from % size) - (index % size),
+                    "--from-rows": Math.floor(from / size) - Math.floor(index / size)
+                  };
+                  const matching = stage?.type === "pop" && stage.matched.includes(index);
+                  return (
+                    <button type="button" key={(animation ? animation.index + "-" : "idle-") + index}
+                      disabled={busy}
+                      className={"tile " + (selected === index && !busy ? "selected " : "") +
+                        (hint.includes(index) && !busy ? "hint " : "") +
+                        (matching ? "fx-pop " : "") +
+                        (stage?.type === "fall" ? "fx-fall " : "") +
+                        (swappedFrom !== null ? "fx-swap " : "") +
+                        (move?.fresh ? "fx-new " : "")}
+                      style={tileStyle}
+                      aria-label={rules.pieces[piece] + ", row " + (Math.floor(index / size) + 1) +
+                        ", column " + (index % size + 1)}
+                      aria-pressed={!busy && selected === index}
+                      onPointerDown={event => onPointerDown(event, index)}
+                      onClick={() => {
+                        if (Date.now() >= suppressClickUntil.current) chooseTile(index);
+                      }}>
+                      <span aria-hidden="true">{rules.pieces[piece]}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
             <div className="game-bottom">
@@ -323,13 +357,13 @@ export default function App() {
             </div>
             <div className="game-actions">
               <button type="button" className="action secondary"
-                disabled={game.won}
+                disabled={game.won || busy}
                 onClick={() => {
                   clearSelection(); setHint(hintFor(game));
                   setMessage("Look for the glowing pieces!");
                 }}>💡 Free hint</button>
               <button type="button" className="action secondary"
-                disabled={game.won} onClick={shuffle}>🔀 Free shuffle</button>
+                disabled={game.won || busy} onClick={shuffle}>🔀 Free shuffle</button>
             </div>
             <p className="message" aria-live="polite">{message}</p>
             {game.won && (
@@ -337,7 +371,7 @@ export default function App() {
                 <div className="win-emoji">🎉</div>
                 <h3>Beautifully done!</h3>
                 <p>Another little adventure is waiting.</p>
-                <button type="button" className="action primary"
+                <button type="button" className="action primary" disabled={busy}
                   onClick={nextLevel}>Next level →</button>
               </div>
             )}
