@@ -176,7 +176,8 @@ function insufficient(board){
     material.every(x=>(row(x.i)+col(x.i))%2===(row(material[0].i)+col(material[0].i))%2);
 }
 function finish(g,previous){
-  const pos=[...(previous.positions||[]).slice(-298),signature(previous),signature(g)];
+  const pos=previous.positions.length ? [...previous.positions.slice(-299),signature(g)] :
+    [signature(previous),signature(g)];
   const next={...g,positions:pos};
   const legal=chessLegalMoves(next);
   if(!legal.length){
