@@ -60,8 +60,8 @@ export default function RookGame({game,onChange,onLeave,stats,settings}){
     </div>
     <p className="cardgame-help">Mom + Pip versus Willow + Fern. Bid, pick a trump color,
       take tricks and reach {ROOK_TARGET} team points. Classic 41-card partnership rules.</p>
-    <section className="rook-records" aria-label="Mom's saved Rook statistics">
-      <h3>🏆 Mom's Rook Record</h3>
+    <details className="rook-records" aria-label="Mom's saved Rook statistics">
+      <summary>🏆 Rook Records · {records.wins} Wins · Best Streak {records.bestStreak}</summary>
       <div className="rook-record-grid">
         <div><strong>{records.played}</strong><small>Games played</small></div>
         <div><strong>{records.wins}</strong><small>Team wins</small></div>
@@ -71,7 +71,7 @@ export default function RookGame({game,onChange,onLeave,stats,settings}){
       <p className="rook-current-streak">Current winning streak: <strong>{records.currentStreak}</strong>
         <span> · {records.handsPlayed} completed hands</span>
       </p>
-    </section>
+    </details>
     <div className="rook-team-scores" aria-label="Team scores">
       <div><strong>🌼 Mom + Pip</strong><span>{game.scores[0]} / {ROOK_TARGET}</span></div>
       <div><strong>🦊 Willow + Fern</strong><span>{game.scores[1]} / {ROOK_TARGET}</span></div>
