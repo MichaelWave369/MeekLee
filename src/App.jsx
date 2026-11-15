@@ -6,6 +6,7 @@ import LevelTrail from "./LevelTrail.jsx";
 import BubbleShooter from "./BubbleShooter.jsx";
 import Garden, { CompanionBadge } from "./Garden.jsx";
 import BonusBloom from "./BonusBloom.jsx";
+import CardCorner from "./CardCorner.jsx";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration
@@ -225,7 +226,7 @@ export default function App() {
     setSaved({ ...saved, mode: next });
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
-    if (view === "garden" || view === "bonus") setView("play");
+    if (view === "garden" || view === "bonus" || view === "cards") setView("play");
     if (view === "trail") {
       const nextProgressKey = next === "bubbles" ?
         (settings.easy ? "easyShooterProgress" : "shooterProgress") :
@@ -245,6 +246,24 @@ export default function App() {
     });
     clearSelection();
     setMessage("A fresh board, on the house!");
+  }
+
+  function showCardCorner() {
+    if (busyRef.current) return;
+    clearSelection();
+    setMenuOpen(false);setShowSettings(false);setShowWorlds(false);
+    setView("cards");
+    if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
+  }
+  function leaveCardCorner() {
+    setView("play");
+    if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
+  }
+  function saveCardGame(kind,nextGame) {
+    if (!["solitaire","rook","parade"].includes(kind)) return;
+    setSaved(previous=>({
+      ...previous,cards:{...previous.cards,[kind]:nextGame}
+    }));
   }
 
   function showGarden() {
@@ -434,6 +453,8 @@ export default function App() {
             onClick={showGarden}>
             🌷 Garden
           </button>
+          <button type="button" className="quick-toggle" disabled={busy}
+            onClick={showCardCorner}>🃏 Cards</button>
         </nav>
         <section id="meeklee-visibility" className={"comfort-bar" + (showSettings ? " open" : "")} aria-label="Visibility and animation settings">
           <div className="comfort-heading">
@@ -478,6 +499,8 @@ export default function App() {
             <span>4 happy worlds</span>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
               onClick={showGarden}>🌷 Mom's Garden</button>
+            <button type="button" className="desktop-garden-shortcut" disabled={busy}
+              onClick={showCardCorner}>🃏 Card Corner</button>
           </div>
           <button type="button" className="world-chooser" disabled={busy} aria-expanded={showWorlds}
             onClick={() => setShowWorlds(!showWorlds)}>
@@ -500,7 +523,10 @@ export default function App() {
             ))}
           </div>}
         </section>
-        {view === "garden" ? (
+        {view === "cards" ? (
+          <CardCorner cards={saved.cards} onChange={saveCardGame}
+            onBack={leaveCardCorner}/>
+        ) : view === "garden" ? (
           <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
             onToggleDecor={plantDecoration} onBonus={openBonus} onBack={leaveGarden} />
         ) : view === "bonus" && activeBonusId ? (
