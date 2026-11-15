@@ -1,0 +1,32 @@
+name: Verify Family Table Worker bundle
+
+on:
+  push:
+    paths:
+      - "family/**"
+      - "src/rook.js"
+      - "src/core.js"
+      - ".github/workflows/family-worker-check.yml"
+  pull_request:
+    paths:
+      - "family/**"
+      - "src/rook.js"
+      - "src/core.js"
+      - ".github/workflows/family-worker-check.yml"
+  workflow_dispatch:
+
+jobs:
+  build-family-worker:
+    name: Dry-run bundle of free Family Table Worker
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify Cloudflare Worker and Durable Object bundle without deploying
+        run: npx --yes wrangler@4 deploy --dry-run --config family/wrangler.toml --outdir /tmp/meeklee-family-worker
+      - name: Verify core has no syntax errors
+        run: node --check family/room-core.js && node --check family/worker.js
