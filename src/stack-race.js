@@ -11,7 +11,7 @@ export function newStack(seed=Date.now(),stockSize=10){
   const pile=shuffleCards(deck(),seed);
   const stock=[[],[]],hand=[[],[]];
   for(let i=0;i<stockSize;i++)for(let player=0;player<2;player++)stock[player].push(pile.pop());
-  while(hand[0].length<5)hand[0].push(pile.pop());
+  for(let player=0;player<2;player++)while(hand[player].length<5)hand[player].push(pile.pop());
   return {kind:"stack",seed,stockSize,draw:pile,completed:[],
     stock,hand,discard:[[[],[],[],[]],[[],[],[],[]]],
     build:[[],[],[],[]],turn:0,turns:1,moves:0,winner:null,last:"Your turn! Build from 1 to 12."};
