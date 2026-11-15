@@ -105,8 +105,11 @@ test("bearing off requires all checkers at home; overshoot applies only to farth
   assert(contains(moves,5,"off",6));
   assert(!contains(moves,3,"off",6),
     "Point four cannot overshoot while point six remains occupied");
-  const only4=game([[3,1]],[[23,15]],{off:[14,0],dice:[6,2]});
+  const only4=game([[3,1]],[[23,15]],{off:[14,0],dice:[6]});
   assert(contains(backgammonLegalMoves(only4),3,"off",6));
+  const useBoth=game([[3,1]],[[23,15]],{off:[14,0],dice:[6,2]});
+  assert(contains(backgammonLegalMoves(useBoth),3,1,2),
+    "Use the smaller die first when doing so makes both dice playable");
 });
 test("doubles provide up to four legal moves and use the maximum playable number",()=>{
   const g=game([[13,1]],[[23,15]],{off:[14,0],dice:[3,3,3,3]});
@@ -128,7 +131,7 @@ test("single, gammon and backgammon scoring awards 1x, 2x, 3x cube and match poi
     ["gammon",[[23,15]],[0,0],[14,0],2],
     ["backgammon",[[23,14]],[0,1],[14,0],3]
   ]){
-    const g=game([[0,1]],pip,{bar,off,dice:[1,2]});
+    const g=game([[0,1]],pip,{bar,off,dice:[1]});
     const legal=backgammonLegalMoves(g);
     const won=backgammonMove(g,0,"off",1);
     assert(won.valid,label);
@@ -168,7 +171,7 @@ test("doubling cube can be offered only before rolling, accepted or passed, and 
 });
 test("match ends at 5 points and cannot deal extra games after final victory",()=>{
   const g=game([[0,1]],[[23,15]],
-    {off:[14,0],matchScore:[4,1],dice:[1,2]});
+    {off:[14,0],matchScore:[4,1],dice:[1]});
   const result=backgammonMove(g,0,"off",1);
   assert(result.valid);
   assert.equal(result.game.matchWinner,0);
