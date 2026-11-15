@@ -6,6 +6,16 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🌼 Solitaire Garden · FreeCell Solitaire
+
+**Now playable, free, and offline:** FreeCell completes the first five-game Solitaire collection (Klondike, Pyramid, TriPeaks, one-suit Spider, and FreeCell). A standard **52-card deck** starts entirely face-up in eight tableau columns, the first four having seven cards and the next four having six. Four separate **temporary free cells** each hold one card; four suit foundations build from Ace upward to King.
+
+**Rules:** Build tableau columns in alternating red/black descending ranks. A single available card may go to an empty free cell, a properly matched tableau card, any empty column, or the next card of its suit foundation. A correctly ordered descending alternating-color run can move as a group, but only up to the real capacity of empty free cells and empty tableau columns: `(empty free cells + 1) × 2^(usable empty columns)`. When the destination itself is empty, it must be reserved rather than counted as a temporary workspace. Completed foundation cards stay on the foundations. Win by building all four suits to King.
+
+**Phone path:** ☰ Menu → 🃏 Cards → FreeCell Solitaire. The eight-column tableau scrolls sideways, and **large selection buttons** for all movable cards or sequences and all legal destinations eliminate difficult tiny-card drag gestures. Hints, the most recent 20 undo steps, confirmation before a new deal, and automatic local save/resume are included. There are no timers, subscriptions, accounts, ads, or paid dependencies.
+
+FreeCell persists to a new validated `cards.freecell` slot inside the original save key. Klondike, Pyramid, TriPeaks, Spider, all family games, original high-level puzzle saves, earned garden ornaments, and pets stay unchanged.
+
 ## 🕷️ Solitaire Garden · Spider Solitaire (one suit)
 
 **Now playable offline:** The friendly one-suit version of Spider Solitaire joins Klondike, Pyramid and TriPeaks. A real 104-card two-deck game with **10 columns**, the first four having six cards and the remaining six having five, plus **50 stock cards in five groups of ten**. Only one top card starts face up in each column.
