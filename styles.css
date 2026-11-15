@@ -967,3 +967,11 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
     animation:none!important;
   }
 }
+
+/* Leave the map's Play button visible when the Garden shortcut is present. */
+@media(max-width:600px){
+  .app-root .trail-landscape {height:clamp(445px,calc(100dvh - 340px),510px);}
+  .app-root .trail-heading {gap:5px;}
+  .app-root .trail-help {margin:5px 0;}
+  .app-root .trail-controls {margin:7px 0;}
+}
