@@ -975,3 +975,17 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .app-root .trail-help {margin:5px 0;}
   .app-root .trail-controls {margin:7px 0;}
 }
+
+.trail-milestone {
+  position:absolute;top:-15px;left:-15px;font-size:1.14rem;
+  background:#fff7e3;border:1px solid #d5aa60;border-radius:50%;
+  padding:2px;line-height:1.1;box-shadow:0 2px 3px #5d49364a;
+  pointer-events:none;
+}
+.trail-chest-count {display:inline-block;white-space:nowrap;
+  background:#fff7cb;color:#6e4f21;border-radius:8px;padding:2px 4px;
+  font-weight:900;font-size:.8rem;}
+@media(max-width:350px){
+  .trail-garden-shortcut {font-size:.79rem;padding:4px 5px;}
+  .trail-chest-count {font-size:.73rem;}
+}
