@@ -79,9 +79,10 @@ export function makeShooterLevel(level, size = EASY_SIZE) {
     }
   }
   const colors = presentColors(cells);
+  const currentColor = pickColor(colors, rng), nextColor = pickColor(colors, rng);
   return {
     type: "shooter", mode: "bubbles", size, level, seed, rngState: rng.getState(),
-    cells, currentColor: pickColor(colors, rng), nextColor: pickColor(colors, rng),
+    cells, currentColor, nextColor,
     target: filledRows * cols, cleared: 0, moves: 0, score: 0, won: false
   };
 }
