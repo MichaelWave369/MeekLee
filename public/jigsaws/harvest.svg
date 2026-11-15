@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Sunlit green farm with a red barn and sunflowers">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#a8e5ff"/><stop offset="1" stop-color="#fff4b6"/></linearGradient><linearGradient id="field" x2="0" y2="1"><stop stop-color="#9cda76"/><stop offset="1" stop-color="#4f9f59"/></linearGradient></defs>
+<rect width="600" height="600" fill="url(#sky)"/><circle cx="467" cy="105" r="65" fill="#ffdf6e"/><g fill="#fff" opacity=".9"><ellipse cx="92" cy="120" rx="83" ry="32"/><ellipse cx="153" cy="112" rx="58" ry="23"/><ellipse cx="270" cy="72" rx="57" ry="23"/></g>
+<path fill="#9dc8a7" d="M0 340Q125 190 270 305T600 270V600H0Z"/><path fill="url(#field)" d="M0 373Q165 288 307 361T600 348V600H0Z"/>
+<path d="M186 367V210L276 142L372 212V372Z" fill="#b85157" stroke="#753a36" stroke-width="9"/><path d="M165 213L276 124L392 215" fill="none" stroke="#fff8e7" stroke-width="17" stroke-linejoin="round"/>
+<rect x="244" y="264" width="68" height="107" rx="4" fill="#fff4d4"/><path d="M247 269L309 370M309 269L247 370" stroke="#ba5353" stroke-width="7"/>
+<rect x="208" y="228" width="44" height="45" fill="#a3e7f2" stroke="#fff" stroke-width="9"/><rect x="318" y="228" width="35" height="45" fill="#a3e7f2" stroke="#fff" stroke-width="9"/>
+<path d="M0 416Q230 373 600 429" stroke="#f6dfad" stroke-width="8" fill="none"/><g stroke="#eed5a5" stroke-width="10"><path d="M0 444L600 478M0 480L600 516"/><path d="M44 422V519M166 418V523M290 422V527M414 438V550M538 447V558"/></g>
+<g fill="#4a8e47"><ellipse cx="68" cy="527" rx="32" ry="61"/><ellipse cx="141" cy="547" rx="30" ry="66"/><ellipse cx="480" cy="530" rx="30" ry="65"/><ellipse cx="552" cy="534" rx="30" ry="64"/></g>
+<g fill="#ffdd52" stroke="#cb983b" stroke-width="4"><circle cx="68" cy="500" r="25"/><circle cx="141" cy="502" r="26"/><circle cx="482" cy="493" r="27"/><circle cx="557" cy="501" r="25"/></g>
+<g fill="#78471e"><circle cx="68" cy="500" r="12"/><circle cx="141" cy="502" r="12"/><circle cx="482" cy="493" r="13"/><circle cx="557" cy="501" r="12"/></g>
+<g fill="#eb7552"><circle cx="330" cy="538" r="18"/><circle cx="372" cy="556" r="20"/><circle cx="408" cy="530" r="15"/></g>
+<g fill="#eaf7cc" opacity=".85"><path d="M0 590Q300 537 600 588V600H0Z"/></g>
+</svg>
