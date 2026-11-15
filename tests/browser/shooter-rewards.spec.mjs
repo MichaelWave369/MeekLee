@@ -73,7 +73,7 @@ test("Rainbow Burst wins a level, awards stars, and carries rewards across chapt
   await page.getByRole("button",{name:/Previous 10/}).click();
   await expect(page.locator(".trail-node.completed .trail-medals").last()).toContainText("★★★");
   await page.reload();
-  await page.getByRole("button",{name:"Open Adventure Path"}).click();
+  await page.getByRole("button",{name:/See My Adventure Path/}).click();
   await page.getByRole("button",{name:/Level 11, current/}).click();
   const next=await saved(page);
   expect(next.level).toBe(11);
