@@ -1,0 +1,87 @@
+.freecell-game{max-width:1200px;margin:0 auto}
+.freecell-counters{display:flex;flex-wrap:wrap;gap:8px;margin:11px 0 17px}
+.freecell-counters strong{display:flex;justify-content:space-between;flex:1;min-width:155px;
+  gap:10px;padding:11px 13px;border:2px solid #d8e8c9;border-radius:13px;
+  background:#f3f9ed;color:#426747}
+.freecell-counters span{font-variant-numeric:tabular-nums}
+.freecell-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(275px,.9fr);
+  gap:17px;align-items:start}
+.freecell-main,.freecell-side{background:#fffdf5;border:2px solid #e0e8d3;
+  border-radius:18px;padding:16px;min-width:0}
+.freecell-main h3,.freecell-side h3{color:#467352;margin:7px 0}
+.freecell-main p,.freecell-side>p{color:#56715b;line-height:1.42}
+.freecell-upper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;margin:10px 0 19px}
+.freecell-slot-group{min-width:0;background:#eaf4e2;padding:10px;border-radius:14px}
+.freecell-slot-group h4{font-size:.88rem;color:#43694c;margin:0 0 8px}
+.freecell-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.freecell-card,.freecell-empty-slot,.freecell-foundation{min-height:74px;width:100%;
+  border:2px solid #aac7a1;border-radius:9px;background:#fffefa;
+  color:#315344;font:inherit;padding:6px 2px;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;gap:3px}
+.freecell-card strong,.freecell-foundation strong{font-size:1.05rem}
+.freecell-card span{font-size:1.13rem}
+.freecell-card.red,.freecell-foundation.red{color:#ae4351}
+.freecell-card:disabled{opacity:1;cursor:default}
+.freecell-card.movable{border-color:#47855c}
+.freecell-card.selected,.freecell-run-choice.selected{outline:3px solid #2f77ac;outline-offset:-3px}
+.freecell-card.hinted,.freecell-empty-slot.hinted,.freecell-foundation.hinted,
+.freecell-target-buttons button.hinted{box-shadow:inset 0 0 0 3px #f1b349}
+.freecell-empty-slot{border-style:dashed;background:#f8fff1;color:#65836b}
+.freecell-empty-slot.target,.freecell-foundation.target{border-color:#408854;background:#e4f7e0}
+.freecell-empty-slot:disabled,.freecell-foundation:disabled{opacity:1;cursor:default}
+.freecell-empty-slot small,.freecell-foundation small{font-size:.72rem}
+.freecell-table-scroll{width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+  padding:12px 8px 16px;border-radius:14px;background:#e0efd6}
+.freecell-columns{display:grid;grid-template-columns:repeat(8,80px);gap:5px;
+  margin:auto;width:max-content;align-items:start}
+.freecell-column{position:relative;width:80px;border-radius:8px;background:#d5e8cc;
+  border:1px dashed #afcaa5}
+.freecell-column.destination{border:3px solid #458854;background:#e8f9e6}
+.freecell-column-top{position:absolute;top:4px;left:3px;right:3px;
+  min-height:32px;border:1px solid #a5c69f;border-radius:7px;
+  background:#f4faf0;color:#3d6345;font-size:.72rem;font-weight:800;z-index:100}
+.freecell-column-top:disabled{opacity:1;cursor:default}
+.freecell-column.destination .freecell-column-top{background:#3e825a;color:white}
+.freecell-card.tableau{position:absolute;left:6px;width:66px;height:90px;min-height:0;
+  box-shadow:0 2px 3px #3c62413c;padding:5px 2px}
+.freecell-card.tableau.movable{background:white;border-color:#50855c}
+.freecell-empty-column{position:absolute;top:51px;left:0;right:0;
+  text-align:center;font-size:.73rem;color:#678069}
+.freecell-notice{min-height:3em;text-align:center;margin:14px 0;color:#406a4a;
+  font-weight:850}
+.freecell-actions{display:flex;flex-wrap:wrap;gap:8px}
+.freecell-actions button{flex:1;min-height:48px;min-width:100px;
+  border:2px solid #aac7a0;border-radius:12px;
+  background:#f4fff1;color:#366144;font:inherit;font-weight:900}
+.freecell-actions button:disabled{opacity:.55;cursor:default}
+.freecell-actions button.confirm{background:#ffebc6;border-color:#c3a06b}
+.freecell-run-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;max-height:295px;overflow-y:auto;padding:2px}
+.freecell-run-choice{display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  padding:9px;min-height:65px;border:2px solid #a9cba2;border-radius:11px;
+  background:#f0f9ec;color:#356147;font:inherit}
+.freecell-run-choice strong{font-size:.91rem}
+.freecell-run-choice small{font-size:.72rem;text-align:left}
+.freecell-run-choice.selected{background:#e6f1ff;border-color:#337faf}
+.freecell-targets{background:#eaf6e5;padding:11px;border-radius:13px;margin-top:17px}
+.freecell-targets h3{font-size:1rem}
+.freecell-target-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.freecell-target-buttons button{display:flex;flex-direction:column;align-items:flex-start;
+  min-height:63px;gap:5px;padding:8px 10px;border:2px solid #80af84;
+  border-radius:10px;background:white;color:#3b6145;font:inherit}
+.freecell-target-buttons button strong{font-size:.85rem;text-align:left}
+.freecell-target-buttons button small{font-size:.76rem;text-align:left}
+.freecell-capacity{font-size:.82rem;margin:9px 0 0}
+.freecell-rules{background:#edf5e8;padding:13px;border-radius:12px;
+  margin-top:17px;color:#48684e}
+.freecell-rules h3{font-size:1.08rem}
+.freecell-rules p{line-height:1.43;margin:9px 0}
+.freecell-stuck{padding:11px;background:#fff0cb;color:#74541e;
+  border-radius:11px;font-weight:850}
+@media(max-width:880px){.freecell-layout{grid-template-columns:1fr}
+  .freecell-main,.freecell-side{max-width:690px;width:100%;margin:auto}}
+@media(max-width:400px){.freecell-main,.freecell-side{padding:10px}
+  .freecell-slot-group{padding:6px}.freecell-upper{gap:6px}
+  .freecell-actions button{min-width:78px;font-size:.88rem;padding:7px 4px}}
+@media(prefers-reduced-motion:reduce){.freecell-card,.freecell-run-choice{transition:none!important}}
