@@ -66,9 +66,9 @@ export default function App() {
   const instruction = rules.mechanic === "tap" ?
     "Tap a group of 2 or more matching critters." :
     mode === "bubbles" ? "Swap neighbors to match 3. Bubbles rise upward!" :
-      "Tap two neighboring pieces or swipe to match 3.";
+      "Drag a piece onto its neighbor and release, or tap two neighbors to match 3.";
   const mobileInstruction = rules.mechanic === "tap" ? "Tap matching groups of 2+" :
-    mode === "bubbles" ? "Match 3 bubbles to make them float!" : "Tap or swipe to match 3";
+    mode === "bubbles" ? "Drag & release to match bubbles!" : "Drag & release to match 3";
 
   useEffect(() => {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(saved)); }
@@ -219,6 +219,7 @@ export default function App() {
       cellWidth: origin.cellWidth, cellHeight: origin.cellHeight
     });
     if (preview.active) {
+      if (!origin.moved) { setSelected(null); setHint([]); }
       origin.moved = true;
       setDrag({ index: origin.index, ...preview });
     } else if (origin.moved) {
