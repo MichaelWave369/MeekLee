@@ -322,7 +322,7 @@ export default function App() {
             setMenuOpen(!menuOpen);
             if (menuOpen) { setShowWorlds(false); setShowSettings(false); }
           }}>
-          <span className="mobile-menu-brand">🌼 MeekLee <span>Adventures</span></span>
+          <span className="mobile-menu-brand" role="heading" aria-level="1">🌼 MeekLee <span>Adventures</span></span>
           <span className="mobile-menu-action">{menuOpen ? "✕ Close" : "☰ Menu"}</span>
         </button>
         <div className="hero-content">
