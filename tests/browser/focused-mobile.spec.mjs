@@ -77,3 +77,16 @@ test("portrait and landscape can reopen Worlds and Display without losing game m
   await expect(page.getByRole("button",{name:/Big pieces/})).toHaveAttribute("aria-pressed","true");
   await context.close();
 });
+
+
+test("sticky menu can be opened after scrolling down into a game", async ({browser})=>{
+  const {context,page}=await phone(browser,390,780);
+  await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+  await expect(page.getByRole("button",{name:"Open game menu"})).toBeVisible();
+  await page.getByRole("button",{name:"Open game menu"}).click();
+  await expect(page.getByRole("button",{name:/Worlds/})).toBeVisible();
+  expect(await page.evaluate(()=>window.scrollY)).toBe(0);
+  await page.getByRole("button",{name:"Close game menu"}).click();
+  await expect(page.locator(".mobile-quickbar")).toBeHidden();
+  await context.close();
+});
