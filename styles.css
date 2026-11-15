@@ -1239,3 +1239,7 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
  .app-root:not(.motion-active) .card-corner-choice,
  .app-root:not(.motion-active) .playing-card{transition:none!important;}
 }
+
+/* Use both a clear suit symbol and strong red/black ink for Mom's Solitaire. */
+.playing-card.classic.red:has(.card-corner-label):not(.back){color:#b53448;}
+.playing-card.classic:not(.red):has(.card-corner-label):not(.back){color:#233b4d;}
