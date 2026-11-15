@@ -10,6 +10,7 @@ import FamilyPorch from "./FamilyPorch.jsx";
 import CheckersGame from "./CheckersGame.jsx";
 import BackgammonGame from "./BackgammonGame.jsx";
 import ChessGame from "./ChessGame.jsx";
+import FiveDiceGame from "./FiveDiceGame.jsx";
 import {newSolitaire} from "./solitaire.js";
 import {newRook} from "./rook.js";
 import {newColorParade} from "./color-parade.js";
@@ -19,6 +20,7 @@ import {newJigsaw} from "./jigsaw.js";
 import {newCheckers} from "./checkers.js";
 import {newBackgammon,backgammonBotTurn} from "./backgammon.js";
 import {newChess} from "./chess.js";
+import {newFiveDice} from "./five-dice.js";
 function readyBackgammon(seed){
   const start=newBackgammon(seed);
   if(start.turn!==1)return start;
@@ -39,6 +41,9 @@ const GAMES=[
   {id:"war",icon:"⚔️",title:"War · Mom vs. Pip",
     description:"Flip cards and battle for the whole deck. Ties trigger a real War!",
     detail:"Mom + Pip bot • No timers"},
+  {id:"dice",icon:"🎲",title:"Five Dice with Pip",
+    description:"The familiar five-dice scorecard game: hold dice, roll three times, and aim for a high score.",
+    detail:"Mom vs. Pip or solo • 13 scoring rows"},
   {id:"stack",icon:"🌷",title:"Stack & Bloom",
     description:"Race Pip to clear your stockpile by building shared 1–12 numbered stacks, with wild cards.",
     detail:"Original family stack race • Two lengths"},
@@ -61,6 +66,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
         id==="checkers"?newCheckers(Date.now()):
         id==="backgammon"?readyBackgammon(Date.now()):
         id==="chess"?newChess(Date.now()):
+        id==="dice"?newFiveDice(Date.now()):
         newColorParade(Date.now());
       onChange(id,fresh);
     }
@@ -81,6 +87,8 @@ export default function CardCorner({cards,onChange,onBack,settings}){
     game={cards.backgammon} onChange={game=>onChange("backgammon",game)} onLeave={restart}/>;
   if(active==="chess"&&cards?.chess)return <ChessGame
     game={cards.chess} onChange={game=>onChange("chess",game)} onLeave={restart}/>;
+  if(active==="dice"&&cards?.dice)return <FiveDiceGame
+    game={cards.dice} onChange={game=>onChange("dice",game)} onLeave={restart}/>;
   if(chosen&&cards?.[chosen.id]){
     const shared={game:cards[chosen.id],onChange:game=>onChange(chosen.id,game),onLeave:restart};
     return chosen.id==="solitaire"?<SolitaireGame {...shared}/>:
@@ -179,7 +187,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
       </div>
       <p>More puzzle worlds and garden treasures remain on the roadmap, too.</p>
     </section>
-    <p className="cardgame-foot">Solitaire, Color Parade, Offline Rook, War, Stack & Bloom and picture puzzles
+    <p className="cardgame-foot">Solitaire, Color Parade, Offline Rook, War, Five Dice, Stack & Bloom and picture puzzles
       are free to play even offline. Family Rook requires a separate online room service.</p>
   </section>;
 }

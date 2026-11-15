@@ -12,6 +12,7 @@ import {validJigsaw} from "./jigsaw.js";
 import {validCheckers} from "./checkers.js";
 import {validBackgammon} from "./backgammon.js";
 import {validChess} from "./chess.js";
+import {validFiveDice} from "./five-dice.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -102,7 +103,8 @@ export function createSaveState(raw = null, preferEasy = false) {
       jigsaw: validJigsaw(previous.cards?.jigsaw) ? previous.cards.jigsaw : null,
       checkers: validCheckers(previous.cards?.checkers) ? previous.cards.checkers : null,
       backgammon: validBackgammon(previous.cards?.backgammon) ? previous.cards.backgammon : null,
-      chess: validChess(previous.cards?.chess) ? previous.cards.chess : null
+      chess: validChess(previous.cards?.chess) ? previous.cards.chess : null,
+      dice: validFiveDice(previous.cards?.dice) ? previous.cards.dice : null
     }
   };
 }
