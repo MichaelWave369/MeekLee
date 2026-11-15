@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
+import { SAVE_KEY, createSaveState } from "./save.js";
 
-const SAVE_KEY = "meeklee-adventures-save-v1";
 const WORLDS = [
   { id: "harvest", icon: "🌻", name: "Harvest Valley", desc: "Swap crops to grow a cheerful garden." },
   { id: "sweets", icon: "🍬", name: "Sugar Mountain", desc: "Sweet combinations and cascading treats." },
@@ -9,43 +9,24 @@ const WORLDS = [
   { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Swap bubbles as they float upward." }
 ];
 
-function isValidGame(game, mode) {
-  return game && game.mode === mode &&
-    Number.isSafeInteger(game.level) && game.level >= 1 &&
-    Number.isSafeInteger(game.seed) && Number.isInteger(game.rngState) &&
-    Array.isArray(game.board) && game.board.length === SIZE * SIZE &&
-    game.board.every(p => Number.isInteger(p) && p >= 0 && p < 6) &&
-    Number.isFinite(game.target) && game.target > 0 &&
-    Number.isFinite(game.cleared) && game.cleared >= 0 &&
-    Number.isFinite(game.score) && Number.isFinite(game.moves) &&
-    typeof game.won === "boolean";
-}
-
 function initialize() {
   let raw = null;
   try { raw = JSON.parse(localStorage.getItem(SAVE_KEY) || "null"); }
-  catch { /* Browsers without storage still run the game. */ }
-  const progress = {};
-  const games = {};
-  for (const mode of Object.keys(MODES)) {
-    const level = raw && Number.isSafeInteger(raw.progress?.[mode]) &&
-      raw.progress[mode] > 0 ? raw.progress[mode] : 1;
-    progress[mode] = level;
-    games[mode] = isValidGame(raw?.games?.[mode], mode) ?
-      raw.games[mode] : makeLevel(mode, level);
-  }
-  return { mode: raw && MODES[raw.mode] ? raw.mode : "harvest", games, progress };
+  catch { /* No storage access: play normally without persistence. */ }
+  const onPhone = typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches;
+  return createSaveState(raw, onPhone);
 }
 
 function hintFor(game) {
+  const size = game.size ?? SIZE;
   if (MODES[game.mode].mechanic === "tap") {
-    for (let i = 0; i < 64; i++) {
+    for (let i = 0; i < game.board.length; i++) {
       const group = connectedGroup(game.board, i);
       if (group.length >= 2) return group;
     }
   } else {
-    for (let i = 0; i < 64; i++) {
-      for (const j of neighbors(i)) {
+    for (let i = 0; i < game.board.length; i++) {
+      for (const j of neighbors(i, size)) {
         if (j < i || game.board[i] === game.board[j]) continue;
         const board = [...game.board];
         [board[i], board[j]] = [board[j], board[i]];
@@ -61,10 +42,15 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [hint, setHint] = useState([]);
   const [message, setMessage] = useState("Every level is free, forever.");
+  const [showWorlds, setShowWorlds] = useState(() => typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const pointer = useRef(null);
   const suppressClickUntil = useRef(0);
-  const { mode, games } = saved;
+  const { mode, settings } = saved;
+  const gameKey = settings.easy ? "easyGames" : "games";
+  const progressKey = settings.easy ? "easyProgress" : "progress";
+  const games = saved[gameKey];
   const game = games[mode];
+  const size = game.size ?? SIZE;
   const rules = MODES[mode];
   const percent = Math.min(100, Math.round(game.cleared * 100 / game.target));
   const instruction = rules.mechanic === "tap" ?
@@ -89,9 +75,9 @@ export default function App() {
         "Try swapping pieces to make a row of three!");
       return;
     }
-    const progress = { ...saved.progress };
+    const progress = { ...saved[progressKey] };
     if (result.game.won) progress[mode] = Math.max(progress[mode], game.level + 1);
-    setSaved({ ...saved, progress, games: { ...games, [mode]: result.game } });
+    setSaved({ ...saved, [progressKey]: progress, [gameKey]: { ...games, [mode]: result.game } });
     setMessage(result.game.won ? "Level complete! Another adventure awaits." :
       result.cascades > 1 ? "Wonderful cascade! ✨" :
         "Lovely! " + result.cleared + " pieces collected.");
@@ -107,7 +93,7 @@ export default function App() {
     } else if (selected === index) {
       clearSelection();
       setMessage("Piece unselected.");
-    } else if (!adjacent(selected, index)) {
+    } else if (!adjacent(selected, index, size)) {
       setSelected(index);
       setMessage("Choose a piece right next to it.");
     } else {
@@ -119,14 +105,15 @@ export default function App() {
     if (!(next in MODES)) return;
     clearSelection();
     setSaved({ ...saved, mode: next });
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
   }
 
   function shuffle() {
     const rng = rngFrom(game.seed, game.rngState);
-    const board = makeBoard(rng, rules.mechanic);
+    const board = makeBoard(rng, rules.mechanic, size);
     setSaved({
-      ...saved, games: {
+      ...saved, [gameKey]: {
         ...games, [mode]: { ...game, board, rngState: rng.getState() }
       }
     });
@@ -143,8 +130,8 @@ export default function App() {
     }
     setSaved({
       ...saved,
-      progress: { ...saved.progress, [mode]: Math.max(saved.progress[mode], next) },
-      games: { ...games, [mode]: makeLevel(mode, next) }
+      [progressKey]: { ...saved[progressKey], [mode]: Math.max(saved[progressKey][mode], next) },
+      [gameKey]: { ...games, [mode]: makeLevel(mode, next, size) }
     });
     clearSelection();
     setMessage("A brand-new adventure!");
@@ -164,14 +151,14 @@ export default function App() {
     const dx = event.clientX - begin.x, dy = event.clientY - begin.y;
     if (Math.max(Math.abs(dx), Math.abs(dy)) < 25) return;
     const delta = Math.abs(dx) > Math.abs(dy) ?
-      (dx > 0 ? 1 : -1) : (dy > 0 ? SIZE : -SIZE);
+      (dx > 0 ? 1 : -1) : (dy > 0 ? size : -size);
     const to = begin.index + delta;
     suppressClickUntil.current = Date.now() + 450;
-    if (adjacent(begin.index, to)) takeTurn(begin.index, to);
+    if (adjacent(begin.index, to, size)) takeTurn(begin.index, to);
   }
 
   return (
-    <>
+    <div className={"app-root" + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "")}>
       <header className="hero">
         <div className="sun" aria-hidden="true">☀️</div>
         <div className="brand-mark" aria-hidden="true">🌼</div>
@@ -183,12 +170,39 @@ export default function App() {
         </div>
       </header>
       <main className="main-shell">
+        <section className="comfort-bar" aria-label="Visibility settings">
+          <div className="comfort-heading">
+            <strong>Made easy to see</strong>
+            <span>Choose what looks best to you.</span>
+          </div>
+          <div className="comfort-actions">
+            <button type="button" className="comfort-button"
+              aria-pressed={settings.easy}
+              aria-label={"Big pieces, " + (settings.easy ? "on" : "off") + ". Switch between six by six and eight by eight puzzle boards."}
+              onClick={() => {
+                setSaved({ ...saved, settings: { ...settings, easy: !settings.easy } });
+                clearSelection(); setMessage("Your puzzle size is set. Your progress is saved in both modes.");
+              }}>
+              🔎 Big pieces: <strong>{settings.easy ? "ON" : "OFF"}</strong>
+            </button>
+            <button type="button" className="comfort-button"
+              aria-pressed={settings.highContrast}
+              aria-label={"High contrast, " + (settings.highContrast ? "on" : "off")}
+              onClick={() => setSaved({ ...saved, settings: { ...settings, highContrast: !settings.highContrast } })}>
+              ◐ Clear contrast: <strong>{settings.highContrast ? "ON" : "OFF"}</strong>
+            </button>
+          </div>
+        </section>
         <section className="world-section" aria-labelledby="world-heading">
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
             <span>4 happy worlds</span>
           </div>
-          <div className="worlds">
+          <button type="button" className="world-chooser" aria-expanded={showWorlds}
+            onClick={() => setShowWorlds(!showWorlds)}>
+            {showWorlds ? "Hide other worlds" : "🌎 Change puzzle world"}
+          </button>
+          {showWorlds && <div className="worlds">
             {WORLDS.map(world => (
               <button key={world.id} type="button"
                 className={"world " + (mode === world.id ? "active" : "")}
@@ -201,7 +215,7 @@ export default function App() {
                 </span>
               </button>
             ))}
-          </div>
+          </div>}
         </section>
         <section className="play-section" aria-labelledby="level-heading">
           <div className="game-panel" style={{ "--world-accent": rules.color }}>
@@ -226,14 +240,15 @@ export default function App() {
             <p className="instruction">{instruction}</p>
             <div className="board-wrap">
               <div className={"game-board " + (rules.gravity === "up" ? "floaty" : "")}
-                role="group" aria-label={rules.name + " puzzle board"}
+                style={{ "--grid-size": size }}
+                role="group" aria-label={rules.name + " puzzle board, " + size + " by " + size}
                 onPointerUp={onPointerUp} onPointerCancel={() => { pointer.current = null; }}>
                 {game.board.map((piece, index) => (
                   <button type="button" key={index}
                     className={"tile " + (selected === index ? "selected " : "") +
                       (hint.includes(index) ? "hint" : "")}
-                    aria-label={rules.pieces[piece] + ", row " + (Math.floor(index / SIZE) + 1) +
-                      ", column " + (index % SIZE + 1)}
+                    aria-label={rules.pieces[piece] + ", row " + (Math.floor(index / size) + 1) +
+                      ", column " + (index % size + 1)}
                     aria-pressed={selected === index}
                     onPointerDown={event => onPointerDown(event, index)}
                     onClick={() => {
@@ -279,6 +294,6 @@ export default function App() {
         </section>
       </main>
       <footer>MeekLee Adventures · Made with love, not microtransactions. ❤️</footer>
-    </>
+    </div>
   );
 }

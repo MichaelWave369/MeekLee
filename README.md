@@ -69,3 +69,22 @@ The existing unit tests exercise deterministic generation across 800 levels, swa
 - Touchscreen testing on Mom's own device
 
 **Made with love, not microtransactions.** ❤️
+
+## Easy-to-See mode for phones
+
+For smaller screens (600px wide or less), **Big pieces** and **Clear contrast** default to ON:
+
+- The puzzle board is **6×6**, making the pieces noticeably larger, not merely scaling their pictures.
+- Larger text, bold labels, high-contrast outlines and generous **at least 44px** touch targets on 320px-wide phones.
+- The large header is compact on phones, with the other puzzle worlds behind a large "Change puzzle world" button.
+- Each setting can be switched using labeled buttons above the puzzle.
+- "Big pieces" OFF restores the traditional 8×8 board. Both board sizes keep their own saved game state.
+- An existing original 8×8 local save is preserved, and the large-board mode inherits its current level number when first added.
+- Every puzzle uses recognizable symbols, not color-only distinctions, and can be played through tap-tap controls without precise dragging.
+- Phone browser zoom is not disabled. Reduced-motion preferences are honored.
+
+The display preferences are saved locally on each device. No account or subscription is required.
+
+### Accessibility verification
+
+In addition to puzzle generation tests, the GitHub Actions workflow runs real Chromium tests at **320px** and **390px** screen widths, checks board tile dimensions, lateral overflow, tapping with hints, saving/reloading, switching puzzle size, and the desktop default. They don't replace testing on Mom's actual phone, with her preferred device zoom and accessibility settings.

@@ -84,7 +84,7 @@ h1 span { color: #e18486; }
 .tile span { filter: drop-shadow(0 2px 1px #00000015); }
 .tile:hover { transform: translateY(-2px); background: #fffded; }
 .tile.selected { background: #ffe4af; outline: 3px solid #e9ad4d; z-index: 1; transform: scale(1.07); }
-.tile.hint { background: #d5f9b7; outline: 3px solid #83c66f; animation: pulse 1.1s infinite alternate; }
+.tile.hint { background: #e1f3ff; outline: 4px solid #22579e; box-shadow: inset 0 0 0 2px #fff; }
 @keyframes pulse { to { transform: scale(1.08); filter: brightness(1.06); } }
 .game-bottom { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin: 15px 0; color: #82917d; font-size: .83rem; font-weight: 800; }
 .game-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -129,4 +129,147 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 }
 @media(prefers-reduced-motion: reduce) {
  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+
+/* Easy-to-See and phone-first controls. The default original style is preserved
+   for classic mode; these settings enlarge real hit targets, not just text. */
+.app-root { min-height: 100vh; }
+.comfort-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  background: #fffdf3; border: 2px solid #a5caa5; border-radius: 17px;
+  padding: 14px 17px; margin-bottom: 24px;
+}
+.comfort-heading { display: flex; flex-direction: column; gap: 3px; }
+.comfort-heading strong { font-size: 1.15rem; color: #285a38; }
+.comfort-heading span { font-size: .91rem; color: #43594a; }
+.comfort-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.comfort-button, .world-chooser {
+  border: 2px solid #536e57; background: #fff; color: #264f32; border-radius: 13px;
+  min-height: 52px; padding: 9px 15px; font-weight: 900; font-size: 1rem;
+}
+.comfort-button[aria-pressed="true"] { background: #dbf3d6; border-color: #377b49; }
+.comfort-button:hover, .world-chooser:hover { background: #e8f6e0; }
+.world-chooser { margin: 0 0 13px; display: none; }
+.world-section { scroll-margin-top: 12px; }
+.game-board {
+  grid-template-columns: repeat(var(--grid-size, 8), minmax(0, 1fr));
+}
+.game-board .tile { touch-action: none; }
+.tile:disabled { cursor: default; }
+.action:disabled { opacity: .65; cursor: default; }
+.easy-see .game-board { width: min(100%, 550px); gap: 5px; }
+.easy-see .tile { font-size: clamp(1.65rem, 4.8vw, 2.45rem); border: 2px solid #708674; }
+.easy-see .instruction { color: #2c5138; font-size: 1.08rem; font-weight: 900; }
+.easy-see .goal-heading { color: #284d35; font-size: 1.12rem; }
+.easy-see .score-chip strong { font-size: 1.4rem; }
+.easy-see .game-bottom { font-size: 1rem; color: #375c42; }
+.easy-see .message { font-size: 1.06rem; font-weight: 900; color: #275139; }
+.easy-see .world-text strong { font-size: 1.08rem; }
+.easy-see .game-actions .action { min-height: 56px; font-size: 1.05rem; }
+.easy-see .game-heading h2 { font-size: 2.1rem; }
+.high-contrast .tile {
+  background: #fff; border: 2px solid #405a49;
+  box-shadow: 0 2px 0 #7e9986;
+}
+.high-contrast .tile.selected {
+  outline: 4px solid #b36708; background: #fff0b9;
+  border-color: #784506;
+}
+.high-contrast .tile.hint {
+  outline: 4px solid #174da2; background: #d8efff;
+  border-color: #174da2;
+}
+.high-contrast .progress-track {
+  background: #fff; border-color: #355f40;
+}
+.high-contrast .progress-track span { background: #2d7650; }
+.high-contrast .comfort-bar, .high-contrast .game-panel { border-color: #537558; }
+.high-contrast .world { border-color: #748e76; }
+.high-contrast .world.active { border-color: #26683a; background: #effcef; }
+.high-contrast .world-text small, .high-contrast .world-text em { color: #305539; }
+.high-contrast .instruction, .high-contrast .game-bottom, .high-contrast .message { color: #1c3c2a; }
+@media (max-width: 900px) {
+  .comfort-bar { flex-wrap: wrap; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 14px 9px 23px; }
+  .hero::before, .hero::after { height: 60px; }
+  .hero::before { bottom: -42px; }
+  .hero::after { bottom: -52px; }
+  .hero .sun, .hero .eyebrow, .hero .tagline { display: none; }
+  .hero .brand-mark { font-size: 1.55rem; }
+  .hero h1 { font-size: clamp(1.5rem, 7vw, 2.1rem); margin: 5px 0 8px; letter-spacing: -.03em; }
+  .hero .promise span { padding: 4px 8px; font-size: .78rem; }
+  .main-shell { padding: 10px 6px 40px; }
+  .comfort-bar { margin-bottom: 10px; padding: 9px; gap: 8px; border-radius: 13px; }
+  .comfort-heading strong { font-size: 1rem; }
+  .comfort-heading span { font-size: .81rem; }
+  .comfort-actions { width: 100%; flex-wrap: nowrap; gap: 6px; }
+  .comfort-button { min-width: 0; flex: 1; padding: 7px 3px; min-height: 53px; font-size: .89rem; line-height: 1.25; }
+  .world-chooser { display: block; width: 100%; min-height: 49px; margin-bottom: 8px; }
+  .section-heading { margin: 0 0 6px; }
+  .section-heading h2 { font-size: 1.06rem; }
+  .section-heading > span { font-size: .79rem; }
+  .worlds { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 12px; }
+  .world { min-height: 68px; padding: 8px; gap: 7px; align-items: center; }
+  .world-icon { height: 37px; width: 37px; font-size: 1.4rem; flex-shrink: 0; }
+  .world-text strong, .easy-see .world-text strong { font-size: .93rem; }
+  .world-text em { font-size: .8rem; }
+  .play-section { margin-top: 8px; }
+  .game-panel { padding: 9px 7px 12px; border-radius: 14px; }
+  .game-heading h2, .easy-see .game-heading h2 { font-size: 1.55rem; margin-bottom: 9px; }
+  .score-chip { padding: 6px 9px; }
+  .score-chip strong, .easy-see .score-chip strong { font-size: 1.05rem; }
+  .goal-heading, .easy-see .goal-heading { font-size: 1.04rem; }
+  .instruction, .easy-see .instruction {
+    font-size: 1rem; line-height: 1.3; margin: 9px 0;
+  }
+  .board-wrap { padding: 3px; border-width: 1px; border-radius: 10px; }
+  .game-board, .easy-see .game-board { width: 100%; gap: 3px; }
+  .tile, .easy-see .tile {
+    min-width: 0; border-radius: 7px;
+    font-size: clamp(1.3rem, 7.2vw, 2.1rem);
+    border-width: 2px;
+    box-shadow: 0 2px 0 #9db8a1;
+  }
+  .game-bottom, .easy-see .game-bottom { font-size: .91rem; margin: 12px 0; }
+  .game-actions .action, .easy-see .game-actions .action {
+    min-height: 54px; padding: 8px 4px; font-size: .97rem;
+  }
+  .message, .easy-see .message { font-size: 1rem; }
+  .side-note { display: none; }
+  footer { padding: 15px 7px; font-size: .82rem; }
+}
+@media (max-width: 350px) {
+  .main-shell { padding-left: 4px; padding-right: 4px; }
+  .game-panel { padding: 7px 5px; }
+  .board-wrap { padding: 2px; }
+  .game-board, .easy-see .game-board { gap: 2px; }
+  .tile, .easy-see .tile { font-size: 1.45rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile.hint, .easy-see .tile.hint { animation: none; }
+}
+
+
+/* On Mom's small phone, the actual instructions and controls must be readable too. */
+@media (max-width: 600px) {
+  .easy-see .tile { font-size: clamp(1.7rem, 8.4vw, 2.45rem); }
+  .comfort-button { font-size: 1rem; line-height: 1.25; }
+  .comfort-heading span { font-size: .94rem; }
+  .easy-see .instruction { font-size: 1.125rem; }
+  .easy-see .goal-heading { font-size: 1.1rem; }
+  .easy-see .game-bottom { font-size: 1rem; }
+  .easy-see .game-actions .action { font-size: 1.05rem; }
+  .easy-see .message { font-size: 1.1rem; }
+}
+@media (max-width: 350px) {
+  .easy-see .tile { font-size: 1.7rem; }
+}
+
+
+/* Phone landscape orientation and touch tablets must not lose world navigation. */
+@media (pointer: coarse) {
+  .world-chooser { display: block; min-height: 52px; }
 }
