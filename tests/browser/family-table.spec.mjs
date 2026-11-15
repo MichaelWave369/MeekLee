@@ -89,7 +89,7 @@ test("private family invite, bot seats, server-owned plays, chat and room recove
   await expect(page.getByText("Waiting for the room creator", {exact:false})).toHaveCount(0);
   await expect(page.getByRole("button",{name:/Deal the Cards/})).toBeVisible();
   await page.getByRole("button",{name:/Deal the Cards/}).click();
-  await expect(page.getByText("Pip 🤖")).toBeVisible();
+  await expect(page.locator(".family-seat").getByText("Pip 🤖",{exact:true})).toBeVisible();
   await expect(page.locator(".family-card-hand .rook-card")).toHaveCount(9);
   await expect(page.getByText("Only you can see these cards")).toBeVisible();
   await page.getByLabel("Message everyone at the table").fill("Hi family! ❤️");
