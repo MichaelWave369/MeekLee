@@ -319,6 +319,8 @@ export default function App() {
           aria-label={menuOpen ? "Close game menu" : "Open game menu"}
           aria-expanded={menuOpen} aria-controls="meeklee-game-menu"
           onClick={() => {
+            // A sticky bar can be tapped mid-page. Bring its dropdown into view.
+            if (!menuOpen && window.scrollY > 0) window.scrollTo({ top: 0, behavior: "instant" });
             setMenuOpen(!menuOpen);
             if (menuOpen) { setShowWorlds(false); setShowSettings(false); }
           }}>
