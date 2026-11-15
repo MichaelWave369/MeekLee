@@ -697,3 +697,59 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .mobile-menu-brand {font-size: .97rem;}
   .mobile-menu-action {min-width: 82px;padding:3px 5px;}
 }
+
+
+/* Earned Bubble Lagoon powers: controls sit inside unused launcher corners so
+   Mom can reach them without adding another full row or extra phone scrolling. */
+.shooter-arena { isolation: isolate; }
+.shooter-powers {
+  position: absolute; left: 4px; right: 4px; bottom: 5px; z-index: 9;
+  display: flex; justify-content: space-between; align-items: end;
+  gap: 8px; pointer-events: none;
+}
+.shooter-power {
+  pointer-events: auto; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-width: 74px; min-height: 52px;
+  font: inherit; font-weight: 900; line-height: 1.15;
+  border: 3px solid #fff; border-radius: 12px;
+  background: #effef7ed; color: #214f5b;
+  box-shadow: 0 4px 0 #1e5366a8, 0 4px 15px #12415b7a;
+  touch-action: manipulation;
+}
+.shooter-power small { font-size: .85rem; color: #205479; }
+.shooter-power.rainbow { background: #f4e0ffed; color: #623e85; }
+.shooter-power:disabled { opacity: .68; filter: grayscale(.35); }
+.shooter-power:focus-visible { outline: 4px solid #ffdc56; outline-offset: 3px; }
+.shooter-goal .shots-left {
+  background: #fff5b8; border: 2px solid #c9ae4e;
+  padding: 1px 6px; border-radius: 10px; white-space: nowrap;
+}
+.shooter-tip-short { display: none; }
+.shooter-combo { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.shooter-combo strong { font-size: .93em; }
+.shooter-combo small { font-size: .55em; font-weight: 900; }
+.shooter-notice { font-size: .93rem; font-weight: 900; margin: 6px 0 0;
+  text-align: center; color: #1f5475; }
+.shooter-return { font:inherit; min-height: 54px; width:100%; margin-top: 16px;
+  background:#fff; color:#285b77; border:2px solid #6098a4;
+  border-radius: 14px; font-weight: 900; }
+.shooter-retry { border-color:#8cc3dd; background:linear-gradient(#fff9dc,#e5f6fa); }
+.victory-stars { color:#edb72a; font-size: clamp(2rem,8vw,3rem);
+  letter-spacing: .11em; text-shadow: 0 2px 0 #fdf5cb; font-weight: 900; }
+.victory-stars span { color: #a3b1b1; }
+.trail-medals { position:absolute; bottom:-21px; left:50%;
+  transform: translateX(-50%); white-space: nowrap; font-weight: 900;
+  font-size: .9rem; letter-spacing:-.08em; color:#e7ac29;
+  text-shadow: 0 1px 0 #fff, 1px 1px 0 #986d25;
+  pointer-events:none; }
+@media(max-width:600px) {
+  .app-root .shooter-tip-long { display:none; }
+  .app-root .shooter-tip-short { display:inline; }
+  .app-root .shooter-instruction { margin:3px 0 5px; }
+  .app-root .shooter-powers { left:2px;right:2px;bottom:3px; }
+  .app-root .shooter-power { min-width: 68px; min-height: 47px;
+    font-size:.86rem; border-width:2px; padding: 2px 3px; }
+  .app-root .shooter-power small {font-size:.77rem;}
+  .app-root .shooter-notice { margin:4px 0 0; font-size:.86rem; }
+  .app-root .trail-medals { font-size: .82rem; }
+}
