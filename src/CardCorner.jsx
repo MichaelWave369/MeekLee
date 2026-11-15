@@ -9,6 +9,7 @@ import JigsawGame from "./JigsawGame.jsx";
 import FamilyPorch from "./FamilyPorch.jsx";
 import CheckersGame from "./CheckersGame.jsx";
 import BackgammonGame from "./BackgammonGame.jsx";
+import ChessGame from "./ChessGame.jsx";
 import {newSolitaire} from "./solitaire.js";
 import {newRook} from "./rook.js";
 import {newColorParade} from "./color-parade.js";
@@ -17,6 +18,7 @@ import {newStack} from "./stack-race.js";
 import {newJigsaw} from "./jigsaw.js";
 import {newCheckers} from "./checkers.js";
 import {newBackgammon,backgammonBotTurn} from "./backgammon.js";
+import {newChess} from "./chess.js";
 function readyBackgammon(seed){
   const start=newBackgammon(seed);
   if(start.turn!==1)return start;
@@ -58,6 +60,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
         id==="jigsaw"?newJigsaw(Date.now()):
         id==="checkers"?newCheckers(Date.now()):
         id==="backgammon"?readyBackgammon(Date.now()):
+        id==="chess"?newChess(Date.now()):
         newColorParade(Date.now());
       onChange(id,fresh);
     }
@@ -76,6 +79,8 @@ export default function CardCorner({cards,onChange,onBack,settings}){
     onChange={game=>onChange("checkers",game)} onLeave={restart}/>;
   if(active==="backgammon"&&cards?.backgammon)return <BackgammonGame
     game={cards.backgammon} onChange={game=>onChange("backgammon",game)} onLeave={restart}/>;
+  if(active==="chess"&&cards?.chess)return <ChessGame
+    game={cards.chess} onChange={game=>onChange("chess",game)} onLeave={restart}/>;
   if(chosen&&cards?.[chosen.id]){
     const shared={game:cards[chosen.id],onChange:game=>onChange(chosen.id,game),onLeave:restart};
     return chosen.id==="solitaire"?<SolitaireGame {...shared}/>:
@@ -133,7 +138,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
     </section>
     <section className="card-corner-jigsaw checkers-nook" aria-label="Board Game Nook">
       <h3>♟️ The Board Game Nook</h3>
-      <p>Pull up a chair! Checkers and Backgammon are ready to play with Pip, both completely offline.</p>
+      <p>Pull up a chair! Chess, Checkers and Backgammon are ready to play with Pip, completely offline.</p>
       <button type="button" className="card-corner-choice"
         onClick={()=>launch("checkers")} aria-label="Play Checkers with Pip">
         <span className="corner-game-art" aria-hidden="true">♟️</span>
@@ -159,8 +164,16 @@ export default function CardCorner({cards,onChange,onBack,settings}){
           </span>
         </span>
       </button>
+      <button type="button" className="card-corner-choice" onClick={()=>launch("chess")}
+        aria-label="Play Chess with Pip">
+        <span className="corner-game-art" aria-hidden="true">♔</span>
+        <span className="corner-game-text"><strong>Chess</strong>
+          <small>Play Chess with Pip: full legal rules, castling, promotion, checkmate, hints and undo.</small>
+          <em>Offline · Mom + Pip · Two friendly skill levels</em>
+          <span className="card-corner-launch">{cards?.chess?"Continue Chess →":"Play Chess →"}</span>
+        </span>
+      </button>
       <div className="checkers-nook-links" aria-label="Coming in future updates">
-        <div><span aria-hidden="true">♟️</span><strong>Chess</strong><small>Coming later</small></div>
         <div><span aria-hidden="true">🃏</span><strong>More Solitaire</strong><small>Coming later</small></div>
         <div><span aria-hidden="true">🌷</span><strong>New Worlds</strong><small>Coming later</small></div>
       </div>

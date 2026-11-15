@@ -23,13 +23,13 @@ The key `meeklee-adventures-save-v1` and original four world engines remain unch
 
 The 24-point board scrolls inside its own area on small phones, **but every legal move is also offered as a large button** for players who don't want to tap small triangles. Dice are generated from a deterministic pseudo-random state so a saved game and automated tests remain repeatable. This is a casual five-point family match, **not a rated/tournament mode**: the optional Crawford and Jacoby conventions are not applied. The opponent has a basic heuristic, not a tournament-strength engine.
 
-## Next: Chess
+## Board Game Nook: Chess with Pip
 
-Don't ship blank buttons or incomplete rules disguised as games:
+**Now playable and offline:** Real 8×8 Chess with Mom playing cream against Pip. Legal moves prevent exposing the king, including for pinned pieces. Complete king safety, castling through safe squares, en passant after an immediate two-step pawn move, underpromotion (queen, rook, bishop or knight), checkmate and stalemate are supported. Casual automatic draw handling covers threefold repetition, fifty-move rule and basic insufficient material. Play with hints, full-turn undo, fresh-game confirmation and an adjustable **Gentle / Confident** local opponent. The board is keyboard-accessible and adapts to 320px phones.
 
-- **Chess:** full legal moves, checks/checkmates/stalemates, castling, en passant, promotion, move hints and an adjustable offline opponent. Accessible board coordinates and optional large pieces. Respect the complexity: no false victories or illegal moves.
+Chess is saved only in its own validated `cards.chess` slot. Existing worlds, saved levels, garden items and every other card game stay unchanged. The bot is a friendly offline heuristic opponent, not an advanced chess engine or online service.
 
-Start offline and local; extend to private family sessions only after the server is safely deployed and independent per-seat state is tested.
+Private live family Chess sessions are still future work and require separately tested seat authorization and the family server.
 
 ## Next: more Solitaire varieties
 
