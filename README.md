@@ -4,7 +4,7 @@
 
 Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds like "weekly adventures." ❤️
 
-A completely free React puzzle game with four colorful worlds, generated levels, unlimited turns, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
+A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
 ## Play online
 
@@ -140,7 +140,7 @@ All paths and illustrations use local CSS, SVG and original emoji scenery. There
 
 Bubble Lagoon is now a **real bubble-shooter world**, not a repainted match-3 board. Tap or drag on the big lagoon arena to choose an angle and release to shoot the bubble. The dotted guide previews the path, including reflections off the side walls. Matching three or more connected hex-grid bubbles clears the group, and any bubbles left disconnected from the ceiling fall away. A launcher shows the current and upcoming bubble, with large **Aim Left**, **Shoot!**, and **Aim Right** buttons for anyone who prefers buttons to precision dragging.
 
-There are **no lives, shot limits, purchases, or forced restarts**. An unlimited **🌈 Free Rainbow Rescue** clears a stubborn connected group and helps ensure progress is never paywalled or stuck. When the lagoon is cleared, the Level Complete screen returns to the ten-stop Adventure Path. The bubbles are distinguished by high-contrast symbols (star, heart, flower, diamond, sun) as well as color.
+There are **no paid boosters, lives, ads, or timers**. Each shooter level has a generous but finite shot budget. A completed three-bubble match earns a **Pearl Boost** (redeem for three extra balls); four or more earns a **Rainbow Burst** (clear a connected color cluster), with an extra Pearl for matches of five or more. The larger match rewards are saved on that level, and unused boosters carry forward. If the balls and earned boosters run out, she can **retry the same level for free**, with three extra shots on every subsequent attempt (capped at a generous bonus). The high-water level and medals are never lost. When the lagoon is cleared, the Level Complete screen returns to the ten-stop Adventure Path. The bubbles are distinguished by high-contrast symbols (star, heart, flower, diamond, sun) as well as color.
 
 The new deterministic shooter engine has its own \`shooterGames\`, \`easyShooterGames\`, \`shooterProgress\`, and \`easyShooterProgress\` local save slots. Old Bubble Lagoon match-3 saves are retained separately and the shooter inherits each difficulty mode's existing unlocked level on first launch. This keeps all of Mom's existing puzzle progress intact even though the bubble world now uses a completely different mechanic.
 
@@ -153,3 +153,12 @@ On phones, **MeekLee Adventures** now opens in a **game-first layout**: the larg
 Bubble Lagoon scales its whole SVG arena uniformly, rather than squishing circles, with a viewport-aware maximum width. On ordinary portrait phones this brings **Shoot** and **Free Rainbow Rescue** into the first screen while retaining large aiming buttons and visible shape symbols. The Adventure Path is more compact too, so **Play Level** is reachable without a long scroll. Extremely short screens may still scroll rather than shrink the pieces below a usable size.
 
 New real Chromium phone tests verify opening/closing the menu, access to the settings and worlds after rotation, a 44px+ menu target, no sideways overflow, visible shooter controls within a 390×780 viewport, and an immediately accessible ten-level map button. The game rules, per-world saved levels, combo timing and shot trajectories are unchanged.
+
+
+### Bubble Lagoon progression rewards
+
+The shot counter is always visible, while the earned **🦪 Pearl +3** and **🌈 Rainbow Burst** buttons sit inside the unused launcher corners, avoiding extra phone scrolling. Rewards are based on the **actual connected bubble group that pops**, not how many drop from the ceiling. A 3-bubble pop earns one Pearl; 4+ earns one Rainbow; 5+ earns both. Both power-ups have a small cap on the number saved to keep their displays simple and the challenge meaningful. Neither requires payment or watching an ad.
+
+Finishing a level awards **one to three stars** according to unused shots, saved per completed level and displayed under the numbered marker on the **10-stop Adventure Path**. Completing levels 10, 20, 30, etc. also gives **two bonus Pearls when entering the next chapter**. Older Bubble Lagoon local saves are upgraded in place without erasing their bubbles, score, moves, or unlocked level.
+
+Exhausting the shot budget ends the **current attempt**, not the adventure or her account. **Try Again** generates the original deterministic level board with additional balls, at no cost. The initial booster stock is restored on retry. If she has earned an unused Pearl or Rainbow when the last ball is fired, the relevant power-up remains available, so she can still save her attempt.
