@@ -35,7 +35,7 @@ test("Board Game Nook adds playable offline Checkers, 8×8 grid and honest futur
   expect(box.width).toBeGreaterThan(270);
   await page.getByRole("button",{name:/Game Shelf/}).click();
   await expect(page.getByText("Chess",{exact:true})).toBeVisible();
-  await expect(page.getByText("Backgammon",{exact:true})).toBeVisible();
+  await expect(page.getByRole("button",{name:"Play Backgammon with Pip"})).toBeVisible();
   await expect(page.getByText("Coming later",{exact:true}).first()).toBeVisible();
   await expect(page.getByRole("button",{name:"Play Checkers with Pip"})).toBeVisible();
   const state=await saved(page);
