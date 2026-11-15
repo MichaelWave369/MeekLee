@@ -6,6 +6,20 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🌼 Family Game House · More ways to play
+
+The expanded **Card Corner** now contains **War (Mom vs. Pip)**, **Stack & Bloom** (an original 1–12 stockpile-card race inspired by traditional family card play), and the original Solitaire, Rook, and Color Parade. Stack & Bloom offers short and longer deals, shared numbered building piles, wild stars, four discard piles and an offline Pip opponent.
+
+**Klondike Solitaire** now offers *draw one* or *draw three* when starting a new deal, plus mouse and touch drag-to-place on the tableau/foundations. The original tap-to-select, hints, undo, and old draw-one saves still work.
+
+The **Picture Puzzle Porch** has three original illustrated scenes (Harvest Valley, Pip's Garden, Bubble Lagoon) with 9-, 16- and 25-piece swap puzzles. Completing a scene at each size can unlock **nine new garden decorations**. Your chapter chests, companions and puzzle-world levels remain unchanged.
+
+The **Family Porch** is an intentionally *private notebook* for game suggestions, recipes and stories saved on the current phone. You can explicitly share a note through the phone's share sheet or clipboard, but there is no public posting, automatic synchronization, or account requirement. Public game requests can use the GitHub issue template with a free GitHub account.
+
+**Next, not yet playable:** a real Checkers/Chess/Backgammon Board Game Nook, additional Solitaire variants, and more genuinely distinct puzzle worlds. A moderated, consent-based family recipe/story community is a separate future project, not something to release without privacy protections.
+
+See [Family Game House roadmap](docs/FAMILY_GAME_HOUSE_ROADMAP.md) for the staged plan and safe migration/test expectations.
+
 ## 🏡 MeekLee's Family Table (online Rook preview + server)
 
 Card Corner now includes an optional **Family Rook Table**: a cozy, accessible room for four relatives to play together, with bots in empty seats, spectators, private invitations, reconnectable seats and text chat. Late spectators can ask to take a bot chair at the next fresh hand.
