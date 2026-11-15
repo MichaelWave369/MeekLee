@@ -6,6 +6,14 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🎲 Board Game Nook · Backgammon with Pip
+
+**Now playable:** a free, offline, no-pressure **Backgammon** match against Pip, with 15 checkers per side and a friendly first-to-five-point score. The 24-point board, opening roll, dice, compulsory maximum number of moves, doubles, blocked points, hits, bar entries, bearing off and single/gammon/backgammon wins use real rules. A friendly doubling cube is included with no financial stakes. The casual family scoring does not claim tournament mode or Crawford/Jacoby conventions.
+
+On a phone open **☰ Menu → 🃏 Cards → Board Game Nook → Backgammon with Pip**. The board scrolls horizontally if necessary; the same legal moves are always displayed as large buttons, so no tiny pieces need to be dragged. A move hint and full-turn undo are available. After a game ends, start the next game within the five-point match or begin a fresh match with confirmation.
+
+Games are saved separately under `cards.backgammon`; existing puzzle worlds, garden, checkers, Rook and Solitaire remain untouched. The bot runs offline without subscriptions or an external server. Read the [Family Game House roadmap](docs/FAMILY_GAME_HOUSE_ROADMAP.md) for future Chess, more Solitaire variants and worlds.
+
 ## ♟️ Board Game Nook · Checkers with Pip
 
 **Now playable:** free, offline, phone-friendly **American Checkers** against Pip. Mom controls red; Pip controls blue. The game enforces 8×8 standard moves, mandatory captures, multi-jumps with the same piece, king promotion, and king movement in both directions. Human-friendly hints, turn-level undo, automatic saves, and a no-pressure new game button are included.
