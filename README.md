@@ -127,3 +127,11 @@ Mobile players now default to **Relaxed** timing with more time to see each swap
 Motion pacing is shared by the React animation scheduler and the CSS keyframes, using simple measured pixel offsets for cross-browser compatibility. Unlike the earlier version, a saved explicit Animations ON preference is respected even when the phone reports an operating-system reduced-motion setting. For new visitors whose device requests reduced motion, animations still default OFF until explicitly enabled.
 
 Chromium tests check rendered animation names and durations at mobile widths, including simulated reduced-motion devices, and confirm the final move count and saved progress. Phone-specific real-device visual testing remains valuable: browser emulation cannot reproduce every Android GPU or refresh-rate behavior.
+
+## Adventure Path
+
+Every world now has an illustrated, easy-to-see **Adventure Path** with ten numbered level markers per page. The little flower or world character marks Mom's current unlocked level, completed markers get checkmarks, and future levels remain locked until she completes the previous one. Page 2 starts at Level 11, page 3 at Level 21, and the same infinite ten-at-a-time pattern continues.
+
+Use **🗺️ Path** from the puzzle board to see progress. When the objective is completed, the board stops on a large **Level Complete!** screen with score and moves. Tapping **See My Adventure Path** returns to the trail and shows the next unlocked marker. Earlier completed levels can be replayed without reducing the highest unlocked level. Existing progress and saves are retained, with 6×6 and 8×8 progress remaining separate.
+
+All paths and illustrations use local CSS, SVG and original emoji scenery. There are no licensed commercial assets or paid dependencies. The new browser tests cover opening the map, selecting an unlocked level, and the boundary where winning Level 10 unlocks Level 11 and the next path page.

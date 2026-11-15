@@ -493,3 +493,78 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
     transition: none !important;
   }
 }
+
+
+/* Adventure Path: deliberately large, readable trail markers, no endlessly
+   scrolling commercial-game map and no paywalls or locked timers. */
+.map-shortcut { border: 2px solid #54875d; border-radius: 12px; background: #ecf8e6; color: #315d40; padding: 8px 13px; min-height: 48px; font-weight: 900; }
+.trail-screen { --trail-sky:#e6f4c7; --trail-hill:#9bd289; margin-top: 17px; border-radius: 23px; padding: clamp(13px,3vw,25px); background: #fffdf2; box-shadow: 0 9px 0 #e7e8ce; border:2px solid #d6e6cb; }
+.trail-harvest { --trail-sky:#d9f5d2; --trail-hill:#91ce86; }
+.trail-sweets { --trail-sky:#ffdef0; --trail-hill:#f3a8d2; }
+.trail-rescue { --trail-sky:#dbefde; --trail-hill:#7bb68e; }
+.trail-bubbles { --trail-sky:#d9f2ff; --trail-hill:#76bdd8; }
+.trail-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.trail-heading h2 { margin:0; font-size:clamp(1.3rem,4vw,2rem); color:#305842; }
+.trail-eyebrow { margin:0; font-weight:900; letter-spacing:.08em; color:#497654; font-size:.77rem; text-transform:uppercase; }
+.trail-back { min-height:46px; border-radius:12px; border:2px solid #64846c; background:white; font-weight:900; color:#345c40; padding:6px 12px; }
+.trail-badge { color:#365f47; font-weight:900; padding:10px; background:#e4f2df; border-radius:12px; white-space:nowrap; }
+.trail-help { margin:12px 0 15px; color:#355443; font-size:1.02rem; font-weight:800; text-align:center; }
+.trail-landscape {
+  height: min(145vw, 660px); min-height:520px; max-height:660px; max-width:460px;
+  position:relative; margin:0 auto; border:3px solid #a9cda1; overflow:hidden; isolation:isolate;
+  border-radius:24px; background:linear-gradient(170deg,var(--trail-sky) 0%,#f6ffed 35%,var(--trail-hill) 100%);
+}
+.trail-landscape::before,.trail-landscape::after {content:"";position:absolute; border-radius:50%; background:#ffffff6c; width:250px;height:160px;top:-70px;left:-80px;}
+.trail-landscape::after { top:auto;bottom:-90px;left:auto;right:-60px;background:#388a4a25;width:310px;height:190px;}
+.trail-route {position:absolute;inset:0;width:100%;height:100%;}
+.trail-decor { position:absolute;font-size:clamp(1.8rem,7vw,3.3rem);filter:drop-shadow(0 3px 3px #41634440);pointer-events:none; }
+.decor-one {left:8%;top:18%} .decor-two {right:9%;top:39%} .decor-three {left:7%;top:63%} .decor-four {right:11%;bottom:6%}
+.trail-nodes {position:absolute; inset:0;}
+.trail-node {
+  position:absolute; display:grid;place-items:center;transform:translate(-50%,50%);
+  height:clamp(49px,13vw,60px);width:clamp(49px,13vw,60px); border:3px solid #fff;
+  border-radius:50%;font-size:1.2rem;font-weight:900; color:#29573b;
+  box-shadow:0 4px 0 #6e9975,0 7px 13px #31513b3d;
+  background:#e9fee0;touch-action:manipulation;
+}
+.trail-node.current { border-color:#e6983d; background:#fff1a8; box-shadow:0 4px 0 #b07f37,0 0 0 4px #fff7c3;z-index:4; }
+.trail-node.completed { background:#e2fbdc; border-color:#53a16d;}
+.trail-node.locked {background:#e2e9e4;color:#657d6b; box-shadow:0 3px 0 #b0bcb2;opacity:.9;}
+.trail-node:disabled {cursor:not-allowed;}
+.trail-node:not(:disabled):hover { background:#fff5b7; }
+.trail-number {font-size:1.24rem;}
+.trail-check,.trail-lock {position:absolute;right:-7px;bottom:-6px;font-size:.8rem;display:grid;place-items:center;border-radius:50%;background:#2f8951;color:white;width:23px;height:23px;}
+.trail-lock {background:#d7e1d8;font-size:.7rem;}
+.trail-marker {position:absolute;top:-36px;left:50%;transform:translateX(-50%);font-size:2rem;filter:drop-shadow(0 2px 2px #43553170);animation:marker-bob 1.7s ease-in-out infinite alternate;}
+@keyframes marker-bob {to{transform:translateX(-50%) translateY(-5px);}}
+.trail-controls { display:flex;align-items:center;justify-content:space-between;gap:7px;margin:18px 0;}
+.trail-controls button {font:inherit;min-height:48px;border:2px solid #74987b;background:#eef7e5;border-radius:12px;padding:6px 9px;color:#365a42;font-weight:900;}
+.trail-controls button:disabled {opacity:.4;cursor:default;}
+.trail-controls strong {font-size:.85rem;color:#365a42;text-align:center;}
+.trail-play {width:100%;font:inherit;font-size:1.15rem;font-weight:900;border:0;border-radius:15px;min-height:58px;background:#64a66d;color:#fff;box-shadow:0 5px 0 #3d7d48;cursor:pointer;}
+.trail-play:hover {background:#4e965d;}
+.trail-footnote {color:#5a745f;text-align:center;font-size:.88rem;font-weight:700;margin:20px 0 0;}
+.trail-victory {max-width:530px;margin:15px auto;text-align:center;border:3px solid #b7d7ab;background:linear-gradient(#fff6d9,#e5f5dc);padding:26px 18px;border-radius:22px;}
+.trail-victory h3 {color:#39734d;font-size:clamp(1.7rem,6vw,2.5rem);margin:4px 0 9px;}
+.trail-victory p {font-size:1.1rem;color:#3e6549;line-height:1.5;}
+.victory-garden {font-size:3.1rem;}
+.victory-results {display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:1.1rem;font-weight:900;margin:16px 0 23px;}
+.victory-no-rush {font-size:.93rem!important;margin:19px 0 0;color:#5f7561!important;}
+@media(max-width:600px) {
+  .app-root .trail-screen {order:3;margin-top:5px;padding:10px;border-radius:16px;box-shadow:none;}
+  .trail-heading {gap:6px;}
+  .trail-heading h2 {font-size:1.45rem;}
+  .trail-back {padding:5px;min-height:46px;}
+  .trail-badge {font-size:.78rem;padding:7px;}
+  .trail-help {font-size:.96rem;margin:8px 0;}
+  .trail-landscape {height:min(145vw,580px);min-height:480px;border-radius:15px;}
+  .trail-node {height:clamp(46px,13vw,57px);width:clamp(46px,13vw,57px);}
+  .trail-node .trail-number {font-size:1.1rem;}
+  .trail-decor {font-size:2rem;}
+  .trail-controls button {font-size:.85rem;}
+  .map-shortcut {min-height:44px;padding:5px 8px;font-size:.85rem;}
+  .trail-victory {padding:19px 12px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .app-root:not(.motion-active) .trail-marker {animation:none!important;}
+}
