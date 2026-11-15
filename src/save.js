@@ -15,6 +15,7 @@ import {validChess} from "./chess.js";
 import {validFiveDice} from "./five-dice.js";
 import {validPyramid} from "./pyramid.js";
 import {validTriPeaks} from "./tripeaks.js";
+import {validSpider} from "./spider.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -108,7 +109,8 @@ export function createSaveState(raw = null, preferEasy = false) {
       chess: validChess(previous.cards?.chess) ? previous.cards.chess : null,
       dice: validFiveDice(previous.cards?.dice) ? previous.cards.dice : null,
       pyramid: validPyramid(previous.cards?.pyramid) ? previous.cards.pyramid : null,
-      tripeaks: validTriPeaks(previous.cards?.tripeaks) ? previous.cards.tripeaks : null
+      tripeaks: validTriPeaks(previous.cards?.tripeaks) ? previous.cards.tripeaks : null,
+      spider: validSpider(previous.cards?.spider) ? previous.cards.spider : null
     }
   };
 }
