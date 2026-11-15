@@ -3,6 +3,8 @@ import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLeve
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
+import BubbleShooter from "./BubbleShooter.jsx";
+import { makeShooterLevel } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
 import { motionCssVariables, stageDuration } from "./motion.js";
 
@@ -58,8 +60,12 @@ export default function App() {
   const [drag, setDrag] = useState(null);
   const suppressClickUntil = useRef(0);
   const { mode, settings } = saved;
-  const gameKey = settings.easy ? "easyGames" : "games";
-  const progressKey = settings.easy ? "easyProgress" : "progress";
+  const gameKey = mode === "bubbles" ?
+    (settings.easy ? "easyShooterGames" : "shooterGames") :
+    (settings.easy ? "easyGames" : "games");
+  const progressKey = mode === "bubbles" ?
+    (settings.easy ? "easyShooterProgress" : "shooterProgress") :
+    (settings.easy ? "easyProgress" : "progress");
   const games = saved[gameKey];
   const game = games[mode];
   const size = game.size ?? SIZE;
@@ -177,7 +183,10 @@ export default function App() {
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
     if (view === "trail") {
-      setTrailPage(pageForLevel(saved[progressKey][next]));
+      const nextProgressKey = next === "bubbles" ?
+        (settings.easy ? "easyShooterProgress" : "shooterProgress") :
+        (settings.easy ? "easyProgress" : "progress");
+      setTrailPage(pageForLevel(saved[nextProgressKey][next]));
     }
   }
 
@@ -206,7 +215,7 @@ export default function App() {
         level > saved[progressKey][mode]) return;
     setSaved(previous => {
       const old = previous[gameKey][mode];
-      const replacement = old.level === level && !old.won ? old : makeLevel(mode, level, size);
+      const replacement = old.level === level && !old.won ? old : (mode === "bubbles" ? makeShooterLevel(level, size) : makeLevel(mode, level, size));
       return { ...previous, [gameKey]: { ...previous[gameKey], [mode]: replacement } };
     });
     clearSelection();
@@ -379,7 +388,9 @@ export default function App() {
                 <span className="world-text">
                   <strong>{world.name}</strong>
                   <small>{world.desc}</small>
-                  <em>Level {games[world.id].level.toLocaleString()}</em>
+                  <em>Level {(world.id === "bubbles" ?
+                    saved[settings.easy ? "easyShooterGames" : "shooterGames"].bubbles :
+                    saved[settings.easy ? "easyGames" : "games"][world.id]).level.toLocaleString()}</em>
                 </span>
               </button>
             ))}
@@ -389,6 +400,17 @@ export default function App() {
           <LevelTrail mode={mode} page={trailPage} unlocked={saved[progressKey][mode]}
             current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
             onBack={() => { setShowWorlds(true); setShowSettings(false); }} />
+        ) : mode === "bubbles" ? (
+          <BubbleShooter game={game} settings={settings} onPath={showPath}
+            onChange={nextGame => setSaved(previous => {
+              const high = { ...previous[progressKey] };
+              if (nextGame.won) high.bubbles = Math.max(high.bubbles, nextGame.level + 1);
+              return {
+                ...previous,
+                [gameKey]: { ...previous[gameKey], bubbles: nextGame },
+                [progressKey]: high
+              };
+            })}/>
         ) : (
         <section className="play-section" aria-labelledby="level-heading">
           <div className="game-panel" style={{ "--world-accent": rules.color }}>
