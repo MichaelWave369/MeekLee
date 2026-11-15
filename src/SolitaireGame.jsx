@@ -10,6 +10,7 @@ export default function SolitaireGame({game,onChange,onLeave}){
   const [notice,setNotice]=useState("Tap a card, then tap where it belongs.");
   const [confirmNew,setConfirmNew]=useState(false);
   const [hint,setHint]=useState(null);
+  const [dealPreference,setDealPreference]=useState(game.drawCount===3?3:1);
   const dragRef=useRef(null);
   const suppressClickRef=useRef(false);
   const [dragging,setDragging]=useState(false);
@@ -91,7 +92,7 @@ export default function SolitaireGame({game,onChange,onLeave}){
   }
   function newDeal(){
     if(!confirmNew){setConfirmNew(true);setNotice("Tap New Deal again to confirm. Your puzzle levels stay saved.");return;}
-    onChange(newSolitaire(Date.now()));
+    onChange(newSolitaire(Date.now(),dealPreference));
     setConfirmNew(false);setSelected(null);setHint(null);
     setNotice("Freshly shuffled! Have fun.");
   }
@@ -108,9 +109,22 @@ export default function SolitaireGame({game,onChange,onLeave}){
       <div><p className="trail-eyebrow">♣ Mom's Card Corner</p><h2>Klondike Solitaire</h2></div>
       <button type="button" className="trail-back" onClick={onLeave}>‹ Card Corner</button>
     </div>
-    <p className="cardgame-help">Draw one card. Build suits Ace to King and alternate red/black
+    <p className="cardgame-help">Draw {game.drawCount===3?"three cards":"one card"} at a time.
+      Build suits Ace to King and alternate red/black
       down the columns. <strong>Drag cards onto each other</strong>, or tap the card and destination.
       Touch-drag works on phones, too!</p>
+    <div className="solitaire-deal-choice" aria-label="Choose Klondike deal style for the next deal">
+      <strong>♠️ Deal style</strong>
+      <button type="button" aria-pressed={dealPreference===1} onClick={()=>setDealPreference(1)}>
+        Draw 1
+      </button>
+      <button type="button" aria-pressed={dealPreference===3} onClick={()=>setDealPreference(3)}>
+        Draw 3
+      </button>
+      <small>{dealPreference!==(game.drawCount===3?3:1)?
+        "This style starts with your next New Deal. Your current game is safe.":
+        "Choose a different style for your next New Deal."}</small>
+    </div>
     <div className="cardgame-score">
       <span>🏡 {homes}/52 home</span><span>🃏 {game.stock.length} in stock</span>
       <span>🌟 {game.moves} moves</span>
@@ -120,7 +134,8 @@ export default function SolitaireGame({game,onChange,onLeave}){
     </div>}
     <div className="solitaire-draw-row">
       <button type="button" className={"solitaire-stock "+(game.stock.length?"has-cards":"")}
-        aria-label={game.stock.length?"Draw one card from stock":game.waste.length?"Recycle the waste pile":"Stock is empty"}
+        aria-label={game.stock.length?"Draw "+(game.drawCount===3?"three":"one")+" card"+(game.drawCount===3?"s":"")+" from stock":
+          game.waste.length?"Recycle the waste pile":"Stock is empty"}
         onClick={()=>apply(drawSolitaire(game))}
         disabled={!game.stock.length&&!game.waste.length||game.won}>
         <span aria-hidden="true">{game.stock.length?"🌼":game.waste.length?"↻":"✓"}</span>
