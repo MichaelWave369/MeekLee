@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
-import LevelTrail, { pageForLevel } from "./LevelTrail.jsx";
+import LevelTrail from "./LevelTrail.jsx";
+import { pageForLevel } from "./trail.js";
 import { motionCssVariables, stageDuration } from "./motion.js";
 
 const WORLDS = [
