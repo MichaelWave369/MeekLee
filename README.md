@@ -178,3 +178,21 @@ Rewards use the largest connected matching group that *actually popped*, includi
 Winning awards **one to three stars** depending on how efficiently the puzzle was finished; the best medal is saved per level and displayed on the ten-stop Adventure Path. Classic 8×8 and large 6×6 medals are saved separately, and previously saved games migrate without being erased. Bubble Lagoon keeps its independently earned Pearl/Rainbow and finite-shot mechanic. The three classic worlds still have no lives, turn limits or payments.
 
 Tests cover real 3/4/5-piece matches, each power's deterministic board changes, actual animation frames, saved boosters, world-specific replay, phone accessibility and star persistence.
+
+## Mom's Happy Garden: chapter treasure chests, rescued friends and bonus boards
+
+Every ten levels completed in **any** of the four worlds unlocks a treasure chest for that world and chapter. The chest becomes claimable after finishing Level 10, 20, 30, and so on. Its gift is **deterministic and once-only** across both the 6×6 phone and 8×8 classic modes, so switching board sizes or replaying a level never duplicates rewards. Existing players with milestone progress can also open their already-earned unopened chests.
+
+Each chest opens to reveal three completely free gifts:
+
+1. **One garden decoration.** The garden starts empty and grows into a cheerful CSS-illustrated scene with flowers, trees, a fountain, and more. Earned decorations can be planted or temporarily put away with big buttons. They always stay in Mom's collection.
+2. **One rescue companion.** Meet characters such as **Pip the Bunny, Biscuit the Puppy, and Muffin the Kitten**. Select a favorite pet in the garden and it will gently bounce alongside her on Adventure Paths and cheer her on during puzzles. Motion follows MeekLee's existing Animations setting and the device's accessibility preference.
+3. **One Treasure Match bonus board.** Each chest unlocks its own deterministic 4×4 memory-matching game with eight picture pairs. There is no timer, move cap, penalty, or paywall. Completing it earns a permanent memory badge with the best recorded number of turns. Boards are replayable at any time, without duplicating chest rewards.
+
+The new **🌷 Garden** button lives inside the compact phone menu. A direct button also appears on the victory screen when completing a chapter, and the Adventure Path has its own Garden shortcut. The desktop world picker includes a Garden link.
+
+### Saving and privacy
+
+The collection is stored in the existing **meeklee-adventures-save-v1** local save, in an isolated \`collection\` object containing claimed chest keys, selected pet, planted decorations, and best bonus-board scores. The migration preserves all original boards, level progress, earned powers and stars. Only a completed milestone can open its chest, and each reward is derived from the world and chapter rather than a paid random prize.
+
+Every garden, bonus game and character uses local React, CSS and emoji symbols. Nothing requires an account or network connection after loading the offline app. All prizes are earned by play. Tests cover ten-level boundaries, old-save migration, no duplicate claims, phone treasure openings, permanent collectibles, bonus board victories and narrow-screen touch targets.

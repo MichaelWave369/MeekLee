@@ -4,6 +4,12 @@ import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
 import BubbleShooter from "./BubbleShooter.jsx";
+import Garden, { CompanionBadge } from "./Garden.jsx";
+import BonusBloom from "./BonusBloom.jsx";
+import {
+  isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
+  gardenInventory, selectCompanion, toggleDecoration
+} from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
 import { motionCssVariables, stageDuration } from "./motion.js";
@@ -51,6 +57,8 @@ export default function App() {
   const [animation, setAnimation] = useState(null);
   const [view, setView] = useState("play");
   const [trailPage, setTrailPage] = useState(0);
+  const [activeBonusId, setActiveBonusId] = useState(null);
+  const [gardenReturnView, setGardenReturnView] = useState("play");
   const busyRef = useRef(false);
   const boardRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -73,6 +81,10 @@ export default function App() {
   const size = game.size ?? SIZE;
   const rules = MODES[mode];
   const worldPowers = WORLD_POWER_LABELS[mode];
+  const {pets: rescuedPets} = gardenInventory(saved.collection);
+  const companion = rescuedPets.find(p => p.id === saved.collection.companion) || null;
+  const chestReady = game.won && game.level % 10 === 0 &&
+    isChestClaimable(saved,mode,game.level / 10);
   const busy = Boolean(animation);
   const stage = animation?.trace[animation.index] ?? null;
   const visualSpeed = animation?.speed ?? settings.motionSpeed;
@@ -213,6 +225,7 @@ export default function App() {
     setSaved({ ...saved, mode: next });
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
+    if (view === "garden" || view === "bonus") setView("play");
     if (view === "trail") {
       const nextProgressKey = next === "bubbles" ?
         (settings.easy ? "easyShooterProgress" : "shooterProgress") :
@@ -232,6 +245,43 @@ export default function App() {
     });
     clearSelection();
     setMessage("A fresh board, on the house!");
+  }
+
+  function showGarden() {
+    if (busyRef.current) return;
+    setGardenReturnView(view === "garden" || view === "bonus" ? "play" : view);
+    clearSelection();
+    setMenuOpen(false);setShowSettings(false);setShowWorlds(false);
+    setView("garden");
+    if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
+  }
+  function leaveGarden() {
+    setView(gardenReturnView);
+    if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
+  }
+  function openBonus(key) {
+    if (!saved.collection.claimed[key]) return;
+    setActiveBonusId(key);
+    setView("bonus");
+    if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
+  }
+  function claimChest(mode, chapter) {
+    setSaved(previous => {
+      const result=claimChapterChest(previous,mode,chapter);
+      return result.valid ? {...previous,collection:result.collection} : previous;
+    });
+  }
+  function changeCompanion(petId) {
+    setSaved(previous => ({...previous,collection:selectCompanion(previous.collection,petId)}));
+  }
+  function plantDecoration(id) {
+    setSaved(previous => ({...previous,collection:toggleDecoration(previous.collection,id)}));
+  }
+  function finishBonus(key,moves) {
+    setSaved(previous => {
+      const result=completeBonus(previous.collection,key,moves);
+      return result.valid ? {...previous,collection:result.collection} : previous;
+    });
   }
 
   function showPath() {
@@ -380,6 +430,10 @@ export default function App() {
             onClick={() => { setShowSettings(!showSettings); setShowWorlds(false); }}>
             🔎 Display
           </button>
+          <button type="button" className="quick-toggle" disabled={busy}
+            onClick={showGarden}>
+            🌷 Garden
+          </button>
         </nav>
         <section id="meeklee-visibility" className={"comfort-bar" + (showSettings ? " open" : "")} aria-label="Visibility and animation settings">
           <div className="comfort-heading">
@@ -422,6 +476,8 @@ export default function App() {
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
             <span>4 happy worlds</span>
+            <button type="button" className="desktop-garden-shortcut" disabled={busy}
+              onClick={showGarden}>🌷 Mom's Garden</button>
           </div>
           <button type="button" className="world-chooser" disabled={busy} aria-expanded={showWorlds}
             onClick={() => setShowWorlds(!showWorlds)}>
@@ -444,11 +500,20 @@ export default function App() {
             ))}
           </div>}
         </section>
-        {view === "trail" ? (
+        {view === "garden" ? (
+          <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
+            onToggleDecor={plantDecoration} onBonus={openBonus} onBack={leaveGarden} />
+        ) : view === "bonus" && activeBonusId ? (
+          <BonusBloom key={activeBonusId} bonusId={activeBonusId}
+            bestMoves={saved.collection.completedBonuses[activeBonusId]}
+            onComplete={finishBonus} onBack={() => setView("garden")} />
+        ) : view === "trail" ? (
           <LevelTrail mode={mode} page={trailPage} unlocked={saved[progressKey][mode]}
             medals={mode === "bubbles" ? saved[settings.easy ? "easyShooterStars" : "shooterStars"].bubbles :
               saved[settings.easy ? "easyWorldStars" : "worldStars"]?.[mode]}
             current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
+            onGarden={showGarden} companion={companion} settings={settings}
+            chestsReady={totalAvailableChests(saved)}
             onBack={() => {
               setMenuOpen(true);
               setShowWorlds(true);
@@ -457,6 +522,7 @@ export default function App() {
             }} />
         ) : mode === "bubbles" ? (
           <BubbleShooter game={game} settings={settings} onPath={showPath}
+            onGarden={showGarden} chapterChestReady={chestReady} companion={companion}
             onChange={nextGame => setSaved(previous => {
               const high = { ...previous[progressKey] };
               const starsKey = settings.easy ? "easyShooterStars" : "shooterStars";
@@ -505,6 +571,9 @@ export default function App() {
                   {"★".repeat(worldStars(game))}<span>{"☆".repeat(3 - worldStars(game))}</span>
                 </div>
                 <div className="victory-results"><span>⭐ {game.score.toLocaleString()} points</span><span>🌟 {game.moves} moves</span></div>
+                {chestReady && <button className="victory-chest" type="button" onClick={showGarden}>
+                  🎁 Open Your Chapter Treasure Chest!
+                </button>}
                 <button className="trail-play" type="button" onClick={showPath}>🌼 See My Adventure Path →</button>
                 <p className="victory-no-rush">No rush. Your next adventure is ready whenever you are.</p>
               </div>
@@ -592,6 +661,7 @@ export default function App() {
             )}
             <div className="game-bottom">
               <span>🌟 {game.moves} moves played</span>
+              <CompanionBadge collection={saved.collection} settings={settings} />
               <span>♾️ Play at your own pace</span>
             </div>
             <div className="game-actions">

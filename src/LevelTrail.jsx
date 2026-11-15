@@ -7,7 +7,7 @@ export const WORLD_TRAILS = {
   rescue: { icon: "🐾", title: "Critter Path", marker: "🐞", scenery: ["🌲","🦊","🍄","🌿"] },
   bubbles: { icon: "🫧", title: "Lagoon Journey", marker: "🐚", scenery: ["🐠","🪸","🐟","⭐"] }
 };
-export default function LevelTrail({ mode, page, unlocked, current, medals, onPage, onLevel, onBack }) {
+export default function LevelTrail({ mode, page, unlocked, current, medals, onPage, onLevel, onBack, onGarden, companion, settings, chestsReady = 0 }) {
   const world = WORLD_TRAILS[mode];
   const start = page * PAGE_SIZE + 1;
   const nodes = levelsForPage(page);
@@ -19,10 +19,18 @@ export default function LevelTrail({ mode, page, unlocked, current, medals, onPa
         <button type="button" className="trail-back" onClick={onBack}>‹ Worlds</button>
         <div><p className="trail-eyebrow">{world.icon} {world.title}</p>
           <h2>Adventure Path</h2></div>
+        <button type="button" className="trail-garden-shortcut" onClick={onGarden}
+          aria-label={"Open Mom's Garden" + (chestsReady ? ", " + chestsReady + " treasure chests ready" : "")}>
+          🌷 Garden {chestsReady>0 && <span className="trail-chest-count">🎁{chestsReady>9?"9+":chestsReady}</span>}
+        </button>
         <span className="trail-badge">Page {page + 1}</span>
       </div>
       <p className="trail-help">Follow the little {world.marker} along the path. Choose your glowing level to play!</p>
       <div className="trail-landscape">
+        {companion && <div className={"trail-companion"+(settings?.motion?" companion-moving":"")}
+          title={companion.name} aria-label={companion.name+" is traveling with you"}>
+          <span aria-hidden="true">{companion.icon}</span>
+        </div>}
         <div className="trail-decor decor-one" aria-hidden="true">{world.scenery[0]}</div>
         <div className="trail-decor decor-two" aria-hidden="true">{world.scenery[1]}</div>
         <div className="trail-decor decor-three" aria-hidden="true">{world.scenery[2]}</div>
@@ -46,6 +54,7 @@ export default function LevelTrail({ mode, page, unlocked, current, medals, onPa
                 aria-label={"Level " + level + ", " + status + (status === "current" ? ", play now" : "")}>
                 {status === "current" && <span className="trail-marker" aria-hidden="true">{world.marker}</span>}
                 <span className="trail-number">{level}</span>
+                {level % 10 === 0 && <span className="trail-milestone" aria-hidden="true">🎁</span>}
                 {status === "completed" && medals?.[level] > 0 &&
                   <span className="trail-medals" aria-label={medals[level] + " stars earned"}>
                     {"★".repeat(Math.min(3, medals[level]))}

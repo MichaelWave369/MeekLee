@@ -1,6 +1,7 @@
 import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel } from "./core.js";
 import { motionSpeed } from "./motion.js";
 import { makeShooterLevel, validShooter, normalizeShooter } from "./shooter.js";
+import { normalizeCollection } from "./collection.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -76,6 +77,9 @@ export function createSaveState(raw = null, preferEasy = false) {
         { ...previous.worldStars[mode] } : {}])),
     easyWorldStars: Object.fromEntries(Object.keys(MODES).map(mode =>
       [mode, previous.easyWorldStars?.[mode] && typeof previous.easyWorldStars[mode] === "object" ?
-        { ...previous.easyWorldStars[mode] } : {}]))
+        { ...previous.easyWorldStars[mode] } : {}])),
+    // Global garden collectibles: shared across all worlds and board sizes.
+    // The existing local save and original game states are untouched.
+    collection: normalizeCollection(previous.collection)
   };
 }

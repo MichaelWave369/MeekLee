@@ -794,3 +794,198 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
  font-weight:900;color:#3e6850;letter-spacing:.015em;}
 .world-powers-wrap .world-powers {margin-top:5px;}
 @media(max-width:600px){.app-root .world-powers-tip {font-size:.82rem;margin:5px 0 1px;}}
+
+
+/* Mom's Garden: all art is local CSS, symbols and SVG. No remote images or ads. */
+.desktop-garden-shortcut,.trail-garden-shortcut {
+  min-height:46px; padding:6px 12px; border:2px solid #53805a;
+  border-radius:12px;background:#e7f5db;color:#30573b;
+  font:inherit;font-weight:900;cursor:pointer;touch-action:manipulation;
+}
+.garden-home,.bonus-screen {
+  order:3;max-width:760px;width:100%;margin:10px auto 25px;
+  border:2px solid #b3d2a5;border-radius:22px;background:#fffdf3;
+  padding:clamp(11px,2.6vw,24px);
+  box-shadow:0 5px 0 #d9e5cc;
+}
+.garden-heading,.bonus-heading {
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.garden-heading h2,.bonus-heading h2 {
+  font-size:clamp(1.4rem,5vw,2rem);color:#305e43;margin:2px 0;
+}
+.garden-intro,.bonus-instructions {
+  color:#42654a;font-weight:750;line-height:1.35;
+  margin:9px 0 12px;font-size:1.03rem;
+}
+.garden-landscape {
+  height:310px;position:relative;isolation:isolate;overflow:hidden;
+  border:3px solid #9bcba3;border-radius:22px;
+  background:linear-gradient(160deg,#c6ebff 4%,#ebfbff 58%,#b8e8ae 59%,#88ce83 100%);
+}
+.garden-sun {position:absolute;top:7px;right:24px;font-size:2.6rem;filter:drop-shadow(0 2px 2px #536b3390);}
+.garden-cloud {position:absolute;font-size:2.8rem;top:3%;opacity:.88;pointer-events:none;}
+.cloud-one {left:12%;}.cloud-two{left:48%;top:14%;}
+.garden-meadow {position:absolute;bottom:-50px;left:-5%;width:110%;height:140px;border-radius:50%;background:#64b66eb5;}
+.garden-fence {position:absolute;bottom:20px;width:100%;font-size:1.3rem;text-align:center;letter-spacing:1.2em;opacity:.64;}
+.garden-placed {
+  position:absolute;left:9px;right:9px;bottom:47px;top:69px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  align-items:end;justify-items:center;gap:2px;
+}
+.garden-ornament {font-size:clamp(2.2rem,7vw,3.8rem);
+  filter:drop-shadow(0 6px 3px #294c3066);line-height:1.05;
+  animation:garden-dance 2.4s ease-in-out var(--ornament-delay,0s) infinite alternate;
+}
+@keyframes garden-dance {from{transform:rotate(-3deg) translateY(1px);}
+  to{transform:rotate(3deg) translateY(-4px);}}
+.garden-starter {grid-column:1/-1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;font-size:3rem;text-align:center;color:#376342;
+  font-weight:900;gap:2px;}
+.garden-starter strong {font-size:1.2rem;}
+.garden-starter small {font-size:.89rem;max-width:270px;}
+.garden-visitor {position:absolute;bottom:7px;right:7px;z-index:4;
+ display:flex;gap:5px;align-items:center;background:#fff7e1f5;
+ border:2px solid #e1bb73;border-radius:12px;padding:4px 8px;
+ color:#356446;font-weight:900;font-size:.86rem;}
+.garden-visitor span {font-size:2rem;}
+.companion-moving>span:first-child, .trail-companion.companion-moving {
+  display:inline-block;animation:meeklee-pet-bob 1.8s ease-in-out infinite alternate;
+}
+@keyframes meeklee-pet-bob {from{transform:translateY(1px) rotate(-4deg);}
+ to{transform:translateY(-6px) rotate(4deg);}}
+.garden-totals {display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:10px 0;}
+.garden-totals span {border:2px solid #bdd9b1;border-radius:11px;
+  background:#eaf8e2;font-size:.91rem;font-weight:900;padding:7px 10px;color:#396344;}
+.garden-section {margin:18px 0 0;border-top:2px dashed #c5d5bd;padding-top:14px;}
+.garden-section h3 {font-size:1.35rem;color:#346342;margin:0 0 6px;}
+.garden-section-help {color:#486e52;font-weight:750;font-size:.96rem;line-height:1.4;margin:4px 0 10px;}
+.garden-empty {color:#5c7c60;margin:9px 0;font-style:italic;}
+.chest-list,.garden-bonus-list {display:grid;gap:9px;}
+.chest-button,.garden-bonus-button {
+  display:flex;align-items:center;gap:12px;width:100%;min-height:65px;
+  border:2px solid #b78d47;border-radius:15px;background:linear-gradient(#fff3bf,#f6df9f);
+  color:#654b25;text-align:left;font:inherit;font-weight:900;padding:9px 12px;
+  cursor:pointer;touch-action:manipulation;
+}
+.chest-button .chest-icon {font-size:2.5rem;flex-shrink:0;}
+.chest-button span:last-child,.garden-bonus-button span:last-child {display:flex;flex-direction:column;}
+.chest-button small,.garden-bonus-button small {font-size:.83rem;font-weight:700;margin-top:3px;}
+.chest-button:hover {background:#fff0b4;}
+.chest-reveal {
+  background:#fff2d8;border:3px solid #e3ba6d;border-radius:17px;
+  padding:13px;margin:13px 0;text-align:center;color:#5e4b26;
+  animation:chest-open .35s ease-out both;
+}
+@keyframes chest-open {from{transform:scale(.96);opacity:.5;}to{transform:scale(1);opacity:1;}}
+.chest-reveal>strong {font-size:1.22rem;}
+.chest-prizes {display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  font-weight:900;margin:12px 0;}
+.chest-prizes span {border-radius:11px;border:2px solid #ecce92;background:#fffcf0;padding:8px;}
+.chest-reveal button,.bonus-success button {
+  min-height:50px;border:2px solid #41815a;border-radius:12px;
+  background:#408951;color:#fff;font:inherit;font-weight:900;padding:8px 13px;
+}
+.garden-collection-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+.garden-collectible {display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;
+  background:#f1f6e8;color:#506c54;border:2px solid #c4d7be;
+  border-radius:13px;min-height:110px;padding:7px;cursor:pointer;font:inherit;}
+.garden-collectible>span {font-size:2.4rem;}
+.garden-collectible>strong {text-align:center;font-size:.87rem;}
+.garden-collectible>small {font-size:.78rem;font-weight:800;}
+.garden-collectible.showing {background:#e3f6d5;border-color:#579269;color:#285b39;}
+.garden-bonus-button {background:#e9ecff;border-color:#9b99cc;color:#444476;}
+.garden-bonus-button>span:first-child {font-size:1.9rem;}
+.garden-more {min-height:46px;border:2px solid #869eb6;border-radius:12px;background:#f7fbff;
+ font:inherit;font-weight:900;color:#42617a;}
+.companion-badge {display:inline-flex;align-items:center;gap:5px;min-height:32px;
+  padding:3px 7px;border:1px solid #a4ce9c;border-radius:11px;background:#f0ffeb;
+  color:#356344;font-size:.78rem;font-weight:850;}
+.companion-badge>span {font-size:1.32rem;}
+.shooter-companion {display:inline-block;font-size:1.4rem;line-height:1.1;}
+.trail-companion {position:absolute;right:3%;top:12%;z-index:4;
+ font-size:2rem;filter:drop-shadow(0 3px 2px #43725b7b);pointer-events:none;}
+.victory-chest {display:block;margin:0 auto 12px;width:100%;min-height:55px;
+ border:3px solid #dfaf56;border-radius:14px;background:linear-gradient(#fff4bf,#f8d781);
+ color:#6b4a1c;font:inherit;font-size:1.03rem;font-weight:900;
+ box-shadow:0 4px 0 #c19540;}
+/* Bonus Treasure Match board: large cards rather than tiny clickable images. */
+.bonus-score {display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:12px 0;}
+.bonus-score span {border:2px solid #b6d1af;border-radius:10px;background:#eafaeb;
+  color:#35614c;padding:7px 12px;font-weight:900;}
+.bonus-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:clamp(5px,1.5vw,10px);margin:0 auto;max-width:460px;}
+.bonus-card {aspect-ratio:1/1;min-width:0;min-height:60px;border-radius:15px;
+ border:3px solid #7ca582;background:linear-gradient(145deg,#a3d9a7,#4f9b72);
+ color:#fff;font:inherit;font-size:clamp(1.7rem,7vw,3rem);font-weight:900;
+ cursor:pointer;box-shadow:0 4px 0 #447c55;touch-action:manipulation;}
+.bonus-card.face-up {background:#fffbe3;border-color:#d8b65f;color:#356846;}
+.bonus-card.matched {background:#e0f8d5;border-color:#70ad72;box-shadow:none;}
+.bonus-card:disabled {opacity:1;}
+.bonus-message {font-weight:900;color:#3b6744;text-align:center;min-height:30px;line-height:1.4;margin:15px 0;}
+.bonus-success {border:2px solid #aed29b;border-radius:15px;background:#eff9e4;
+ text-align:center;padding:12px;color:#346242;}
+.bonus-success strong {font-size:1.35rem;}
+.bonus-success button {margin:5px;min-width:120px;}
+.bonus-actions {display:flex;gap:9px;justify-content:center;}
+.bonus-actions button {min-height:50px;flex:1;border:2px solid #6b9973;
+ border-radius:12px;background:#eaf6e3;color:#346040;font:inherit;font-weight:900;}
+@media(max-width:600px){
+  .app-root .garden-home,.app-root .bonus-screen {margin:3px 0 14px;padding:10px;border-radius:15px;}
+  .garden-heading,.bonus-heading {gap:7px;}
+  .garden-heading h2,.bonus-heading h2 {font-size:1.35rem;}
+  .garden-intro,.bonus-instructions {font-size:.94rem;margin:7px 0;}
+  .garden-landscape {height:230px;border-radius:15px;}
+  .garden-placed {top:52px;bottom:40px;}
+  .garden-ornament {font-size:2.2rem;}
+  .garden-visitor {font-size:.75rem;}
+  .garden-visitor span {font-size:1.65rem;}
+  .garden-collection-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+  .garden-collectible {min-height:93px;}
+  .garden-collectible>span {font-size:2rem;}
+  .garden-section h3 {font-size:1.19rem;}
+  .garden-totals span {font-size:.77rem;padding:5px 6px;}
+  .trail-heading {flex-wrap:wrap;}
+  .trail-garden-shortcut {padding:5px 7px;font-size:.91rem;}
+  .trail-heading .trail-badge {font-size:.78rem;}
+  .app-root .mobile-quickbar.menu-open .quick-toggle {min-width:0;padding:5px 3px;font-size:.86rem;}
+  .companion-badge small {display:none;}
+  .companion-badge {min-height:28px;padding:1px 5px;}
+  .bonus-card {min-height:58px;border-radius:12px;}
+}
+@media(max-width:350px) {
+  .garden-heading h2,.bonus-heading h2 {font-size:1.22rem;}
+  .trail-heading h2 {font-size:1.21rem;}
+  .trail-heading .trail-badge {display:none;}
+  .garden-collection-grid {gap:5px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .app-root:not(.motion-active) .companion-moving>span:first-child,
+  .app-root:not(.motion-active) .trail-companion.companion-moving,
+  .app-root:not(.motion-active) .garden-ornament,
+  .app-root:not(.motion-active) .chest-reveal {
+    animation:none!important;
+  }
+}
+
+/* Leave the map's Play button visible when the Garden shortcut is present. */
+@media(max-width:600px){
+  .app-root .trail-landscape {height:clamp(445px,calc(100dvh - 340px),510px);}
+  .app-root .trail-heading {gap:5px;}
+  .app-root .trail-help {margin:5px 0;}
+  .app-root .trail-controls {margin:7px 0;}
+}
+
+.trail-milestone {
+  position:absolute;top:-15px;left:-15px;font-size:1.14rem;
+  background:#fff7e3;border:1px solid #d5aa60;border-radius:50%;
+  padding:2px;line-height:1.1;box-shadow:0 2px 3px #5d49364a;
+  pointer-events:none;
+}
+.trail-chest-count {display:inline-block;white-space:nowrap;
+  background:#fff7cb;color:#6e4f21;border-radius:8px;padding:2px 4px;
+  font-weight:900;font-size:.8rem;}
+@media(max-width:350px){
+  .trail-garden-shortcut {font-size:.79rem;padding:4px 5px;}
+  .trail-chest-count {font-size:.73rem;}
+}
