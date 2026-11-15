@@ -405,9 +405,17 @@ export default function FamilyTable({onLeave,onPractice}){
                       ()=>gameAction({type:"play",index}):undefined}/>)}
                 </div>
               </section>}
-            {room.me.role==="spectator"&&<p className="family-watching-note">
-              You're watching this match. Player hands stay private, but you're welcome in the conversation!
-            </p>}
+            {room.me.role==="spectator"&&<div className="family-watching-note">
+              <p>You're watching this match. Player hands stay private, but you're welcome in the conversation!</p>
+              {room.onWaitingList?<div className="family-seat-waiting">
+                <strong>You're on the list to replace a bot at the next hand.</strong>
+                <button type="button" disabled={pending}
+                  onClick={()=>gameAction({type:"leave-queue"})}>Leave Waiting List</button>
+              </div>:room.botSeats>room.waitingCount?
+                <button type="button" className="family-primary-button" disabled={pending}
+                  onClick={()=>gameAction({type:"queue"})}>🃏 Play the Next Hand (Take a Bot Seat)</button>:
+                <small>All playing chairs are currently occupied. You're welcome to stay and chat.</small>}
+            </div>}
           </>}
         </div>
         <aside className="family-chat-panel" aria-label="Private family text chat">
