@@ -7,7 +7,7 @@ import BubbleShooter from "./BubbleShooter.jsx";
 import Garden, { CompanionBadge } from "./Garden.jsx";
 import BonusBloom from "./BonusBloom.jsx";
 import {
-  availableChests, chapterKey, claimChapterChest, completeBonus,
+  isChestClaimable, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
@@ -84,7 +84,7 @@ export default function App() {
   const {pets: rescuedPets} = gardenInventory(saved.collection);
   const companion = rescuedPets.find(p => p.id === saved.collection.companion) || null;
   const chestReady = game.won && game.level % 10 === 0 &&
-    availableChests(saved).some(reward => reward.key === chapterKey(mode,game.level / 10));
+    isChestClaimable(saved,mode,game.level / 10);
   const busy = Boolean(animation);
   const stage = animation?.trace[animation.index] ?? null;
   const visualSpeed = animation?.speed ?? settings.motionSpeed;
