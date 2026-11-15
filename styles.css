@@ -267,3 +267,9 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 @media (max-width: 350px) {
   .easy-see .tile { font-size: 1.7rem; }
 }
+
+
+/* Phone landscape orientation and touch tablets must not lose world navigation. */
+@media (pointer: coarse) {
+  .world-chooser { display: block; min-height: 52px; }
+}
