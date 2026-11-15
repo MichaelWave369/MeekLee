@@ -148,7 +148,7 @@ export default function BubbleShooter({ game, onChange, onPath, settings }) {
         <h3>Out of Bubbles!</h3>
         <p>Good try! This level has a fresh set of balls ready for you, plus a few extra to help.</p>
         <div className="victory-results"><span>⭐ {game.score} points</span><span>🎯 {game.moves} shots</span></div>
-        <button type="button" className="trail-play" onClick={retry}>↻ Try Level {game.level} Again</button>
+        <button type="button" className="trail-play" onClick={() => retry()}>↻ Try Level {game.level} Again</button>
         <button type="button" className="shooter-return" onClick={onPath}>🗺️ Back to Adventure Path</button>
         <p>No lives lost, no waiting, no purchases. Your completed levels and stars are safe.</p>
       </div>
