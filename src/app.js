@@ -63,7 +63,7 @@ function render() {
   const prompt = rules.mechanic === "tap" ? "Tap a group of 2 or more matching critters." :
     state.mode === "bubbles" ? "Swap neighbors to match 3. Bubbles rise upward!" :
     "Tap two neighboring pieces or swipe to match 3.";
-  root.innerHTML = \`
+  root.innerHTML = `
     <header class="hero">
       <div class="sun" aria-hidden="true">☀️</div>
       <div class="brand-mark" aria-hidden="true">🌼</div>
@@ -76,38 +76,38 @@ function render() {
       <section class="world-section" aria-labelledby="world-heading">
         <div class="section-heading"><h2 id="world-heading">Choose your adventure</h2><span>4 happy worlds</span></div>
         <div class="worlds">
-        \${worlds.map(([id, icon, name, desc]) => \`
-          <button class="world \${state.mode === id ? "active" : ""}" data-world="\${id}" aria-pressed="\${state.mode === id}">
-            <span class="world-icon" aria-hidden="true">\${icon}</span>
-            <span class="world-text"><strong>\${name}</strong><small>\${desc}</small><em>Level \${state.games[id]?.level || state.progress[id]}</em></span>
-          </button>\`).join("")}
+        ${worlds.map(([id, icon, name, desc]) => `
+          <button class="world ${state.mode === id ? "active" : ""}" data-world="${id}" aria-pressed="${state.mode === id}">
+            <span class="world-icon" aria-hidden="true">${icon}</span>
+            <span class="world-text"><strong>${name}</strong><small>${desc}</small><em>Level ${state.games[id]?.level || state.progress[id]}</em></span>
+          </button>`).join("")}
         </div>
       </section>
       <section class="play-section" aria-labelledby="level-heading">
-        <div class="game-panel" style="--world-accent:\${rules.color}">
+        <div class="game-panel" style="--world-accent:${rules.color}">
           <div class="game-heading">
-            <div><p class="eyebrow world-label">\${rules.name}</p><h2 id="level-heading">Level \${game.level.toLocaleString()}</h2></div>
-            <div class="score-chip">⭐ <strong>\${game.score.toLocaleString()}</strong><small>points</small></div>
+            <div><p class="eyebrow world-label">${rules.name}</p><h2 id="level-heading">Level ${game.level.toLocaleString()}</h2></div>
+            <div class="score-chip">⭐ <strong>${game.score.toLocaleString()}</strong><small>points</small></div>
           </div>
-          <div class="goal-heading"><span>🎯 Collect \${game.target} pieces</span><strong>\${Math.min(game.cleared, game.target)} / \${game.target}</strong></div>
-          <div class="progress-track" role="progressbar" aria-label="Level progress" aria-valuemin="0" aria-valuemax="\${game.target}" aria-valuenow="\${Math.min(game.cleared, game.target)}"><span style="width:\${pct}%"></span></div>
-          <p class="instruction">\${prompt}</p>
+          <div class="goal-heading"><span>🎯 Collect ${game.target} pieces</span><strong>${Math.min(game.cleared, game.target)} / ${game.target}</strong></div>
+          <div class="progress-track" role="progressbar" aria-label="Level progress" aria-valuemin="0" aria-valuemax="${game.target}" aria-valuenow="${Math.min(game.cleared, game.target)}"><span style="width:${pct}%"></span></div>
+          <p class="instruction">${prompt}</p>
           <div class="board-wrap">
-            <div class="game-board \${rules.gravity === "up" ? "floaty" : ""}" role="group" aria-label="\${rules.name} puzzle board">
-              \${game.board.map((piece, i) => \`
-                <button type="button" class="tile \${selected === i ? "selected" : ""} \${hint.includes(i) ? "hint" : ""}" data-i="\${i}"
-                  aria-label="\${escapeAttr(rules.pieces[piece])}, row \${Math.floor(i / SIZE) + 1}, column \${i % SIZE + 1}" aria-pressed="\${selected === i}">
-                  <span aria-hidden="true">\${rules.pieces[piece]}</span>
-                </button>\`).join("")}
+            <div class="game-board ${rules.gravity === "up" ? "floaty" : ""}" role="group" aria-label="${rules.name} puzzle board">
+              ${game.board.map((piece, i) => `
+                <button type="button" class="tile ${selected === i ? "selected" : ""} ${hint.includes(i) ? "hint" : ""}" data-i="${i}"
+                  aria-label="${escapeAttr(rules.pieces[piece])}, row ${Math.floor(i / SIZE) + 1}, column ${i % SIZE + 1}" aria-pressed="${selected === i}">
+                  <span aria-hidden="true">${rules.pieces[piece]}</span>
+                </button>`).join("")}
             </div>
           </div>
-          <div class="game-bottom"><span>🌟 \${game.moves} moves played</span><span>♾️ Play at your own pace</span></div>
+          <div class="game-bottom"><span>🌟 ${game.moves} moves played</span><span>♾️ Play at your own pace</span></div>
           <div class="game-actions">
             <button class="action secondary" data-action="hint">💡 Free hint</button>
             <button class="action secondary" data-action="shuffle">🔀 Free shuffle</button>
           </div>
-          <p class="message" id="message" aria-live="polite">\${escapeAttr(message || "Every level is free, forever.")}</p>
-          \${game.won ? \`<div class="win-panel" role="status"><div class="win-emoji">🎉</div><h3>Beautifully done!</h3><p>Another little adventure is waiting.</p><button class="action primary" data-action="next">Next level →</button></div>\` : ""}
+          <p class="message" id="message" aria-live="polite">${escapeAttr(message || "Every level is free, forever.")}</p>
+          ${game.won ? `<div class="win-panel" role="status"><div class="win-emoji">🎉</div><h3>Beautifully done!</h3><p>Another little adventure is waiting.</p><button class="action primary" data-action="next">Next level →</button></div>` : ""}
         </div>
         <aside class="side-note">
           <div class="note-flower">💐</div>
@@ -118,7 +118,7 @@ function render() {
         </aside>
       </section>
     </main>
-    <footer>MeekLee Adventures · Made with love, not microtransactions. <span>❤️</span></footer>\`;
+    <footer>MeekLee Adventures · Made with love, not microtransactions. <span>❤️</span></footer>`;
 }
 
 function clearSelection() { selected = null; hint = []; }
@@ -135,7 +135,7 @@ function applyTurn(first, second) {
     state.progress[state.mode] = Math.max(state.progress[state.mode], result.game.level + 1);
     setMessage("Level complete! You've earned another adventure.");
   } else {
-    setMessage(result.cascades > 1 ? "Wonderful cascade! ✨" : \`Lovely! \${result.cleared} pieces collected.\`);
+    setMessage(result.cascades > 1 ? "Wonderful cascade! ✨" : `Lovely! ${result.cleared} pieces collected.`);
   }
   save();
   render();
