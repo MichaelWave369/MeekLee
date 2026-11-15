@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import SolitaireGame from "./SolitaireGame.jsx";
 import PyramidGame from "./PyramidGame.jsx";
+import TriPeaksGame from "./TriPeaksGame.jsx";
 import RookGame from "./RookGame.jsx";
 import ColorParadeGame from "./ColorParadeGame.jsx";
 import FamilyTable from "./FamilyTable.jsx";
@@ -14,6 +15,7 @@ import ChessGame from "./ChessGame.jsx";
 import FiveDiceGame from "./FiveDiceGame.jsx";
 import {newSolitaire} from "./solitaire.js";
 import {newPyramid} from "./pyramid.js";
+import {newTriPeaks} from "./tripeaks.js";
 import {newRook} from "./rook.js";
 import {newColorParade} from "./color-parade.js";
 import {newWar} from "./war.js";
@@ -36,6 +38,9 @@ const GAMES=[
     detail:"One player • Hints and undo"},
   {id:"pyramid",icon:"🔺",title:"Pyramid Solitaire",
     description:"Pair exposed cards that add up to 13, or clear a king by itself. Three relaxing passes through the stock.",
+    detail:"One player • Hints and undo • Offline"},
+  {id:"tripeaks",icon:"⛰️",title:"TriPeaks Solitaire",
+    description:"Clear three peaks by choosing cards one rank above or below the waste. Build a cozy card streak.",
     detail:"One player • Hints and undo • Offline"},
   {id:"rook",icon:"🐦",title:"Rook Card Table",
     description:"Four-player partnership bidding and tricks. Mom teams up with Pip against two computer players.",
@@ -65,6 +70,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
     if(!cards?.[id]){
       const fresh=id==="solitaire"?newSolitaire(Date.now()):
         id==="pyramid"?newPyramid(Date.now()):
+        id==="tripeaks"?newTriPeaks(Date.now()):
         id==="rook"?newRook(Date.now()):
         id==="war"?newWar(Date.now()):
         id==="stack"?newStack(Date.now()):
@@ -85,6 +91,8 @@ export default function CardCorner({cards,onChange,onBack,settings}){
   if(active==="porch")return <FamilyPorch onLeave={restart}/>;
   if(active==="pyramid"&&cards?.pyramid)return <PyramidGame
     game={cards.pyramid} onChange={game=>onChange("pyramid",game)} onLeave={restart}/>;
+  if(active==="tripeaks"&&cards?.tripeaks)return <TriPeaksGame
+    game={cards.tripeaks} onChange={game=>onChange("tripeaks",game)} onLeave={restart}/>;
   if(active==="family")return <FamilyTable onLeave={restart}
     onPractice={()=>launch("rook")}/>;
   if(active==="jigsaw"&&cards?.jigsaw)return <JigsawGame game={cards.jigsaw}
@@ -190,12 +198,12 @@ export default function CardCorner({cards,onChange,onBack,settings}){
         </span>
       </button>
       <div className="checkers-nook-links" aria-label="Coming in future updates">
-        <div><span aria-hidden="true">🃏</span><strong>TriPeaks, Spider & FreeCell</strong><small>Coming later</small></div>
+        <div><span aria-hidden="true">🃏</span><strong>Spider & FreeCell</strong><small>Coming later</small></div>
         <div><span aria-hidden="true">🌷</span><strong>New Worlds</strong><small>Coming later</small></div>
       </div>
       <p>More puzzle worlds and garden treasures remain on the roadmap, too.</p>
     </section>
-    <p className="cardgame-foot">Klondike, Pyramid, Color Parade, Offline Rook, War, Five Dice, Stack & Bloom and picture puzzles
+    <p className="cardgame-foot">Klondike, Pyramid, TriPeaks, Color Parade, Offline Rook, War, Five Dice, Stack & Bloom and picture puzzles
       are free to play even offline. Family Rook requires a separate online room service.</p>
   </section>;
 }

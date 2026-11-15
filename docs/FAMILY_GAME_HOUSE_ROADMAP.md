@@ -13,6 +13,12 @@ MeekLee began as a gift for Mom. Keep the game **free, cozy, accessible, offline
 
 The key `meeklee-adventures-save-v1` and original four world engines remain unchanged. All new games store separate slots under `saved.cards`. The notebook has an independent local storage key. Completing a picture writes its award in the same state update as the completed puzzle.
 
+## Solitaire Garden: TriPeaks Solitaire
+
+**Now playable and offline:** TriPeaks adds the familiar three-peak overlap game with 28 tableau cards, a 23-card stock and an initial waste card. Only initially exposed base cards may be played; higher cards turn face-up after both directly covering cards are removed. Take a card one rank above or below the top waste, regardless of suit, with Ace/King wrap enabled for relaxed family play. Removed cards become the new waste card and build a streak score; drawing from stock resets the streak. There is **no stock recycle** in TriPeaks. Win by clearing all 28 tableau cards.
+
+Large playable-card buttons make phone play practical without tiny taps, alongside hint, undo, win/stuck notice and confirmation before a fresh deal. The save uses a separately validated `cards.tripeaks` state and never replaces Klondike, Pyramid, gardens, puzzle progress or the other games. Include 320px browser tests, 100 seeded-engine games and save-migration regression.
+
 ## Solitaire Garden: Pyramid Solitaire
 
 **Now playable and offline:** Pyramid joins Klondike as an independent Solitaire game. It uses a standard 52-card deck, 28 face-up pyramid cards in seven rows and 24 stock cards. Only cards not covered by the two directly below them can be removed. Two exposed cards totaling 13 form a pair; an exposed king can be removed alone. The top waste card is playable, and two stock recycles allow three relaxed passes. Win by clearing all 28 pyramid cards.
@@ -47,7 +53,7 @@ Private live family Chess sessions are still future work and require separately 
 
 ## Next: more Solitaire varieties
 
-After draw-one/draw-three Klondike and Pyramid, next: **TriPeaks**, **Spider (one suit first)**, and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
+After draw-one/draw-three Klondike, Pyramid and TriPeaks, next: **Spider (one suit first)** and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
 ## Next: new worlds and more garden life
 
