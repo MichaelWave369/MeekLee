@@ -13,7 +13,7 @@ function initialize() {
   let raw = null;
   try { raw = JSON.parse(localStorage.getItem(SAVE_KEY) || "null"); }
   catch { /* No storage access: play normally without persistence. */ }
-  const onPhone = typeof window !== "undefined" && window.matchMedia("(max-width: 600px)").matches;
+  const onPhone = typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches;
   return createSaveState(raw, onPhone);
 }
 
@@ -42,7 +42,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [hint, setHint] = useState([]);
   const [message, setMessage] = useState("Every level is free, forever.");
-  const [showWorlds, setShowWorlds] = useState(() => typeof window === "undefined" || !window.matchMedia("(max-width: 600px)").matches);
+  const [showWorlds, setShowWorlds] = useState(() => typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const pointer = useRef(null);
   const suppressClickUntil = useRef(0);
   const { mode, settings } = saved;
@@ -105,7 +105,7 @@ export default function App() {
     if (!(next in MODES)) return;
     clearSelection();
     setSaved({ ...saved, mode: next });
-    if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px)").matches) setShowWorlds(false);
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
   }
 
