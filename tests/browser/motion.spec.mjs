@@ -1,4 +1,9 @@
 import { test, expect } from "@playwright/test";
+async function revealMenu(page) {
+  const open = page.getByRole("button", { name: "Open game menu" });
+  if (await open.count()) await open.click();
+}
+
 import { makeLevel, EASY_SIZE } from "../../src/core.js";
 
 async function prepare(browser, { reducedMotion = "no-preference", speed = "relaxed", width = 390 } = {}) {
@@ -39,8 +44,10 @@ function durationMs(text) {
 
 test("phone visibly spends time swapping, popping and falling instead of flashing to final board", async ({ browser }) => {
   const { page, context } = await prepare(browser);
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Animation pace/i })).toContainText("Relaxed");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await playFirstSuggestedSwap(page);
   const swapping = page.locator(".tile.fx-swap").first();
@@ -72,8 +79,10 @@ test("phone visibly spends time swapping, popping and falling instead of flashin
 
 test("explicit Animations ON wins over an Android reduced-motion preference", async ({ browser }) => {
   const { page, context } = await prepare(browser, { reducedMotion: "reduce" });
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Match animations/i })).toHaveAttribute("aria-pressed", "true");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await playFirstSuggestedSwap(page);
   const swapping = page.locator(".tile.fx-swap").first();
@@ -87,12 +96,15 @@ test("explicit Animations ON wins over an Android reduced-motion preference", as
 
 test("phone can choose Quick pace and saves the preference without wiping progress", async ({ browser }) => {
   const { page, context } = await prepare(browser);
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await page.getByRole("button", { name: /Animation pace/i }).click();
   await expect(page.getByRole("button", { name: /Animation pace/i })).toContainText("Quick");
   await page.reload();
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Animation pace/i })).toContainText("Quick");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await playFirstSuggestedSwap(page);
   const swapping = page.locator(".tile.fx-swap").first();
