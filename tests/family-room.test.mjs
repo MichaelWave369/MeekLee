@@ -160,3 +160,41 @@ test("text chat is invite-only, bounded, rate-limited and plain text; guests can
   assert.equal(room.chat.length,ROOM_CHAT_LIMIT);
   assert.equal(room.chat.at(0).text,"Message 12");
 });
+
+
+test("a relative who arrives late can queue for a bot chair, but only sees cards after a fresh hand",()=>{
+  let room=newRoom();
+  room=ok(familyAction(room,tokens[0],{type:"start"},1800,47));
+  room=ok(joinFamilyRoom(room,"Aunt Late",tokens[1],1900));
+  assert.equal(membership(room,tokens[1]).role,"spectator");
+  assert.deepEqual(familyView(room,tokens[1]).game.hand,[]);
+  assert.equal(familyAction(room,tokens[1],{type:"play",index:0}).ok,false);
+  room=ok(familyAction(room,tokens[1],{type:"queue"},2000));
+  assert.equal(room.waiting.length,1);
+  assert.equal(familyView(room,tokens[1]).onWaitingList,true);
+  assert.deepEqual(familyView(room,tokens[1]).game.hand,[]);
+  assert.equal(familyAction(room,tokens[1],{type:"queue"}).room.waiting.length,1);
+  // Simulate a finished hand: the next deal is a legal promotion boundary.
+  room={...room,game:{...room.game,phase:"round-over",turn:null}};
+  room=ok(familyAction(room,tokens[0],{type:"next"},3000,59));
+  assert.equal(membership(room,tokens[1]).role,"player");
+  assert.equal(membership(room,tokens[1]).seat,1);
+  assert.equal(room.players[1].bot,false);
+  assert.equal(room.spectators.length,0);
+  assert.equal(room.waiting.length,0);
+  assert.equal(familyView(room,tokens[1]).game.hand.length,9);
+  assert.deepEqual(familyView(room,tokens[1]).game.hand,room.game.hands[1]);
+  assert.equal(familyView(room,tokens[0]).me.seat,0);
+});
+
+test("only spectators can queue and a queued watcher can cancel without changing seats",()=>{
+  let room=newRoom();
+  room=ok(familyAction(room,tokens[0],{type:"start"},1800,55));
+  room=ok(joinFamilyRoom(room,"Uncle",tokens[1],1900));
+  assert.equal(familyAction(room,tokens[0],{type:"queue"}).ok,false);
+  room=ok(familyAction(room,tokens[1],{type:"queue"},2000));
+  assert.equal(room.waiting.length,1);
+  room=ok(familyAction(room,tokens[1],{type:"leave-queue"},2100));
+  assert.equal(room.waiting.length,0);
+  assert.equal(membership(room,tokens[1]).role,"spectator");
+});
