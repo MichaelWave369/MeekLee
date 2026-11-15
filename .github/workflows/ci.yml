@@ -14,5 +14,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check module syntax and test 800 generated levels
+      - name: Install React and build tools
+        run: npm install --no-audit --no-fund
+      - name: Validate puzzle levels, React build, and offline shell
         run: npm run check
