@@ -105,3 +105,17 @@ The visual frames come from the deterministic puzzle rules, not from random deco
 The Display menu has an **✨ Animations ON/OFF** option. The preference is saved locally; devices requesting reduced motion default to OFF. Turning it off applies game results immediately without the animated sequence. All animations use CSS and no paid libraries or third-party assets.
 
 The automated Playwright phone tests cover the compact view, board placement, saving/reloading, real match → pop → fall transitions, and reduced motion. Actual device testing is still recommended to confirm comfort and animation timing for Mom.
+
+## Finger-follow swipe controls (mobile and mouse)
+
+Swap puzzles now support **press → drag → release**:
+
+- Touch a fruit/candy/bubble and slide it toward an adjacent piece. The selected piece visibly lifts and follows the finger. Its neighbor highlights as the valid drop target.
+- Release to commit the swap, then watch the existing match, pop, gravity and combo sequence. The board is **not** changed while the finger is down.
+- Short movements, ambiguous diagonals, canceled touches and off-board drags snap back without consuming a move.
+- If the swap makes no match, it is rejected without consuming a move.
+- Tap-to-select then tap a neighboring piece still works, as does desktop mouse dragging.
+- Large 6×6 puzzle pieces, high contrast, saved progress and optional match animations are unchanged.
+- The controls require no network requests, external services or paid libraries.
+
+Tests cover direction recognition and edge safety, plus a **real simulated touchscreen swipe upward** in Chromium that verifies the source follows the finger, highlights the neighbor, and spends precisely one move only after release. Cancel and simple-tap fallback are also covered.
