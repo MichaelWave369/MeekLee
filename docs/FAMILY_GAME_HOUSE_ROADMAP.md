@@ -47,7 +47,7 @@ Private live family Chess sessions are still future work and require separately 
 
 ## Next: more Solitaire varieties
 
-After draw-one and draw-three Klondike: **Pyramid**, **TriPeaks**, **Spider (one suit first)**, and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
+After draw-one/draw-three Klondike and Pyramid, next: **TriPeaks**, **Spider (one suit first)**, and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
 ## Next: new worlds and more garden life
 
