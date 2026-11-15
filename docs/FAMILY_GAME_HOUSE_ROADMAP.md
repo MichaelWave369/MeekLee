@@ -13,6 +13,14 @@ MeekLee began as a gift for Mom. Keep the game **free, cozy, accessible, offline
 
 The key `meeklee-adventures-save-v1` and original four world engines remain unchanged. All new games store separate slots under `saved.cards`. The notebook has an independent local storage key. Completing a picture writes its award in the same state update as the completed puzzle.
 
+## Solitaire Garden: Pyramid Solitaire
+
+**Now playable and offline:** Pyramid joins Klondike as an independent Solitaire game. It uses a standard 52-card deck, 28 face-up pyramid cards in seven rows and 24 stock cards. Only cards not covered by the two directly below them can be removed. Two exposed cards totaling 13 form a pair; an exposed king can be removed alone. The top waste card is playable, and two stock recycles allow three relaxed passes. Win by clearing all 28 pyramid cards.
+
+Provide large alternative buttons for exposed cards on small screens, hints, move undo, clear win/stuck messaging, new-deal confirmation, and a separate validated `cards.pyramid` save. Do not migrate or overwrite existing `cards.solitaire` Klondike games, board games, garden pets or high-level puzzle worlds.
+
+**Still next:** TriPeaks, Spider (one suit first), and FreeCell, each with separate save slots and working gameplay.
+
 ## Family Game House: Five Dice with Pip
 
 **Now playable and offline:** Mom's favorite five-dice scorecard game joins Card Corner under MeekLee's original name **Five Dice with Pip**, inspired by the classic Yahtzee-style rules. Five tappable dice, up to three rolls, held-dice indicators and roll persistence, 13 real score categories, the upper-section 63-point threshold/35-point bonus, multiple five-of-a-kind 100-point bonuses, forced upper placement and Joker rules are supported. Pip plays locally with a lightweight heuristic opponent, and solo mode is available. No internet, timer, payment or sign-up required.
@@ -39,7 +47,7 @@ Private live family Chess sessions are still future work and require separately 
 
 ## Next: more Solitaire varieties
 
-After draw-one and draw-three Klondike: **Pyramid**, **TriPeaks**, **Spider (one suit first)**, and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
+After draw-one/draw-three Klondike and Pyramid, next: **TriPeaks**, **Spider (one suit first)**, and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
 ## Next: new worlds and more garden life
 

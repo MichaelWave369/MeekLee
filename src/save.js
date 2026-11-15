@@ -13,6 +13,7 @@ import {validCheckers} from "./checkers.js";
 import {validBackgammon} from "./backgammon.js";
 import {validChess} from "./chess.js";
 import {validFiveDice} from "./five-dice.js";
+import {validPyramid} from "./pyramid.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -104,7 +105,8 @@ export function createSaveState(raw = null, preferEasy = false) {
       checkers: validCheckers(previous.cards?.checkers) ? previous.cards.checkers : null,
       backgammon: validBackgammon(previous.cards?.backgammon) ? previous.cards.backgammon : null,
       chess: validChess(previous.cards?.chess) ? previous.cards.chess : null,
-      dice: validFiveDice(previous.cards?.dice) ? previous.cards.dice : null
+      dice: validFiveDice(previous.cards?.dice) ? previous.cards.dice : null,
+      pyramid: validPyramid(previous.cards?.pyramid) ? previous.cards.pyramid : null
     }
   };
 }

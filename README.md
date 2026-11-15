@@ -6,6 +6,14 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🔺 Solitaire Garden · Pyramid Solitaire
+
+**Now playable offline:** Pyramid Solitaire joins Klondike in Mom's Card Corner. All 28 pyramid cards start face-up in seven rows. Remove **two exposed cards totaling 13**, or remove an **exposed king** by itself. The top waste card can pair with another available card; covered pyramid cards cannot be played until both cards directly beneath them are removed. Clear all 28 pyramid cards to win. The 24-card draw pile is draw-one, with **two recycles** for a relaxed total of three passes through the stock.
+
+On phones, open **☰ Menu → 🃏 Cards → Pyramid Solitaire**. A scrollable pyramid sits alongside **large accessible action buttons for all exposed cards**, so small card taps aren't required. Hint, undo, new-deal confirmation and automatic local save/resume are supported. All cards, rules and styling use free original MeekLee assets.
+
+Pyramid uses a separately validated `cards.pyramid` save slot. Klondike's existing `cards.solitaire` data, all prior games, Harvest Valley (including high-level saves), garden, pets and other progress are preserved. No accounts, timer, payments or external services.
+
 ## 🎲 Family Game House · Five Dice with Pip
 
 **Now playable:** An original, free five-dice game with the familiar Yahtzee-style 13-row scorecard. Choose **Mom vs. Pip** (friendly offline computer opponent) or **Mom solo** before a fresh game. Roll five dice up to three times each turn, tap to hold/release individual dice, then choose one available scorecard category. The score preview is shown before committing; choosing a row uses it forever, even when it scores zero.
