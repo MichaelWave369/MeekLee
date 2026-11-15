@@ -72,7 +72,7 @@ h1 span { color: #e18486; }
 .board-wrap { display: flex; justify-content: center; padding: 15px; border-radius: 20px; background: linear-gradient(160deg, #edf5dd, #d4ebd6); border: 2px solid #d7e9d2; }
 .game-board {
   display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: clamp(2px, .55vw, 6px);
-  width: min(100%, 520px); aspect-ratio: 1; touch-action: pan-y; user-select: none;
+  width: min(100%, 520px); aspect-ratio: 1; touch-action: none; user-select: none;
 }
 .game-board.floaty { background: #d8f0fa; border-radius: 10px; }
 .tile {
