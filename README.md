@@ -6,6 +6,12 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## ♔ Board Game Nook · Chess with Pip
+
+**Now playable:** Complete offline Chess against Pip, with both sides' legal moves, checks, checkmates, stalemates, safe castling, en passant, four promotion choices and casual draw rules. Select Pip's Gentle or Confident level, use large touch-friendly squares, Hint, Undo Turn and New Game confirmation. Save/resume is independent under `cards.chess`, without changing Mom's garden or any other game. The heuristic bot is not tournament strength.
+
+On a phone: **☰ Menu → 🃏 Cards → Board Game Nook → Chess**. Works offline after caching, with no payment, timer or account.
+
 ## 🎲 Board Game Nook · Backgammon with Pip
 
 **Now playable:** a free, offline, no-pressure **Backgammon** match against Pip, with 15 checkers per side and a friendly first-to-five-point score. The 24-point board, opening roll, dice, compulsory maximum number of moves, doubles, blocked points, hits, bar entries, bearing off and single/gammon/backgammon wins use real rules. A friendly doubling cube is included with no financial stakes. The casual family scoring does not claim tournament mode or Crawford/Jacoby conventions.
@@ -20,7 +26,7 @@ Games are saved separately under `cards.backgammon`; existing puzzle worlds, gar
 
 On a phone, open **☰ Menu → 🃏 Cards → Checkers with Pip** in the new Board Game Nook section. Tap a red piece and then a glowing destination. If a jump is available, it must be taken. Pip plays his turn automatically. Every match uses its own `cards.checkers` save, so Harvest Valley, Mom's garden, other puzzle worlds, and the rest of Card Corner are untouched.
 
-**Chess and Backgammon are labeled as future projects**, not playable buttons. The [Family Game House roadmap](docs/FAMILY_GAME_HOUSE_ROADMAP.md) tracks the next stage.
+**Chess and Backgammon are now playable offline**, alongside Checkers. The [Family Game House roadmap](docs/FAMILY_GAME_HOUSE_ROADMAP.md) tracks the next stage.
 
 ## 🌼 Family Game House · More ways to play
 
@@ -32,7 +38,7 @@ The **Picture Puzzle Porch** has three original illustrated scenes (Harvest Vall
 
 The **Family Porch** is an intentionally *private notebook* for game suggestions, recipes and stories saved on the current phone. You can explicitly share a note through the phone's share sheet or clipboard, but there is no public posting, automatic synchronization, or account requirement. Public game requests can use the GitHub issue template with a free GitHub account.
 
-**Next, not yet playable:** a real Checkers/Chess/Backgammon Board Game Nook, additional Solitaire variants, and more genuinely distinct puzzle worlds. A moderated, consent-based family recipe/story community is a separate future project, not something to release without privacy protections.
+**Next, not yet playable:** additional Solitaire variants, more genuinely distinct puzzle worlds and new garden life. A moderated, consent-based family recipe/story community is a separate future project, not something to release without privacy protections.
 
 See [Family Game House roadmap](docs/FAMILY_GAME_HOUSE_ROADMAP.md) for the staged plan and safe migration/test expectations.
 
