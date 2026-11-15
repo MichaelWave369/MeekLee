@@ -251,3 +251,16 @@
     grid-template-columns:1fr;
   }
 }
+
+.family-watching-note{
+  background:#f6f8ea;border:2px solid #c8dbb9;border-radius:12px;
+  padding:12px;color:#526d53;margin:12px 0;
+}
+.family-watching-note p{margin:2px 0 11px;font-size:.92rem;font-weight:850;}
+.family-watching-note .family-primary-button{width:100%;}
+.family-seat-waiting{display:flex;flex-wrap:wrap;align-items:center;gap:9px;}
+.family-seat-waiting strong{font-size:.87rem;flex:1;}
+.family-seat-waiting button{
+  min-height:44px;border-radius:11px;background:#fff8e9;color:#5b644c;
+  border:2px solid #a6b8a1;padding:8px;font:inherit;font-weight:900;
+}
