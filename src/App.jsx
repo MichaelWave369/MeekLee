@@ -41,6 +41,10 @@ export default function App() {
   const [saved, setSaved] = useState(initialize);
   const [selected, setSelected] = useState(null);
   const [hint, setHint] = useState([]);
+  const [animation, setAnimation] = useState(null);
+  const busyRef = useRef(false);
+  const [showSettings, setShowSettings] = useState(() =>
+    typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const [message, setMessage] = useState("Every level is free, forever.");
   const [showWorlds, setShowWorlds] = useState(() => typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const pointer = useRef(null);
@@ -52,6 +56,10 @@ export default function App() {
   const game = games[mode];
   const size = game.size ?? SIZE;
   const rules = MODES[mode];
+  const busy = Boolean(animation);
+  const stage = animation?.trace[animation.index] ?? null;
+  const shownBoard = stage?.board ?? game.board;
+  const movements = new Map((stage?.movements ?? []).map(move => [move.to, move]));
   const percent = Math.min(100, Math.round(game.cleared * 100 / game.target));
   const instruction = rules.mechanic === "tap" ?
     "Tap a group of 2 or more matching critters." :
@@ -65,8 +73,25 @@ export default function App() {
 
   function clearSelection() { setSelected(null); setHint([]); }
 
+  function commitTurn(result, turnMode = mode, turnGameKey = gameKey, turnProgressKey = progressKey) {
+    setSaved(previous => {
+      const progress = { ...previous[turnProgressKey] };
+      if (result.game.won) progress[turnMode] = Math.max(progress[turnMode], result.game.level + 1);
+      return {
+        ...previous,
+        [turnProgressKey]: progress,
+        [turnGameKey]: { ...previous[turnGameKey], [turnMode]: result.game }
+      };
+    });
+    const cascades = result.cascades || 0;
+    setMessage(result.game.won ? "Beautifully done! A new adventure is waiting." :
+      cascades >= 3 ? "Amazing! " + cascades + " incredible combos!" :
+      cascades > 1 ? "Wonderful! " + cascades + " combos in a row!" :
+      "Lovely! " + result.cleared + " pieces collected.");
+  }
+
   function takeTurn(first, second) {
-    if (game.won) return;
+    if (game.won || busyRef.current) return;
     const result = playTurn(game, first, second);
     clearSelection();
     if (!result.valid) {
@@ -75,16 +100,36 @@ export default function App() {
         "Try swapping pieces to make a row of three!");
       return;
     }
-    const progress = { ...saved[progressKey] };
-    if (result.game.won) progress[mode] = Math.max(progress[mode], game.level + 1);
-    setSaved({ ...saved, [progressKey]: progress, [gameKey]: { ...games, [mode]: result.game } });
-    setMessage(result.game.won ? "Level complete! Another adventure awaits." :
-      result.cascades > 1 ? "Wonderful cascade! ✨" :
-        "Lovely! " + result.cleared + " pieces collected.");
+    if (settings.motion && result.trace?.length) {
+      busyRef.current = true;
+      setAnimation({ trace: result.trace, index: 0, result, turnMode: mode, turnGameKey: gameKey, turnProgressKey: progressKey });
+    } else {
+      commitTurn(result);
+    }
   }
 
+  // Display actual intermediate boards. Input is locked during match animations.
+  // Each stage has one timer with effect cleanup.
+  useEffect(() => {
+    if (!animation) return;
+    const frame = animation.trace[animation.index];
+    const delay = frame.type === "swap" ? 200 :
+      frame.type === "pop" ? (frame.combo >= 2 ? 450 : 320) :
+      frame.type === "fall" ? 450 : 260;
+    const timer = window.setTimeout(() => {
+      if (animation.index + 1 < animation.trace.length) {
+        setAnimation({ ...animation, index: animation.index + 1 });
+      } else {
+        commitTurn(animation.result, animation.turnMode, animation.turnGameKey, animation.turnProgressKey);
+        busyRef.current = false;
+        setAnimation(null);
+      }
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [animation]);
+
   function chooseTile(index) {
-    if (game.won) return;
+    if (game.won || busyRef.current) return;
     if (rules.mechanic === "tap") { takeTurn(index); return; }
     if (selected === null) {
       setSelected(index);
@@ -102,7 +147,7 @@ export default function App() {
   }
 
   function changeWorld(next) {
-    if (!(next in MODES)) return;
+    if (!(next in MODES) || busyRef.current) return;
     clearSelection();
     setSaved({ ...saved, mode: next });
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
@@ -110,6 +155,7 @@ export default function App() {
   }
 
   function shuffle() {
+    if (busyRef.current || game.won) return;
     const rng = rngFrom(game.seed, game.rngState);
     const board = makeBoard(rng, rules.mechanic, size);
     setSaved({
@@ -122,7 +168,7 @@ export default function App() {
   }
 
   function nextLevel() {
-    if (!game.won) return;
+    if (!game.won || busyRef.current) return;
     const next = game.level + 1;
     if (!Number.isSafeInteger(next)) {
       setMessage("You've reached the computer's maximum level number!");
@@ -138,7 +184,7 @@ export default function App() {
   }
 
   function onPointerDown(event, index) {
-    if (rules.mechanic !== "swap" || game.won) return;
+    if (rules.mechanic !== "swap" || game.won || busyRef.current) return;
     if (event.pointerType === "mouse") return;
     pointer.current = { index, x: event.clientX, y: event.clientY, id: event.pointerId };
     try { event.currentTarget.setPointerCapture(event.pointerId); } catch { /* Optional on older browsers. */ }
@@ -147,7 +193,7 @@ export default function App() {
   function onPointerUp(event) {
     const begin = pointer.current;
     pointer.current = null;
-    if (!begin || begin.id !== event.pointerId) return;
+    if (!begin || begin.id !== event.pointerId || busyRef.current) return;
     const dx = event.clientX - begin.x, dy = event.clientY - begin.y;
     if (Math.max(Math.abs(dx), Math.abs(dy)) < 25) return;
     const delta = Math.abs(dx) > Math.abs(dy) ?
@@ -170,7 +216,19 @@ export default function App() {
         </div>
       </header>
       <main className="main-shell">
-        <section className="comfort-bar" aria-label="Visibility settings">
+        <nav className="mobile-quickbar" aria-label="Game menu">
+          <button type="button" className="quick-toggle" disabled={busy}
+            aria-expanded={showWorlds} aria-controls="meeklee-worlds"
+            onClick={() => { setShowWorlds(!showWorlds); setShowSettings(false); }}>
+            🌍 Worlds
+          </button>
+          <button type="button" className="quick-toggle" disabled={busy}
+            aria-expanded={showSettings} aria-controls="meeklee-visibility"
+            onClick={() => { setShowSettings(!showSettings); setShowWorlds(false); }}>
+            🔎 Display
+          </button>
+        </nav>
+        <section id="meeklee-visibility" className={"comfort-bar" + (showSettings ? " open" : "")} aria-label="Visibility and animation settings">
           <div className="comfort-heading">
             <strong>Made easy to see</strong>
             <span>Choose what looks best to you.</span>
@@ -193,7 +251,7 @@ export default function App() {
             </button>
           </div>
         </section>
-        <section className="world-section" aria-labelledby="world-heading">
+        <section id="meeklee-worlds" className={"world-section" + (showWorlds ? " open" : "")} aria-labelledby="world-heading">
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
             <span>4 happy worlds</span>
