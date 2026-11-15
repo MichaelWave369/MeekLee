@@ -114,7 +114,7 @@ test("best stars track efficient play and old browser saves keep original boards
   const game=makeLevel("sweets",9,EASY_SIZE);
   game.won=true;game.moves=6;
   assert.equal(worldStars(game),3);
-  game.moves=10;assert.equal(worldStars(game),2);
+  game.moves=Math.ceil(game.target * .42);assert.equal(worldStars(game),2);
   game.moves=100;assert.equal(worldStars(game),1);
   const legacy=makeLevel("rescue",26,SIZE);legacy.score=777;legacy.cleared=13;
   const previous={mode:"rescue",games:{rescue:legacy},progress:{rescue:26}};
