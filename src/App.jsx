@@ -326,7 +326,7 @@ export default function App() {
                     (stage.indices[0] === index ? stage.indices[1] : stage.indices[0]) : null;
                   const from = move ? move.from : swappedFrom;
                   const tileStyle = from == null ? undefined : {
-                    "--from-cols": (from % size) - (index % size),
+                    "--from-cols": (((from % size) + size) % size) - (index % size),
                     "--from-rows": Math.floor(from / size) - Math.floor(index / size)
                   };
                   const matching = stage?.type === "pop" && stage.matched.includes(index);
