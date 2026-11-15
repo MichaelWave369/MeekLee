@@ -789,3 +789,8 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .app-root .world-power { font-size:.8rem; padding:5px 6px; }
   .app-root .world-power strong {padding:2px 4px;}
 }
+
+.world-powers-tip {margin:8px 0 2px;text-align:center;font-size:.91rem;
+ font-weight:900;color:#3e6850;letter-spacing:.015em;}
+.world-powers-wrap .world-powers {margin-top:5px;}
+@media(max-width:600px){.app-root .world-powers-tip {font-size:.82rem;margin:5px 0 1px;}}
