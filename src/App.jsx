@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
+import { dragPreview } from "./drag.js";
 
 const WORLDS = [
   { id: "harvest", icon: "🌻", name: "Harvest Valley", desc: "Swap crops to grow a cheerful garden." },
@@ -48,6 +49,7 @@ export default function App() {
   const [message, setMessage] = useState("Every level is free, forever.");
   const [showWorlds, setShowWorlds] = useState(() => typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const pointer = useRef(null);
+  const [drag, setDrag] = useState(null);
   const suppressClickUntil = useRef(0);
   const { mode, settings } = saved;
   const gameKey = settings.easy ? "easyGames" : "games";
@@ -188,25 +190,72 @@ export default function App() {
     setMessage("A brand-new adventure!");
   }
 
+  // Keep the piece visibly attached to the finger. The puzzle doesn't commit
+  // until release, so a partial drag or cancelled touch cannot consume a turn.
   function onPointerDown(event, index) {
-    if (rules.mechanic !== "swap" || game.won || busyRef.current) return;
-    if (event.pointerType === "mouse") return;
-    pointer.current = { index, x: event.clientX, y: event.clientY, id: event.pointerId };
-    try { event.currentTarget.setPointerCapture(event.pointerId); } catch { /* Optional on older browsers. */ }
+    if (rules.mechanic !== "swap" || game.won || busyRef.current || pointer.current) return;
+    if (event.isPrimary === false || (event.pointerType === "mouse" && event.button !== 0)) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const board = event.currentTarget.parentElement;
+    const styles = window.getComputedStyle(board);
+    const gapX = Number.parseFloat(styles.columnGap) || 0;
+    const gapY = Number.parseFloat(styles.rowGap) || 0;
+    pointer.current = {
+      index, id: event.pointerId,
+      x: event.clientX, y: event.clientY,
+      cellWidth: rect.width + gapX, cellHeight: rect.height + gapY,
+      moved: false
+    };
+    try { event.currentTarget.setPointerCapture(event.pointerId); }
+    catch { /* Event remains usable on browsers without capture. */ }
+  }
+
+  function onPointerMove(event) {
+    const origin = pointer.current;
+    if (!origin || origin.id !== event.pointerId || busyRef.current) return;
+    const preview = dragPreview({
+      index: origin.index, size,
+      dx: event.clientX - origin.x, dy: event.clientY - origin.y,
+      cellWidth: origin.cellWidth, cellHeight: origin.cellHeight
+    });
+    if (preview.active) {
+      origin.moved = true;
+      setDrag({ index: origin.index, ...preview });
+    } else if (origin.moved) {
+      setDrag(null);
+    }
   }
 
   function onPointerUp(event) {
-    const begin = pointer.current;
+    const origin = pointer.current;
+    if (!origin || origin.id !== event.pointerId) return;
     pointer.current = null;
-    if (!begin || begin.id !== event.pointerId || busyRef.current) return;
-    const dx = event.clientX - begin.x, dy = event.clientY - begin.y;
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < 25) return;
-    const delta = Math.abs(dx) > Math.abs(dy) ?
-      (dx > 0 ? 1 : -1) : (dy > 0 ? size : -size);
-    const to = begin.index + delta;
-    suppressClickUntil.current = Date.now() + 450;
-    if (adjacent(begin.index, to, size)) takeTurn(begin.index, to);
+    const preview = dragPreview({
+      index: origin.index, size,
+      dx: event.clientX - origin.x, dy: event.clientY - origin.y,
+      cellWidth: origin.cellWidth, cellHeight: origin.cellHeight
+    });
+    const wasDragging = origin.moved || preview.active;
+    setDrag(null);
+    if (!wasDragging) return; // A stationary touch remains a normal tap-to-select.
+
+    // Browsers can synthesize a click after pointerup; do not double-submit.
+    suppressClickUntil.current = Date.now() + 650;
+    clearSelection();
+    if (preview.ready && preview.target !== null && !busyRef.current) {
+      takeTurn(origin.index, preview.target);
+    } else {
+      setMessage("Slide a piece onto a neighbor, then let go.");
+    }
   }
+
+  function onPointerCancel(event) {
+    if (pointer.current?.id !== event.pointerId) return;
+    pointer.current = null;
+    setDrag(null);
+    suppressClickUntil.current = Date.now() + 650;
+  }
+
 
   return (
     <div className={"app-root" + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "")}>
@@ -319,7 +368,7 @@ export default function App() {
                 style={{ "--grid-size": size }}
                 role="group" aria-label={rules.name + " puzzle board, " + size + " by " + size}
                 aria-busy={busy}
-                onPointerUp={onPointerUp} onPointerCancel={() => { pointer.current = null; }}>
+                >
                 {shownBoard.map((piece, index) => {
                   const move = movements.get(index);
                   const swappedFrom = stage?.type === "swap" && stage.indices?.includes(index) ?
@@ -330,6 +379,12 @@ export default function App() {
                     "--from-rows": Math.floor(from / size) - Math.floor(index / size)
                   };
                   const matching = stage?.type === "pop" && stage.matched.includes(index);
+                  const lifted = drag?.index === index && !busy;
+                  const dropTarget = drag?.target === index && drag?.ready && !busy;
+                  const fingerStyle = lifted ? {
+                    transform: "translate3d(" + drag.x + "px," + drag.y + "px,0) scale(1.075)",
+                    transition: "none"
+                  } : undefined;
                   return (
                     <button type="button" key={(animation ? animation.index + "-" : "idle-") + index}
                       disabled={busy}
@@ -338,12 +393,18 @@ export default function App() {
                         (matching ? "fx-pop " : "") +
                         (stage?.type === "fall" ? "fx-fall " : "") +
                         (swappedFrom !== null ? "fx-swap " : "") +
-                        (move?.fresh ? "fx-new " : "")}
-                      style={tileStyle}
+                        (move?.fresh ? "fx-new " : "") +
+                        (lifted ? "finger-dragging " : "") +
+                        (dropTarget ? "finger-drop-target " : "")}
+                      style={lifted ? { ...tileStyle, ...fingerStyle } : tileStyle}
                       aria-label={rules.pieces[piece] + ", row " + (Math.floor(index / size) + 1) +
                         ", column " + (index % size + 1)}
                       aria-pressed={!busy && selected === index}
                       onPointerDown={event => onPointerDown(event, index)}
+                      onPointerMove={onPointerMove}
+                      onPointerUp={onPointerUp}
+                      onPointerCancel={onPointerCancel}
+                      onLostPointerCapture={onPointerCancel}
                       onClick={() => {
                         if (Date.now() >= suppressClickUntil.current) chooseTile(index);
                       }}>
