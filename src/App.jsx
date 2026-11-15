@@ -320,7 +320,7 @@ export default function App() {
           aria-expanded={menuOpen} aria-controls="meeklee-game-menu"
           onClick={() => {
             // A sticky bar can be tapped mid-page. Bring its dropdown into view.
-            if (!menuOpen && window.scrollY > 0) window.scrollTo({ top: 0, behavior: "instant" });
+            if (!menuOpen && window.scrollY > 0) window.scrollTo({ top: 0, behavior: "auto" });
             setMenuOpen(!menuOpen);
             if (menuOpen) { setShowWorlds(false); setShowSettings(false); }
           }}>
