@@ -32,7 +32,7 @@ function Orb({index,color,size,className=""}) {
   </g>;
 }
 
-export default function BubbleShooter({ game, onChange, onPath, settings }) {
+export default function BubbleShooter({ game, onChange, onPath, onGarden, chapterChestReady, companion, settings }) {
   const svgRef=useRef(null), touchRef=useRef(null), rafRef=useRef(null);
   const {width,height,origin}=bubbleGeometry(game.size);
   const [aim,setAim]=useState({x:origin.x,y:20});
@@ -136,6 +136,9 @@ export default function BubbleShooter({ game, onChange, onPath, settings }) {
         <p>The lagoon is clear! Your marker moved another step along the Adventure Path.</p>
         <div className="victory-stars" aria-label={game.stars + " out of 3 stars"}>{"★".repeat(game.stars || 1)}<span>{"☆".repeat(3-(game.stars||1))}</span></div>
         <div className="victory-results"><span>⭐ {game.score} points</span><span>🎯 {game.moves} shots</span><span>🫧 {game.shotsLeft} balls left</span></div>
+        {chapterChestReady && <button className="victory-chest" type="button" onClick={onGarden}>
+          🎁 Open Your Chapter Treasure Chest!
+        </button>}
         <button className="trail-play" type="button" onClick={onPath}>🐚 See My Adventure Path →</button>
         <p>Every 10 completed levels earns two bonus Pearls for the next chapter.</p>
       </div>
@@ -157,7 +160,11 @@ export default function BubbleShooter({ game, onChange, onPath, settings }) {
 
   return <section className="shooter-panel" aria-label="Bubble Lagoon bubble-shooter game">
     <div className="shooter-topline">
-      <div><p className="eyebrow">🫧 Bubble Lagoon</p><h2>Level {game.level}</h2></div>
+      <div><p className="eyebrow">🫧 Bubble Lagoon</p><h2>Level {game.level}</h2>
+        {companion && <span className={"shooter-companion"+(settings.motion?" companion-moving":"")}
+          title={companion.name} aria-label={companion.name+" is cheering you on"}>
+          <span aria-hidden="true">{companion.icon}</span>
+        </span>}</div>
       <button type="button" className="map-shortcut" disabled={blocked} onClick={onPath}>🗺️ Path</button>
       <div className="score-chip">⭐ {game.score}</div>
     </div>
