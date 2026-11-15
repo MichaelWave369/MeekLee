@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
+import LevelTrail, { pageForLevel } from "./LevelTrail.jsx";
 import { motionCssVariables, stageDuration } from "./motion.js";
 
 const WORLDS = [
@@ -44,6 +45,8 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [hint, setHint] = useState([]);
   const [animation, setAnimation] = useState(null);
+  const [view, setView] = useState("play");
+  const [trailPage, setTrailPage] = useState(0);
   const busyRef = useRef(false);
   const boardRef = useRef(null);
   const [showSettings, setShowSettings] = useState(() =>
@@ -172,6 +175,9 @@ export default function App() {
     setSaved({ ...saved, mode: next });
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
+    if (view === "trail") {
+      setTrailPage(pageForLevel(saved[progressKey][next]));
+    }
   }
 
   function shuffle() {
@@ -185,6 +191,26 @@ export default function App() {
     });
     clearSelection();
     setMessage("A fresh board, on the house!");
+  }
+
+  function showPath() {
+    if (busyRef.current) return;
+    clearSelection();
+    setTrailPage(pageForLevel(saved[progressKey][mode]));
+    setView("trail");
+  }
+
+  function startTrailLevel(level) {
+    if (busyRef.current || !Number.isSafeInteger(level) || level < 1 ||
+        level > saved[progressKey][mode]) return;
+    setSaved(previous => {
+      const old = previous[gameKey][mode];
+      const replacement = old.level === level && !old.won ? old : makeLevel(mode, level, size);
+      return { ...previous, [gameKey]: { ...previous[gameKey], [mode]: replacement } };
+    });
+    clearSelection();
+    setMessage("Enjoy Level " + level + "!");
+    setView("play");
   }
 
   function nextLevel() {
@@ -358,6 +384,11 @@ export default function App() {
             ))}
           </div>}
         </section>
+        {view === "trail" ? (
+          <LevelTrail mode={mode} page={trailPage} unlocked={saved[progressKey][mode]}
+            current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
+            onBack={() => { setShowWorlds(true); setShowSettings(false); }} />
+        ) : (
         <section className="play-section" aria-labelledby="level-heading">
           <div className="game-panel" style={{ "--world-accent": rules.color }}>
             <div className="game-heading">
@@ -365,6 +396,8 @@ export default function App() {
                 <p className="eyebrow world-label">{rules.name}</p>
                 <h2 id="level-heading">Level {game.level.toLocaleString()}</h2>
               </div>
+              <button type="button" className="map-shortcut" disabled={busy} onClick={showPath}
+                aria-label="Open Adventure Path">🗺️ Path</button>
               <div className="score-chip">
                 ⭐ <strong>{game.score.toLocaleString()}</strong><small>points</small>
               </div>
@@ -379,6 +412,16 @@ export default function App() {
               <span style={{ width: percent + "%" }}/>
             </div>
             <p className="instruction"><span className="desktop-tip">{instruction}</span><span className="mobile-tip">{mobileInstruction}</span></p>
+            {game.won && !busy ? (
+              <div className="trail-victory" role="status">
+                <div className="victory-garden" aria-hidden="true">🌼 🎉 🌷</div>
+                <h3>Level {game.level} Complete!</h3>
+                <p>Beautifully done! Your marker moved one step farther along the Adventure Path.</p>
+                <div className="victory-results"><span>⭐ {game.score.toLocaleString()} points</span><span>🌟 {game.moves} moves</span></div>
+                <button className="trail-play" type="button" onClick={showPath}>🌼 See My Adventure Path →</button>
+                <p className="victory-no-rush">No rush. Your next adventure is ready whenever you are.</p>
+              </div>
+            ) : (
             <div className={"board-wrap" + (busy ? " is-animating" : "")}>
               {stage?.type === "pop" && (
                 <div key={"combo-" + animation.index} className={"combo-toast" + (stage.combo >= 2 ? " big-combo" : "")}
@@ -439,6 +482,7 @@ export default function App() {
                 })}
               </div>
             </div>
+            )}
             <div className="game-bottom">
               <span>🌟 {game.moves} moves played</span>
               <span>♾️ Play at your own pace</span>
@@ -454,15 +498,7 @@ export default function App() {
                 disabled={game.won || busy} onClick={shuffle}>🔀 Free shuffle</button>
             </div>
             <p className="message" aria-live="polite">{message}</p>
-            {game.won && (
-              <div className="win-panel" role="status">
-                <div className="win-emoji">🎉</div>
-                <h3>Beautifully done!</h3>
-                <p>Another little adventure is waiting.</p>
-                <button type="button" className="action primary" disabled={busy}
-                  onClick={nextLevel}>Next level →</button>
-              </div>
-            )}
+
           </div>
           <aside className="side-note">
             <div className="note-flower">💐</div>
@@ -472,6 +508,7 @@ export default function App() {
             <div className="note-quote">“Just one more level!”</div>
           </aside>
         </section>
+        )}
       </main>
       <footer>MeekLee Adventures · Made with love, not microtransactions. ❤️</footer>
     </div>
