@@ -25,7 +25,8 @@ async function openWithGame(browser, game, motion = true) {
       easyGames: { [game.mode]: game },
       easyProgress: { [game.mode]: game.level }
     };
-    window.localStorage.setItem("meeklee-adventures-save-v1", JSON.stringify(save));
+    if (!window.localStorage.getItem("meeklee-adventures-save-v1"))
+      window.localStorage.setItem("meeklee-adventures-save-v1", JSON.stringify(save));
   }, { game, motion });
   await page.goto("./");
   await expect(page.locator(".tile")).toHaveCount(36);
