@@ -76,7 +76,7 @@ export function paradePlay(g,seat,index,color=null) {
   if(card.type==="wild"&&!PARADE_COLORS.some(c=>c.id===color))return {valid:false,game:g};
   const hands=g.hands.map(hand=>[...hand]);
   hands[seat].splice(index,1);
-  const next={...g,hands,discard:[...g.discard,card],
+  const next={...g,hands,deck:[...g.deck],discard:[...g.discard,card],
     activeColor:card.type==="wild"?color:card.color,
     direction:card.type==="reverse"?g.direction*-1:g.direction,
     drawn:false,passes:0,
