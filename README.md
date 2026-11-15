@@ -6,6 +6,14 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🏡 MeekLee's Family Table (online Rook preview + server)
+
+Card Corner now includes an optional **Family Rook Table**: a cozy, accessible room for four relatives to play together, with bots in empty seats, spectators, private invitations, reconnectable seats and text chat. Late spectators can ask to take a bot chair at the next fresh hand.
+
+**Important:** GitHub Pages alone cannot host real-time rooms. Until a separate Cloudflare Durable Object Worker is deployed and its URL configured, this menu option shows a clearly labelled **design preview**, not a live multiplayer room. Offline Rook and every other game work normally.
+
+The full server and testable multiplayer implementation is in [family/README.md](family/README.md), including Free-plan hosting setup, privacy limitations and deployment instructions. No online accounts or subscriptions are required of players; server deployment does require a Cloudflare account. Voice chat is not included in v1.
+
 ## Play online
 
 **GitHub Pages:** https://michaelwave369.github.io/MeekLee/
