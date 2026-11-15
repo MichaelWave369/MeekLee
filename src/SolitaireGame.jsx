@@ -33,8 +33,13 @@ export default function SolitaireGame({game,onChange,onLeave}){
     setNotice("Waste card selected. Tap a column or foundation to place it.");
   }
   function foundation(suit){
-    if(selected)apply(moveSolitaire(game,selected,{zone:"foundation",suit}));
-    else setNotice("First select a card from the waste or tableau.");
+    if(selected){
+      if(selected.zone==="foundation"&&selected.suit===suit){setSelected(null);return;}
+      apply(moveSolitaire(game,selected,{zone:"foundation",suit}));
+    }else if(game.foundations[suit]?.length){
+      setSelected({zone:"foundation",suit});
+      setNotice("Foundation card selected. Tap a tableau column to bring it back.");
+    }else setNotice("Select an Ace, then tap its empty foundation.");
   }
   function newDeal(){
     if(!confirmNew){setConfirmNew(true);setNotice("Tap New Deal again to confirm. Your puzzle levels stay saved.");return;}
@@ -79,7 +84,8 @@ export default function SolitaireGame({game,onChange,onLeave}){
       </div>
       <div className="solitaire-foundations" aria-label="Four suit foundations">
         {STANDARD_SUITS.map(s=>
-          <button key={s.id} type="button" className={"solitaire-foundation"+(s.red?" red":"")}
+          <button key={s.id} type="button" className={"solitaire-foundation"+(s.red?" red":"")+
+            (selected?.zone==="foundation"&&selected.suit===s.id?" selected":"")}
             onClick={()=>foundation(s.id)}
             aria-label={s.name+" foundation with "+game.foundations[s.id].length+" cards"}>
             {game.foundations[s.id].length?
