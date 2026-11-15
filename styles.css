@@ -418,3 +418,32 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .tile.fx-pop, .tile.fx-fall, .tile.fx-swap, .tile.fx-new,
   .combo-toast { animation: none !important; }
 }
+
+
+/* Rotate a phone sideways without switching back to a giant setup dashboard. */
+@media (pointer: coarse) and (max-height: 500px) and (min-width: 601px) {
+  .app-root .hero { padding: 5px 8px 10px; }
+  .app-root .hero .sun, .app-root .hero .brand-mark,
+  .app-root .hero .eyebrow, .app-root .hero .tagline,
+  .app-root .hero .promise, .app-root .hero::before,
+  .app-root .hero::after { display: none; }
+  .app-root .hero h1 { font-size: 1.6rem; margin: 3px 0; }
+  .app-root .main-shell {
+    display: flex; flex-direction: column; max-width: 650px;
+    padding: 5px 9px 20px;
+  }
+  .app-root .mobile-quickbar { order: 0; display: flex; gap: 9px; margin-bottom: 8px; }
+  .app-root .quick-toggle {
+    flex: 1; min-height: 47px; border: 2px solid #52785e;
+    border-radius: 12px; background: #f3f9eb; color: #255139;
+    font-size: 1rem; font-weight: 900;
+  }
+  .app-root .quick-toggle[aria-expanded="true"] { background: #dbf0da; }
+  .app-root .world-section { order: 1; }
+  .app-root .comfort-bar { order: 2; }
+  .app-root .play-section { order: 3; display: block; margin-top: 0; }
+  .app-root .world-section:not(.open), .app-root .comfort-bar:not(.open) { display: none; }
+  .app-root .world-section.open { display: block; margin-bottom: 12px; }
+  .app-root .comfort-bar.open { display: flex; margin-bottom: 12px; }
+  .app-root .world-chooser, .app-root .side-note { display: none; }
+}
