@@ -26,7 +26,7 @@ async function openTriPeaks(browser,width=390,raw=null){
   await expect(page.getByRole("heading",{name:"TriPeaks Solitaire"})).toBeVisible();
   return {context,page};
 }
-const saved=page=>page.evaluate(()=>JSON.parse(localStorage.getItem(KEY)));
+const saved=page=>page.evaluate(()=>JSON.parse(localStorage.getItem("meeklee-adventures-save-v1")));
 test("TriPeaks keeps 28 face-down/exposed cards and 320px device stays usable",async({browser})=>{
   const {context,page}=await openTriPeaks(browser,320,{progress:{harvest:6001},
     collection:{claimed:{"harvest:1":true},companion:"bunny"}});
