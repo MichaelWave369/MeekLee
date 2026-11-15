@@ -10,7 +10,7 @@ import CardCorner from "./CardCorner.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
-  gardenInventory, selectCompanion, toggleDecoration
+  gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
@@ -261,7 +261,7 @@ export default function App() {
     if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
   }
   function saveCardGame(kind,nextGame) {
-    if (!["solitaire","rook","parade"].includes(kind)) return;
+    if (!["solitaire","rook","parade","war","stack","jigsaw"].includes(kind)) return;
     setSaved(previous=>({
       ...previous,cards:{
         ...previous.cards,
@@ -271,7 +271,10 @@ export default function App() {
         rookStats: kind==="rook" ?
           recordRookTransition(previous.cards.rookStats,previous.cards.rook,nextGame):
           previous.cards.rookStats
-      }
+      },
+      collection:kind==="jigsaw"?
+        recordJigsawGardenReward(previous.collection,previous.cards.jigsaw,nextGame):
+        previous.collection
     }));
   }
 
