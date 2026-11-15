@@ -6,6 +6,16 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🕷️ Solitaire Garden · Spider Solitaire (one suit)
+
+**Now playable offline:** The friendly one-suit version of Spider Solitaire joins Klondike, Pyramid and TriPeaks. A real 104-card two-deck game with **10 columns**, the first four having six cards and the remaining six having five, plus **50 stock cards in five groups of ten**. Only one top card starts face up in each column.
+
+Move an unbroken descending same-suit sequence onto a card **one rank higher**, or move it into an empty column. Exposing a hidden card flips it face-up. Complete King-to-Ace sequences of 13 clear automatically; clear eight runs to win. Deal another ten stock cards only when every column contains at least one face-up card. No automatic shuffle or unfair paid hint mechanic.
+
+Open on phones using **☰ Menu → 🃏 Cards → Spider Solitaire**. A horizontally scrollable tabletop sits alongside **large run-selection buttons and separate valid destination buttons**, so Mom never has to drag tiny cards. Included are hints, last-20-move undo, stuck-game messaging and confirm-to-restart.
+
+Spider has a validated, completely independent `cards.spider` local save. Klondike, Pyramid, TriPeaks, Five Dice, all other family games, high-level puzzle worlds, garden decorations and pets stay unchanged. No payments, internet account, subscription, ads or external graphics.
+
 ## ⛰️ Solitaire Garden · TriPeaks Solitaire
 
 **Now playable:** TriPeaks joins Klondike and Pyramid in Mom's free, offline Solitaire Garden. A standard 52-card deck starts with **28 overlapping tableau cards across three peaks**, **23 stock cards**, and **1 starting waste card**. Initially only the 10 bottom cards are face-up. Choose an exposed card **one rank above or below the top waste card**, irrespective of suit. Ace and King connect in this cozy variant. Each chosen card becomes the next waste card; uncover both supporting cards to flip the one above. Draw another stock card whenever you cannot or choose not to build a sequence. Clear all 28 cards to win, with a streak score for consecutive removals.

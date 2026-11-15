@@ -13,6 +13,12 @@ MeekLee began as a gift for Mom. Keep the game **free, cozy, accessible, offline
 
 The key `meeklee-adventures-save-v1` and original four world engines remain unchanged. All new games store separate slots under `saved.cards`. The notebook has an independent local storage key. Completing a picture writes its award in the same state update as the completed puzzle.
 
+## Solitaire Garden: Spider Solitaire (one suit)
+
+**Now playable and offline:** 104 distinct card identities across eight identical spade suits, dealt into 10 columns (six cards in each of the first four, five in each remaining column), with the rest as five ten-card stock deals. One top card starts face-up per column. Move descending contiguous runs as a group onto a card one rank higher or into an empty column, reveal concealed cards as exposed, and automatically clear complete 13-card King-to-Ace runs. Win after eight complete runs clear. Stock deals are legal only with a card in every column; no stock recycle.
+
+On phones, provide a horizontally scrollable visual board plus accessible, large run-selection and destination buttons. Add hints, last-20-move undo, blocked-game notice, restart confirmation and isolated validated `cards.spider` save. Test eight-run completion, legal sequences, stock gating, 320px layout, and no regressions for existing games or garden.
+
 ## Solitaire Garden: TriPeaks Solitaire
 
 **Now playable and offline:** TriPeaks adds the familiar three-peak overlap game with 28 tableau cards, a 23-card stock and an initial waste card. Only initially exposed base cards may be played; higher cards turn face-up after both directly covering cards are removed. Take a card one rank above or below the top waste, regardless of suit, with Ace/King wrap enabled for relaxed family play. Removed cards become the new waste card and build a streak score; drawing from stock resets the streak. There is **no stock recycle** in TriPeaks. Win by clearing all 28 tableau cards.
@@ -53,7 +59,7 @@ Private live family Chess sessions are still future work and require separately 
 
 ## Next: more Solitaire varieties
 
-After draw-one/draw-three Klondike, Pyramid and TriPeaks, next: **Spider (one suit first)** and **FreeCell**. Give each type its own independent save and legible phone layout, with optional drag or tap.
+After draw-one/draw-three Klondike, Pyramid, TriPeaks and one-suit Spider, next: **FreeCell** (then optional two/four-suit Spider difficulties). Give each type its own independent save and legible phone layout, with optional drag or tap.
 
 ## Next: new worlds and more garden life
 
