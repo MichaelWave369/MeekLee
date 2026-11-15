@@ -2,6 +2,9 @@ import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel } from "./core.js";
 import { motionSpeed } from "./motion.js";
 import { makeShooterLevel, validShooter, normalizeShooter } from "./shooter.js";
 import { normalizeCollection } from "./collection.js";
+import {validSolitaire} from "./solitaire.js";
+import {validRook} from "./rook.js";
+import {validColorParade} from "./color-parade.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -80,6 +83,12 @@ export function createSaveState(raw = null, preferEasy = false) {
         { ...previous.easyWorldStars[mode] } : {}])),
     // Global garden collectibles: shared across all worlds and board sizes.
     // The existing local save and original game states are untouched.
-    collection: normalizeCollection(previous.collection)
+    collection: normalizeCollection(previous.collection),
+    // Card Corner uses independent persistent games; older puzzle saves are unchanged.
+    cards: {
+      solitaire: validSolitaire(previous.cards?.solitaire) ? previous.cards.solitaire : null,
+      rook: validRook(previous.cards?.rook) ? previous.cards.rook : null,
+      parade: validColorParade(previous.cards?.parade) ? previous.cards.parade : null
+    }
   };
 }

@@ -196,3 +196,34 @@ The new **🌷 Garden** button lives inside the compact phone menu. A direct but
 The collection is stored in the existing **meeklee-adventures-save-v1** local save, in an isolated \`collection\` object containing claimed chest keys, selected pet, planted decorations, and best bonus-board scores. The migration preserves all original boards, level progress, earned powers and stars. Only a completed milestone can open its chest, and each reward is derived from the world and chapter rather than a paid random prize.
 
 Every garden, bonus game and character uses local React, CSS and emoji symbols. Nothing requires an account or network connection after loading the offline app. All prizes are earned by play. Tests cover ten-level boundaries, old-save migration, no duplicate claims, phone treasure openings, permanent collectibles, bonus board victories and narrow-screen touch targets.
+
+## Mom's Card Corner: three free card games
+
+Tap **☰ Menu → 🃏 Cards** on a phone or **Card Corner** beside the world selector on a desktop. The new hub is independent of the four puzzle worlds and Happy Garden. All three games run locally in the existing offline-first app with automatic saved-game resume, large high-contrast cards and no payments or accounts.
+
+### ♠ Klondike Solitaire
+- Familiar draw-one Klondike: a shuffled 52-card deck, seven tableau columns, four suit foundations and a recyclable stock/waste pile
+- Move face-up sequences by alternating color and descending rank; build each foundation from Ace to King
+- Tap a card, then a target column or foundation to move it, including legal multi-card runs
+- **Hint**, **Auto Home**, **Undo**, and a deliberately confirmed **New Deal**
+- Red hearts/diamonds and black spades/clubs have large numbers and distinct symbols; the seven columns scroll horizontally *inside* the board on narrow phones to avoid shrinking cards below readable size
+
+### 🐦 Four-player Rook-style partnership table
+- **Mom + Pip** versus **Willow + Fern**, three offline computer opponents
+- Implements the **41-card Kentucky Discard-style partnership variant**: four colors with ranks 5–14 plus the Bird, nine cards per player, five-card nest, bidding from 70 in increments of five, trump, following the led color when able, and tricks; first partnership to 300 points
+- The winning bidder picks up the nest, sets five cards aside, and names trump. The Bird is highest trump. The team that wins the last trick scores nest counters
+- Captured counters: 5 = 5, 10 = 10, 14 = 10, Bird = 20. A bidding team that misses the bid loses the bid amount
+- Computer players make their own bids, pick nest cards, choose trump and play only legal cards, based on their own hand and public trick information
+- Rook has many regional variants. This first version is clearly labeled; it does **not** pretend to implement every house rule or the 57-card version. It uses original symbols rather than Hasbro card art, and is not affiliated with Hasbro
+
+### 🌈 Color Parade, an original Uno-style card game
+- Mom competes with three bots to match the top card by **color, number, or action symbol**, or choose a new color with a Wild
+- An original 108-card deck with four cheerful colors and Skip, Reverse, Take Two, and Wild cards
+- Draw a single card or play, then end the turn. First to empty their hand wins a round; scores are accumulated for remaining opponent cards, aiming for 200
+- This is a familiar game *type* with original naming, interface and original card graphics, **not** the UNO brand, printed cards, or official licensed product
+
+### Saving, accessibility and testing
+
+Each card game has an isolated local save under \`cards.solitaire\`, \`cards.rook\`, or \`cards.parade\` in the existing \`meeklee-adventures-save-v1\` record. Existing puzzle levels, powers, garden decorations and bonus matches remain untouched. Games auto-resume on reopening Card Corner. No account or remote service is used for bots.
+
+Automated engine tests cover Klondike's 52 unique cards, legal red/black descending tableau runs, foundations, recycling and undo; Rook's 41-card deal, bidding, kitty, follow-color enforcement, tricks, scoring and many full bot games; and Color Parade's action cards, wild colors, draws, reshuffles and complete multi-bot matches. Phone browser tests cover each game at 390px and 320px, menu navigation, saving/reloading, and readability without horizontal page overflow.
