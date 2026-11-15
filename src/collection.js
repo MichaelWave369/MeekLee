@@ -80,16 +80,36 @@ export function unlockedForMode(saved,mode) {
   const valid=v=>Number.isSafeInteger(v) && v>0 ? v : 1;
   return Math.max(valid(classic),valid(easy));
 }
-export function availableChests(saved) {
+export function isChestClaimable(saved,mode,chapter) {
+  const key=chapterKey(mode,chapter);
+  return Boolean(key && unlockedForMode(saved,mode)>=chapter*10+1 &&
+    !normalizeCollection(saved?.collection).claimed[key]);
+}
+// The total count is exact even when Mom has earned thousands of chapters.
+export function totalAvailableChests(saved) {
+  const claimed=normalizeCollection(saved?.collection).claimed;
+  return CHEST_WORLDS.reduce((total,mode)=>{
+    const earned=Math.floor((unlockedForMode(saved,mode)-1)/10);
+    const used=Object.keys(claimed).reduce((count,key)=>{
+      const [claimedMode,chapterText]=key.split(":");
+      return count+(claimedMode===mode && Number(chapterText)<=earned ? 1 : 0);
+    },0);
+    return total+Math.max(0,earned-used);
+  },0);
+}
+// Page a handful of unopened gifts; never iterate millions of milestones
+// when an imported save has enormous progress. Later chests still exist.
+export function availableChests(saved, limitPerWorld = 12) {
   const claimed=normalizeCollection(saved?.collection).claimed, result=[];
   for (const mode of CHEST_WORLDS) {
-    const chapters=Math.min(200,Math.floor((unlockedForMode(saved,mode)-1)/10));
-    for (let chapter=1;chapter<=chapters;chapter++) {
+    const chapters=Math.floor((unlockedForMode(saved,mode)-1)/10);
+    let emitted=0;
+    for (let chapter=1;chapter<=chapters && emitted<limitPerWorld;chapter++) {
       const reward=chestReward(mode,chapter);
-      if (!claimed[reward.key]) result.push(reward);
+      if (!claimed[reward.key]) {result.push(reward);emitted++;}
     }
   }
-  return result;
+  return result.sort((a,b)=>a.chapter-b.chapter || CHEST_WORLDS.indexOf(a.mode)-CHEST_WORLDS.indexOf(b.mode));
 }
 export function claimChapterChest(saved, mode, chapter) {
   const reward=chestReward(mode,chapter);
