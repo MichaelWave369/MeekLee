@@ -184,7 +184,8 @@ export default function FiveDiceGame({game,onChange,onLeave}){
         onChange={e=>{setNextMode(e.target.value);setConfirmNew(false);}}>
         <option value="pip">Mom vs. Pip</option><option value="solo">Mom plays solo</option>
       </select>
-      <button type="button" className={confirmNew?"confirm-new":""} onClick={restart}>
+      <button type="button" className={confirmNew?"confirm-new":""} onClick={restart}
+        aria-label={confirmNew?"Confirm New Game":"New Game"}>
         {confirmNew?"✓ Confirm New Game":"↻ New Game"}
       </button>
       <small>{nextMode!==game.mode?"Player choice applies to your next game.":""}</small>
