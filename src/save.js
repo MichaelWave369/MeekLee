@@ -9,6 +9,7 @@ import {validColorParade} from "./color-parade.js";
 import {validWar} from "./war.js";
 import {validStack} from "./stack-race.js";
 import {validJigsaw} from "./jigsaw.js";
+import {validCheckers} from "./checkers.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -96,7 +97,8 @@ export function createSaveState(raw = null, preferEasy = false) {
       parade: validColorParade(previous.cards?.parade) ? previous.cards.parade : null,
       war: validWar(previous.cards?.war) ? previous.cards.war : null,
       stack: validStack(previous.cards?.stack) ? previous.cards.stack : null,
-      jigsaw: validJigsaw(previous.cards?.jigsaw) ? previous.cards.jigsaw : null
+      jigsaw: validJigsaw(previous.cards?.jigsaw) ? previous.cards.jigsaw : null,
+      checkers: validCheckers(previous.cards?.checkers) ? previous.cards.checkers : null
     }
   };
 }
