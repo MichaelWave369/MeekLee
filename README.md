@@ -6,13 +6,13 @@ MeekLee Adventures is a free, original, browser-based puzzle game inspired by th
 
 ## Play
 
-Open \`index.html\` using a local HTTP server or visit the GitHub Pages deployment once enabled. The simplest local option with Python:
+Open `index.html` using a local HTTP server or visit the GitHub Pages deployment once enabled. The simplest local option with Python:
 
-\`\`\`bash
+```bash
 python -m http.server 8000
-\`\`\`
+```
 
-Then visit \`http://localhost:8000\`. Opening \`index.html\` as a \`file://\` URL directly will not load ES modules reliably.
+Then visit `http://localhost:8000`. Opening `index.html` as a `file://` URL directly will not load ES modules reliably.
 
 ### Four little worlds
 
@@ -33,7 +33,7 @@ This is an initial playable foundation. It is **not** a mathematical proof that 
 
 ## Privacy and offline play
 
-No third-party analytics, ads, API keys, accounts, or backend. Save data lives locally under \`meeklee-adventures-save-v1\` in your browser, one saved game per world. Installed browsers can cache the app shell with a service worker for offline sessions after the first successful online visit. Clearing site data removes progress, so eventual import/export backup is on the roadmap.
+No third-party analytics, ads, API keys, accounts, or backend. Save data lives locally under `meeklee-adventures-save-v1` in your browser, one saved game per world. Installed browsers can cache the app shell with a service worker for offline sessions after the first successful online visit. Clearing site data removes progress, so eventual import/export backup is on the roadmap.
 
 Typography tries a Google-hosted font but automatically falls back to local fonts when offline; gameplay has no font dependency.
 
@@ -41,9 +41,9 @@ Typography tries a Google-hosted font but automatically falls back to local font
 
 Requires Node 20+ for automated checks. Runtime gameplay has **zero dependencies**.
 
-\`\`\`bash
+```bash
 npm run check
-\`\`\`
+```
 
 Tests cover 800 generated levels across all four worlds, deterministic seeds, valid swaps, group clears, invalid actions, no turn caps, and win progression.
 
