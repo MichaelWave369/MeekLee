@@ -74,8 +74,8 @@ export default function BubbleShooter({ game, onChange, onPath, settings }) {
     const result=rainbowRescue(game);
     if(result.valid){setNotice("Rainbow Burst! Watch those bubbles pop!");setFlying({phase:"pop",result});}
   }
-  function retry(){
-    const result=retryShooter(game);
+  function retry(allowRestart = false){
+    const result=retryShooter(game, allowRestart);
     if(!result.valid||blocked)return;
     setNotice("");
     setAim({x:origin.x,y:20});
@@ -210,6 +210,8 @@ export default function BubbleShooter({ game, onChange, onPath, settings }) {
       <button type="button" disabled={blocked || game.shotsLeft===0} onClick={()=>setAim(prev=>({x:Math.min(width,prev.x+24),y:prev.y}))} aria-label="Aim right">Aim →</button>
     </div>
     {notice && <p className="shooter-notice" role="status">{notice}</p>}
+    {notice.startsWith("No room") && <button type="button" className="shooter-return"
+      onClick={() => retry(true)}>↻ Restart Level (Free)</button>}
     <p className="shooter-footnote">Earn a Pearl with 3 matching bubbles (+3 balls), or a Rainbow with 4+ (burst a cluster). Each level has a shot budget, but retries are always free. No lives or purchases.</p>
   </section>;
 }
