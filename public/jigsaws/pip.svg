@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Happy white bunny Pip with flowers in a storybook garden">
+<defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#c4f3fd"/><stop offset="1" stop-color="#fff7bf"/></linearGradient></defs>
+<rect width="600" height="600" fill="url(#bg)"/><circle cx="482" cy="95" r="62" fill="#ffe38b"/>
+<path d="M0 394Q138 268 288 390T600 360V600H0Z" fill="#b3dca1"/><path d="M0 490Q232 399 600 484V600H0Z" fill="#77b96a"/>
+<g stroke="#fff3da" stroke-width="14" fill="none"><path d="M0 405H600M0 452H600"/><path d="M46 354V489M142 354V485M238 354V492M336 354V490M432 354V489M530 354V485"/></g>
+<ellipse cx="308" cy="492" rx="138" ry="112" fill="#fff5df" stroke="#d6d5c2" stroke-width="7"/>
+<ellipse cx="241" cy="229" rx="41" ry="129" transform="rotate(-19 241 229)" fill="#fffdf5" stroke="#ded7cb" stroke-width="7"/>
+<ellipse cx="369" cy="229" rx="41" ry="129" transform="rotate(19 369 229)" fill="#fffdf5" stroke="#ded7cb" stroke-width="7"/>
+<ellipse cx="243" cy="224" rx="20" ry="88" transform="rotate(-19 243 224)" fill="#f7aec7"/>
+<ellipse cx="369" cy="224" rx="20" ry="88" transform="rotate(19 369 224)" fill="#f7aec7"/>
+<circle cx="305" cy="355" r="130" fill="#fffdf5" stroke="#ded7cb" stroke-width="7"/>
+<ellipse cx="259" cy="349" rx="10" ry="15" fill="#384b43"/><ellipse cx="352" cy="349" rx="10" ry="15" fill="#384b43"/>
+<ellipse cx="239" cy="380" rx="22" ry="13" fill="#f3b9bd" opacity=".7"/><ellipse cx="371" cy="380" rx="22" ry="13" fill="#f3b9bd" opacity=".7"/>
+<path d="M294 381Q305 393 316 381" fill="none" stroke="#7c5c55" stroke-width="6" stroke-linecap="round"/><path d="M305 389V397M305 397Q279 421 264 403M305 397Q332 421 346 403" fill="none" stroke="#7c5c55" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="238" cy="490" rx="35" ry="45" fill="#fff"/><ellipse cx="374" cy="490" rx="35" ry="45" fill="#fff"/>
+<path d="M275 464Q302 487 336 464L347 530H265Z" fill="#76bca2"/><circle cx="303" cy="474" r="10" fill="#e9cf7d"/>
+<g stroke="#589b5c" stroke-width="8" stroke-linecap="round"><path d="M89 600V445M136 600V480M480 600V435M537 600V490"/></g>
+<g fill="#f7b9d1"><circle cx="89" cy="438" r="24"/><circle cx="136" cy="467" r="18"/><circle cx="480" cy="423" r="26"/><circle cx="537" cy="475" r="22"/></g><g fill="#ffe384"><circle cx="89" cy="438" r="11"/><circle cx="136" cy="467" r="8"/><circle cx="480" cy="423" r="12"/><circle cx="537" cy="475" r="10"/></g>
+</svg>
