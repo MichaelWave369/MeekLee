@@ -63,3 +63,21 @@ test("desktop starts in original classic mode and can enable larger pieces", asy
   await expect(page.locator(".tile")).toHaveCount(36);
   await context.close();
 });
+
+
+test("rotated phone still defaults to big tiles and keeps its change-world button", async ({ browser }) => {
+  const context = await browser.newContext({
+    viewport: { width: 844, height: 390 }, isMobile: true,
+    deviceScaleFactor: 2, hasTouch: true
+  });
+  const page = await context.newPage();
+  await page.goto("./");
+  await expect(page.locator(".tile")).toHaveCount(36);
+  await expect(page.getByRole("button", { name: /Big pieces/i })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: /Change puzzle world/i }).click();
+  await expect(page.getByRole("button", { name: /Sugar Mountain/ })).toBeVisible();
+  await page.getByRole("button", { name: /Sugar Mountain/ }).click();
+  await expect(page.getByText("Sugar Mountain", { exact: true }).first()).toBeVisible();
+  await expect(page.locator(".tile")).toHaveCount(36);
+  await context.close();
+});
