@@ -1,0 +1,16 @@
+name = "meeklee-family-table"
+main = "worker.js"
+compatibility_date = "2026-10-15"
+
+# Durable Objects are available on Cloudflare's Workers Free tier.
+# SQLite-backed object persists the private shuffled deck and chat messages.
+[[durable_objects.bindings]]
+name = "FAMILY_ROOMS"
+class_name = "FamilyRoomDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["FamilyRoomDO"]
+
+[observability]
+enabled = true
