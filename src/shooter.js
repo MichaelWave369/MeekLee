@@ -1,5 +1,5 @@
 // Original MeekLee Bubble Lagoon: deterministic hex-grid bubble shooting.
-// No proprietary game assets, paywalls, lives, shot limits or server required.
+// Original mechanics, earned boosts, free retries, and no paywalls or lives.
 import { EASY_SIZE, SIZE, rngFrom, seedFor } from "./core.js";
 
 export const BUBBLE_RADIUS = 20;
@@ -65,7 +65,63 @@ function pickColor(colors, rng) {
   return colors[Math.floor(rng() * colors.length)] ?? 0;
 }
 
-export function makeShooterLevel(level, size = EASY_SIZE) {
+
+export const MAX_EARNED_POWERUPS = 9;
+export function shotBudgetForLevel(level, size = EASY_SIZE, retries = 0) {
+  const filledRows = 3 + ((level - 1) % 3);
+  const target = filledRows * size;
+  // Generous opening budget; three additional shots after each failed attempt.
+  // A ceiling prevents runaway numbers after many retries.
+  return 14 + Math.ceil(target / 2) + Math.min(15, Math.max(0, retries) * 3);
+}
+function clampPower(value) {
+  return Number.isInteger(value) ? Math.max(0, Math.min(MAX_EARNED_POWERUPS, value)) : 0;
+}
+export function shooterStars(game) {
+  if (!game?.won) return 0;
+  if (game.shotsLeft >= Math.ceil(game.maxShots * .45)) return 3;
+  if (game.shotsLeft >= Math.ceil(game.maxShots * .2)) return 2;
+  return 1;
+}
+export function normalizeShooter(game) {
+  // Existing phones already have a shooter save without a shot counter.
+  // Preserve its board, score, moves and seed rather than restarting Mom's level.
+  if (!validShooter(game, game?.size)) return null;
+  const retries = Number.isInteger(game.retries) && game.retries >= 0 ? Math.min(100,game.retries) : 0;
+  const maxShots = Number.isInteger(game.maxShots) && game.maxShots > 0 ?
+    game.maxShots : shotBudgetForLevel(game.level, game.size, retries);
+  const shotsLeft = Number.isInteger(game.shotsLeft) && game.shotsLeft >= 0 ?
+    game.shotsLeft : Math.max(0,maxShots-game.moves);
+  const pearls = clampPower(game.pearls), rainbows = clampPower(game.rainbows);
+  return {
+    ...game, retries, maxShots, shotsLeft, pearls, rainbows,
+    startPearls: clampPower(game.startPearls),
+    startRainbows: clampPower(game.startRainbows),
+    bestMatch: Number.isInteger(game.bestMatch) && game.bestMatch >= 0 ? game.bestMatch : 0,
+    stars: game.won ? (game.stars || shooterStars({...game,maxShots,shotsLeft})) : 0,
+    failed: !game.won && shotsLeft === 0 && pearls === 0 && rainbows === 0
+  };
+}
+export function retryShooter(game, allowRestart = false) {
+  const previous = normalizeShooter(game);
+  if (!previous || previous.won || (!previous.failed && !allowRestart)) return { valid: false, game };
+  const next = makeShooterLevel(previous.level, previous.size, {
+    retries: previous.retries + 1,
+    pearls: previous.startPearls,
+    rainbows: previous.startRainbows
+  });
+  return { valid: true, game: next };
+}
+export function nextShooterLevel(level, size, previous) {
+  const old = previous ? normalizeShooter(previous) : null;
+  const milestone = level > 1 && level % 10 === 1 && old?.won && old.level === level - 1;
+  return makeShooterLevel(level,size,{
+    pearls: (old?.pearls || 0) + (milestone ? 2 : 0),
+    rainbows: old?.rainbows || 0
+  });
+}
+
+export function makeShooterLevel(level, size = EASY_SIZE, options = {}) {
   if (!Number.isSafeInteger(level) || level < 1) throw new Error("Invalid shooter level");
   const { cols, rows } = bubbleGeometry(size);
   const seed = seedFor(size === EASY_SIZE ? "lagoon:easy:shooter" : "lagoon:classic:shooter", level);
@@ -80,10 +136,16 @@ export function makeShooterLevel(level, size = EASY_SIZE) {
   }
   const colors = presentColors(cells);
   const currentColor = pickColor(colors, rng), nextColor = pickColor(colors, rng);
+  const retries = Number.isInteger(options.retries) ? Math.max(0,Math.min(100,options.retries)) : 0;
+  const maxShots = shotBudgetForLevel(level, size, retries);
+  const pearls = clampPower(options.pearls), rainbows = clampPower(options.rainbows);
   return {
     type: "shooter", mode: "bubbles", size, level, seed, rngState: rng.getState(),
     cells, currentColor, nextColor,
-    target: filledRows * cols, cleared: 0, moves: 0, score: 0, won: false
+    target: filledRows * cols, cleared: 0, moves: 0, score: 0, won: false,
+    maxShots, shotsLeft: maxShots, retries, failed: false,
+    pearls, rainbows, startPearls: pearls, startRainbows: rainbows,
+    bestMatch: 0, stars: 0
   };
 }
 export function validShooter(game, size) {
@@ -159,40 +221,71 @@ function resolveClears(cells, size, landing) {
 }
 
 export function fireBubble(game, aimX, aimY) {
-  if (!validShooter(game,game?.size) || game.won) return {valid:false,game};
-  const path = simulateBubblePath(game,aimX,aimY);
+  const current = normalizeShooter(game);
+  if (!current || current.won || current.failed || current.shotsLeft <= 0)
+    return {valid:false,game};
+  const path = simulateBubblePath(current,aimX,aimY);
   if (!path.valid) return {valid:false,game,path};
   const cells = [...game.cells];
   cells[path.landing] = game.currentColor;
   const {popped,dropped} = resolveClears(cells,game.size,path.landing);
-  const rng = rngFrom(game.seed,game.rngState), colors=presentColors(cells);
-  const nextColor=colors.includes(game.nextColor) ? game.nextColor : pickColor(colors,rng);
+  const rng = rngFrom(current.seed,current.rngState), colors=presentColors(cells);
+  const nextColor=colors.includes(current.nextColor) ? current.nextColor : pickColor(colors,rng);
   const following=pickColor(colors,rng);
   const scoreGain=popped.length*25+dropped.length*40;
+  // Exactly three: a Pearl (redeem for +3 balls).
+  // Four or more: a Rainbow Burst (removes a whole cluster).
+  // Five or more: add a Pearl too, to celebrate a truly big combination.
+  const earned = {
+    pearl: popped.length === 3 || popped.length >= 5 ? 1 : 0,
+    rainbow: popped.length >= 4 ? 1 : 0
+  };
+  const shotsLeft = current.shotsLeft - 1, pearls = clampPower(current.pearls + earned.pearl),
+    rainbows = clampPower(current.rainbows + earned.rainbow), won = colors.length===0;
+  const next = {
+    ...current,cells,rngState:rng.getState(),currentColor:nextColor,nextColor:following,
+    moves:current.moves+1,cleared:current.cleared+popped.length+dropped.length,
+    score:current.score+scoreGain,won,shotsLeft,pearls,rainbows,
+    bestMatch:Math.max(current.bestMatch,popped.length),
+    failed:!won && shotsLeft===0 && pearls===0 && rainbows===0
+  };
+  next.stars = shooterStars(next);
+  return { valid:true,path,popped,dropped,earned,landedColor:current.currentColor,game:next };
+}
+
+/** Redeem one earned Pearl for three shots. No money, no lives, no timers. */
+export function usePearl(game) {
+  const current = normalizeShooter(game);
+  if (!current || current.won || current.failed || current.pearls < 1)
+    return {valid:false,game};
   return {
-    valid:true,path,popped,dropped,landedColor:game.currentColor,
-    game:{...game,cells,rngState:rng.getState(),currentColor:nextColor,nextColor:following,
-      moves:game.moves+1,cleared:game.cleared+popped.length+dropped.length,
-      score:game.score+scoreGain,won:colors.length===0}
+    valid:true,
+    game:{...current,pearls:current.pearls-1,shotsLeft:current.shotsLeft+3,failed:false}
   };
 }
 
+/** Consume an earned Rainbow Burst to pop the largest connected color group. */
 export function rainbowRescue(game) {
-  if (!validShooter(game,game?.size) || game.won) return {valid:false,game};
+  const current = normalizeShooter(game);
+  if (!current || current.won || current.failed || current.rainbows < 1)
+    return {valid:false,game};
   let longest=[];
-  for (let i=0;i<game.cells.length;i++) {
-    const group=bubbleGroup(game.cells,i,game.size,true);
+  for (let i=0;i<current.cells.length;i++) {
+    const group=bubbleGroup(current.cells,i,current.size,true);
     if(group.length>longest.length)longest=group;
   }
   if(!longest.length)return {valid:false,game};
-  const cells=[...game.cells];for(const i of longest)cells[i]=null;
-  const keep=anchored(cells,game.size),dropped=[];
+  const cells=[...current.cells];for(const i of longest)cells[i]=null;
+  const keep=anchored(cells,current.size),dropped=[];
   for(let i=0;i<cells.length;i++)if(cells[i]!==null&&!keep.has(i)){cells[i]=null;dropped.push(i);}
-  const rng=rngFrom(game.seed,game.rngState),colors=presentColors(cells);
-  return {
-    valid:true,popped:longest,dropped,
-    game:{...game,cells,rngState:rng.getState(),cleared:game.cleared+longest.length+dropped.length,
-      score:game.score+longest.length*25+dropped.length*40,
-      currentColor:pickColor(colors,rng),nextColor:pickColor(colors,rng),won:colors.length===0}
+  const rng=rngFrom(current.seed,current.rngState),colors=presentColors(cells);
+  const rainbows = current.rainbows-1, won=colors.length===0;
+  const next={
+    ...current,cells,rngState:rng.getState(),cleared:current.cleared+longest.length+dropped.length,
+    score:current.score+longest.length*25+dropped.length*40,
+    currentColor:pickColor(colors,rng),nextColor:pickColor(colors,rng),
+    rainbows,won,failed:!won && current.shotsLeft===0 && current.pearls===0 && rainbows===0
   };
+  next.stars=shooterStars(next);
+  return {valid:true,popped:longest,dropped,earned:{pearl:0,rainbow:0},game:next};
 }

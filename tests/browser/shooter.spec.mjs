@@ -29,13 +29,13 @@ test("Bubble Lagoon opens an original aim-and-shoot arena with large phone contr
   await context.close();
 });
 
-test("bubble shooter finishes a level via the free rescue and returns to the next marker",async({browser})=>{
+test("earned Rainbow Burst completes a level and returns to the next adventure marker",async({browser})=>{
   const context=await browser.newContext({viewport:{width:390,height:780},isMobile:true,hasTouch:true,reducedMotion:"reduce"});
   const page=await context.newPage();
   const game=makeShooterLevel(10,6);
   // Seed a small single cluster so free rescue safely clears the board.
   game.cells.fill(null);
-  game.cells[0]=0; game.cells[1]=0;
+  game.cells[0]=0; game.cells[1]=0; game.rainbows=1;
   await page.addInitScript(({game})=>{
     if(!localStorage.getItem("meeklee-adventures-save-v1"))
       localStorage.setItem("meeklee-adventures-save-v1",JSON.stringify({
@@ -44,7 +44,7 @@ test("bubble shooter finishes a level via the free rescue and returns to the nex
       }));
   },{game});
   await page.goto("./");
-  await page.getByRole("button",{name:/Free Rainbow Rescue/}).click();
+  await page.getByRole("button",{name:/Use Rainbow Burst/}).click();
   await expect(page.getByRole("heading",{name:/Level 10 Complete!/})).toBeVisible({timeout:5000});
   await page.getByRole("button",{name:/See My Adventure Path/}).click();
   await expect(page.getByText("Page 2")).toBeVisible();

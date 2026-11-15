@@ -1,6 +1,6 @@
 import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel } from "./core.js";
 import { motionSpeed } from "./motion.js";
-import { makeShooterLevel, validShooter } from "./shooter.js";
+import { makeShooterLevel, validShooter, normalizeShooter } from "./shooter.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -56,15 +56,19 @@ export function createSaveState(raw = null, preferEasy = false) {
   const easyShooterProgress = { bubbles: positiveLevel(previous.easyShooterProgress?.bubbles, easyProgress.bubbles) };
   const shooterGames = {
     bubbles: validShooter(previous.shooterGames?.bubbles, SIZE) ?
-      previous.shooterGames.bubbles : makeShooterLevel(shooterProgress.bubbles, SIZE)
+      normalizeShooter(previous.shooterGames.bubbles) : makeShooterLevel(shooterProgress.bubbles, SIZE)
   };
   const easyShooterGames = {
     bubbles: validShooter(previous.easyShooterGames?.bubbles, EASY_SIZE) ?
-      previous.easyShooterGames.bubbles : makeShooterLevel(easyShooterProgress.bubbles, EASY_SIZE)
+      normalizeShooter(previous.easyShooterGames.bubbles) : makeShooterLevel(easyShooterProgress.bubbles, EASY_SIZE)
   };
   return {
     mode: Object.hasOwn(MODES, previous.mode) ? previous.mode : "harvest",
     games, progress, easyGames, easyProgress, settings,
-    shooterGames, easyShooterGames, shooterProgress, easyShooterProgress
+    shooterGames, easyShooterGames, shooterProgress, easyShooterProgress,
+    shooterStars: { bubbles: previous.shooterStars?.bubbles && typeof previous.shooterStars.bubbles === "object" ?
+      { ...previous.shooterStars.bubbles } : {} },
+    easyShooterStars: { bubbles: previous.easyShooterStars?.bubbles && typeof previous.easyShooterStars.bubbles === "object" ?
+      { ...previous.easyShooterStars.bubbles } : {} }
   };
 }
