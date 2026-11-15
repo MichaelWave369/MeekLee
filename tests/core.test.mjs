@@ -90,3 +90,33 @@ test("win condition is cumulative and no time or turn limit exists", () => {
   assert.equal(next.game.moves, 1);
   assert.equal(playTurn(next.game, index).valid, false);
 });
+
+
+test("a player can complete generated levels without a purchase or a fixed move cap", () => {
+  for (const mode of Object.keys(MODES)) {
+    for (let level = 1; level <= 25; level++) {
+      let game = makeLevel(mode, level), turns = 0;
+      while (!game.won && turns < 300) {
+        let turn = null;
+        if (MODES[mode].mechanic === "tap") {
+          const i = game.board.findIndex((_, index) => connectedGroup(game.board, index).length >= 2);
+          assert(i >= 0, "no groups in " + mode + "/" + level);
+          turn = playTurn(game, i);
+        } else {
+          for (let i = 0; i < 64 && !turn; i++) {
+            for (const j of [i + 1, i + SIZE]) {
+              if (!adjacent(i, j)) continue;
+              const candidate = playTurn(game, i, j);
+              if (candidate.valid) { turn = candidate; break; }
+            }
+          }
+        }
+        assert(turn?.valid, "no playable action in " + mode + "/" + level);
+        game = turn.game;
+        turns++;
+      }
+      assert(game.won, "level should complete: " + mode + "/" + level);
+      assert(game.moves > 0 && game.moves <= 300);
+    }
+  }
+});
