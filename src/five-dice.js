@@ -194,7 +194,10 @@ export function fiveDiceBotTurn(g){
     const rolled=rollFiveDice(state);
     if(!rolled.valid)return {valid:false,game:g};
     state=rolled.game;
-    if(attempt<2)state={...state,held:holdForBot(state)};
+    if(attempt<2){
+      state={...state,held:holdForBot(state)};
+      if(state.held.every(Boolean))break;
+    }
   }
   const lastDice=[...state.dice],category=chooseBotCategory(state);
   const scored=scoreFiveDice(state,category);
