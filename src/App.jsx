@@ -261,7 +261,7 @@ export default function App() {
     if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
   }
   function saveCardGame(kind,nextGame) {
-    if (!["solitaire","rook","parade","war","stack","jigsaw","checkers"].includes(kind)) return;
+    if (!["solitaire","rook","parade","war","stack","jigsaw","checkers","backgammon"].includes(kind)) return;
     setSaved(previous=>({
       ...previous,cards:{
         ...previous.cards,
