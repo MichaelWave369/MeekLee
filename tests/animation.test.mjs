@@ -44,7 +44,7 @@ test("every successful move emits pop and gravity frames matching the final boar
             const targets = frame.movements.map(move => move.to);
             assert.equal(new Set(targets).size, size * size);
             for (const movement of frame.movements) {
-              assert.equal(movement.from % size, movement.to % size);
+              assert.equal(((movement.from % size) + size) % size, movement.to % size);
               assert.equal(typeof movement.fresh, "boolean");
               if (!movement.fresh) assert(movement.from >= 0 && movement.from < size * size);
               else assert(movement.from < 0 || movement.from >= size * size);
