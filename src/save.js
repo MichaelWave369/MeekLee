@@ -69,6 +69,13 @@ export function createSaveState(raw = null, preferEasy = false) {
     shooterStars: { bubbles: previous.shooterStars?.bubbles && typeof previous.shooterStars.bubbles === "object" ?
       { ...previous.shooterStars.bubbles } : {} },
     easyShooterStars: { bubbles: previous.easyShooterStars?.bubbles && typeof previous.easyShooterStars.bubbles === "object" ?
-      { ...previous.easyShooterStars.bubbles } : {} }
+      { ...previous.easyShooterStars.bubbles } : {} },
+    // Add independent medal maps without touching legacy progress or the boards.
+    worldStars: Object.fromEntries(Object.keys(MODES).map(mode =>
+      [mode, previous.worldStars?.[mode] && typeof previous.worldStars[mode] === "object" ?
+        { ...previous.worldStars[mode] } : {}])),
+    easyWorldStars: Object.fromEntries(Object.keys(MODES).map(mode =>
+      [mode, previous.easyWorldStars?.[mode] && typeof previous.easyWorldStars[mode] === "object" ?
+        { ...previous.easyWorldStars[mode] } : {}]))
   };
 }
