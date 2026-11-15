@@ -119,3 +119,11 @@ Swap puzzles now support **press → drag → release**:
 - The controls require no network requests, external services or paid libraries.
 
 Tests cover direction recognition and edge safety, plus a **real simulated touchscreen swipe upward** in Chromium that verifies the source follows the finger, highlights the neighbor, and spends precisely one move only after release. Cancel and simple-tap fallback are also covered.
+
+## Clear, relaxed animations on phones
+
+Mobile players now default to **Relaxed** timing with more time to see each swap, pop, combo and gravity drop. In **🔎 Display**, turn **✨ Animations** ON and select the **🐢 Animation pace** button to switch between **Relaxed** and **Quick**. The preferences save alongside existing progress without changing any puzzle boards or levels.
+
+Motion pacing is shared by the React animation scheduler and the CSS keyframes, using simple measured pixel offsets for cross-browser compatibility. Unlike the earlier version, a saved explicit Animations ON preference is respected even when the phone reports an operating-system reduced-motion setting. For new visitors whose device requests reduced motion, animations still default OFF until explicitly enabled.
+
+Chromium tests check rendered animation names and durations at mobile widths, including simulated reduced-motion devices, and confirm the final move count and saved progress. Phone-specific real-device visual testing remains valuable: browser emulation cannot reproduce every Android GPU or refresh-rate behavior.

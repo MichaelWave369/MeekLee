@@ -1,4 +1,5 @@
 import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel } from "./core.js";
+import { motionSpeed } from "./motion.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -34,7 +35,10 @@ export function createSaveState(raw = null, preferEasy = false) {
     // Respect the user's reduced-motion preference on first visit.
     motion: typeof previous.settings?.motion === "boolean" ?
       previous.settings.motion :
-      !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
+      !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches),
+    // New and returning phone players get clearly paced motion without losing saves.
+    motionSpeed: previous.settings?.motionSpeed === "classic" || previous.settings?.motionSpeed === "relaxed" ?
+      motionSpeed(previous.settings.motionSpeed) : (preferEasy ? "relaxed" : "classic")
   };
   const progress = {}, easyProgress = {}, games = {}, easyGames = {};
   for (const mode of Object.keys(MODES)) {
