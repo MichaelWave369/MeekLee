@@ -7,7 +7,7 @@ import BubbleShooter from "./BubbleShooter.jsx";
 import Garden, { CompanionBadge } from "./Garden.jsx";
 import BonusBloom from "./BonusBloom.jsx";
 import {
-  isChestClaimable, claimChapterChest, completeBonus,
+  isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
@@ -513,6 +513,7 @@ export default function App() {
               saved[settings.easy ? "easyWorldStars" : "worldStars"]?.[mode]}
             current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
             onGarden={showGarden} companion={companion} settings={settings}
+            chestsReady={totalAvailableChests(saved)}
             onBack={() => {
               setMenuOpen(true);
               setShowWorlds(true);
