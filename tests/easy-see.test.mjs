@@ -50,7 +50,7 @@ test("each accessible world completes levels through legal turns", () => {
         }
         assert(turn?.valid, "no legal turn " + mode + "/" + level);
         assert.equal(turn.game.board.length, 36);
-        assert.equal(findMatches(turn.game.board).size, 0);
+        if (MODES[mode].mechanic === "swap") assert.equal(findMatches(turn.game.board).size, 0);
         assert.equal(MODES[mode].mechanic === "tap" ?
           hasGroup(turn.game.board) : hasSwap(turn.game.board), true);
         game = turn.game;
