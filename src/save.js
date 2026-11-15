@@ -30,7 +30,11 @@ export function createSaveState(raw = null, preferEasy = false) {
     easy: typeof previous.settings?.easy === "boolean" ?
       previous.settings.easy : Boolean(preferEasy),
     highContrast: typeof previous.settings?.highContrast === "boolean" ?
-      previous.settings.highContrast : Boolean(preferEasy)
+      previous.settings.highContrast : Boolean(preferEasy),
+    // Respect the user's reduced-motion preference on first visit.
+    motion: typeof previous.settings?.motion === "boolean" ?
+      previous.settings.motion :
+      !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
   };
   const progress = {}, easyProgress = {}, games = {}, easyGames = {};
   for (const mode of Object.keys(MODES)) {
