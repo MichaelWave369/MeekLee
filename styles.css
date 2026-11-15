@@ -753,3 +753,39 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .app-root .shooter-notice { margin:4px 0 0; font-size:.86rem; }
   .app-root .trail-medals { font-size: .82rem; }
 }
+
+
+/* Big, clearly labeled boosters sit below the classic puzzle without
+   obscuring or shrinking any of Mom's large, tappable board pieces. */
+.world-powers {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 10px; margin: 10px 0 8px;
+}
+.world-power {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 6px; min-height: 55px; padding: 8px 13px;
+  border: 2px solid #6e9f6b; border-radius: 14px;
+  background: linear-gradient(#fffdef,#e0f4dc); color: #2e5c42;
+  font: inherit; font-weight: 900; font-size: clamp(.88rem,2.7vw,1.08rem);
+  box-shadow: 0 4px 0 #85b68a; touch-action: manipulation;
+}
+.world-power.big {
+  border-color: #d195b1; background: linear-gradient(#fff4fc,#f5e3f4);
+  color: #713c62; box-shadow: 0 4px 0 #dda8c2;
+}
+.world-power:disabled { opacity: .64; filter: saturate(.62); cursor: not-allowed; }
+.world-power:enabled { cursor:pointer; }
+.world-power:enabled:hover { filter:brightness(1.04); }
+.world-power strong { flex:0 0 auto; background:#fffdf6;border-radius:10px;
+  padding:4px 8px;color:#2b573e;font-size:1.1rem; }
+.world-power:focus-visible { outline:4px solid #e6b638;outline-offset:3px; }
+@media(max-width:600px) {
+  .app-root .world-powers { gap:7px; margin:8px 0 7px; }
+  .app-root .world-power { min-height:52px; padding:7px 9px;
+    font-size:clamp(.78rem,3.15vw,.96rem); line-height:1.14; }
+  .app-root .world-power strong { font-size:.94rem; padding:3px 6px; }
+}
+@media(max-width:350px) {
+  .app-root .world-power { font-size:.8rem; padding:5px 6px; }
+  .app-root .world-power strong {padding:2px 4px;}
+}
