@@ -7,6 +7,7 @@ import BubbleShooter from "./BubbleShooter.jsx";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
 import { motionCssVariables, stageDuration } from "./motion.js";
+import { WORLD_POWER_LABELS, awardWorldTurn, redeemWorldPower, nextWorldLevel, worldStars } from "./world-powers.js";
 
 const WORLDS = [
   { id: "harvest", icon: "🌻", name: "Harvest Valley", desc: "Swap crops to grow a cheerful garden." },
@@ -71,6 +72,7 @@ export default function App() {
   const game = games[mode];
   const size = game.size ?? SIZE;
   const rules = MODES[mode];
+  const worldPowers = WORLD_POWER_LABELS[mode];
   const busy = Boolean(animation);
   const stage = animation?.trace[animation.index] ?? null;
   const visualSpeed = animation?.speed ?? settings.motionSpeed;
@@ -94,36 +96,40 @@ export default function App() {
   function commitTurn(result, turnMode = mode, turnGameKey = gameKey, turnProgressKey = progressKey) {
     setSaved(previous => {
       const progress = { ...previous[turnProgressKey] };
+      const starsKey = turnGameKey === "easyGames" ? "easyWorldStars" : "worldStars";
+      const existingStars = previous[starsKey]?.[turnMode] || {};
+      const improvedStars = result.game.won ? {
+        ...existingStars,
+        [result.game.level]: Math.max(existingStars[result.game.level] || 0, worldStars(result.game))
+      } : existingStars;
       if (result.game.won) progress[turnMode] = Math.max(progress[turnMode], result.game.level + 1);
       return {
         ...previous,
         [turnProgressKey]: progress,
-        [turnGameKey]: { ...previous[turnGameKey], [turnMode]: result.game }
+        [turnGameKey]: { ...previous[turnGameKey], [turnMode]: result.game },
+        [starsKey]: { ...previous[starsKey], [turnMode]: improvedStars }
       };
     });
     const cascades = result.cascades || 0;
+    const earned = result.earned || {};
+    const rewardText = (earned.small || earned.big) ?
+      " Earned " + [
+        earned.small ? earned.small + " " + WORLD_POWER_LABELS[turnMode].small.name : null,
+        earned.big ? earned.big + " " + WORLD_POWER_LABELS[turnMode].big.name : null
+      ].filter(Boolean).join(" and ") + "!" : "";
     setMessage(result.game.won ? "Beautifully done! A new adventure is waiting." :
-      cascades >= 3 ? "Amazing! " + cascades + " incredible combos!" :
-      cascades > 1 ? "Wonderful! " + cascades + " combos in a row!" :
-      "Lovely! " + result.cleared + " pieces collected.");
+      result.powerUsed ? WORLD_POWER_LABELS[turnMode][result.powerUsed].name + "! " + result.cleared + " pieces cleared." :
+      cascades >= 3 ? "Amazing! " + cascades + " incredible combos!" + rewardText :
+      cascades > 1 ? "Wonderful! " + cascades + " combos in a row!" + rewardText :
+      "Lovely! " + result.cleared + " pieces collected." + rewardText);
   }
 
-  function takeTurn(first, second) {
-    if (game.won || busyRef.current) return;
-    const result = playTurn(game, first, second);
-    clearSelection();
-    if (!result.valid) {
-      setMessage(mode === "rescue" ?
-        "Find two or more matching neighbors!" :
-        "Try swapping pieces to make a row of three!");
-      return;
-    }
+  function animateResult(result) {
     if (settings.motion && result.trace?.length) {
       busyRef.current = true;
       // Long cascades remain playable without trapping someone in an animation.
       const trace = result.trace.length > 16 ?
         [...result.trace.slice(0, 15), { type: "shuffle", board: [...result.game.board] }] : result.trace;
-      // Pixel distances avoid CSS calc multiplication that some phone browsers ignore.
       const board = boardRef.current;
       const tile = board?.querySelector(".tile");
       const tileRect = tile?.getBoundingClientRect();
@@ -139,6 +145,27 @@ export default function App() {
     } else {
       commitTurn(result);
     }
+  }
+
+  function takeTurn(first, second) {
+    if (game.won || busyRef.current) return;
+    const result = awardWorldTurn(game, playTurn(game, first, second));
+    clearSelection();
+    if (!result.valid) {
+      setMessage(mode === "rescue" ?
+        "Find two or more matching neighbors!" :
+        "Try swapping pieces to make a row of three!");
+      return;
+    }
+    animateResult(result);
+  }
+
+  function takeWorldPower(kind) {
+    if (!worldPowers || game.won || busyRef.current) return;
+    const result = redeemWorldPower(game, kind);
+    if (!result.valid) return;
+    clearSelection();
+    animateResult(result);
   }
 
   // Display actual intermediate boards. Input is locked during match animations.
@@ -222,7 +249,7 @@ export default function App() {
       const replacement = old.level === level && !old.won && !old.failed ? old :
         (mode === "bubbles" ?
           (old.level === level && old.failed ? retryShooter(old).game : nextShooterLevel(level, size, old)) :
-          makeLevel(mode, level, size));
+          nextWorldLevel(mode, level, size, old));
       return { ...previous, [gameKey]: { ...previous[gameKey], [mode]: replacement } };
     });
     clearSelection();
@@ -240,7 +267,7 @@ export default function App() {
     setSaved({
       ...saved,
       [progressKey]: { ...saved[progressKey], [mode]: Math.max(saved[progressKey][mode], next) },
-      [gameKey]: { ...games, [mode]: makeLevel(mode, next, size) }
+      [gameKey]: { ...games, [mode]: nextWorldLevel(mode, next, size, game) }
     });
     clearSelection();
     setMessage("A brand-new adventure!");
@@ -419,7 +446,8 @@ export default function App() {
         </section>
         {view === "trail" ? (
           <LevelTrail mode={mode} page={trailPage} unlocked={saved[progressKey][mode]}
-            medals={mode === "bubbles" ? saved[settings.easy ? "easyShooterStars" : "shooterStars"].bubbles : null}
+            medals={mode === "bubbles" ? saved[settings.easy ? "easyShooterStars" : "shooterStars"].bubbles :
+              saved[settings.easy ? "easyWorldStars" : "worldStars"]?.[mode]}
             current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
             onBack={() => {
               setMenuOpen(true);
@@ -482,7 +510,10 @@ export default function App() {
               {stage?.type === "pop" && (
                 <div key={"combo-" + animation.index} className={"combo-toast" + (stage.combo >= 2 ? " big-combo" : "")}
                   aria-hidden="true">
-                  <span>{stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
+                  <span>{stage.powerUsed ? "✨ " + worldPowers?.[stage.powerUsed]?.name + "!" :
+                    stage.reward?.big ? worldPowers?.big.icon + " " + worldPowers?.big.name + "!" :
+                    stage.reward?.small ? worldPowers?.small.icon + " " + worldPowers?.small.name + "!" :
+                    stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
                   <small>+{stage.gained} points ✨</small>
                 </div>
               )}
@@ -538,6 +569,20 @@ export default function App() {
                 })}
               </div>
             </div>
+            )}
+            {!game.won && worldPowers && (
+              <div className="world-powers" role="group" aria-label="Earned special powers">
+                {(["small", "big"]).map(kind => (
+                  <button key={kind} type="button" className={"world-power " + kind}
+                    disabled={busy || !(game.powers?.[kind] > 0)}
+                    aria-label={"Use " + worldPowers[kind].name + ", " + (game.powers?.[kind] || 0) + " saved, " + worldPowers[kind].action}
+                    title={worldPowers[kind].action}
+                    onClick={() => takeWorldPower(kind)}>
+                    <span>{worldPowers[kind].icon} {worldPowers[kind].name}</span>
+                    <strong>×{game.powers?.[kind] || 0}</strong>
+                  </button>
+                ))}
+              </div>
             )}
             <div className="game-bottom">
               <span>🌟 {game.moves} moves played</span>
