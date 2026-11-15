@@ -4,7 +4,7 @@ import { createSaveState } from "../src/save.js";
 import {
   GARDEN_DECOR,GARDEN_PETS, BONUS_PIECES,
   chestReward, chapterKey, unlockedForMode, availableChests,
-  normalizeCollection, claimChapterChest, gardenInventory,
+  normalizeCollection, claimChapterChest, gardenInventory, isChestClaimable, totalAvailableChests,
   selectCompanion, toggleDecoration, bonusBoard, completeBonus
 } from "../src/collection.js";
 
@@ -135,4 +135,18 @@ test("milestone rewards remain stable across save reloads and all four worlds",(
   assert.deepEqual(again.collection,saved.collection);
   assert.equal(gardenInventory(again.collection).rewards.length,4);
   assert.equal(availableChests(again).length,0);
+});
+
+
+test("treasure milestones continue beyond level 2,000 without huge UI lists",()=>{
+  const saved=unlocked(null,"harvest",2501);
+  assert.equal(totalAvailableChests(saved),250);
+  assert.equal(availableChests(saved).length,12);
+  assert.equal(isChestClaimable(saved,"harvest",250),true);
+  const opened=claimChapterChest(saved,"harvest",250);
+  assert(opened.valid);
+  const updated={...saved,collection:opened.collection};
+  assert.equal(isChestClaimable(updated,"harvest",250),false);
+  assert.equal(totalAvailableChests(updated),249);
+  assert.equal(availableChests(updated).length,12);
 });
