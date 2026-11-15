@@ -65,6 +65,8 @@ export default function App() {
     "Tap a group of 2 or more matching critters." :
     mode === "bubbles" ? "Swap neighbors to match 3. Bubbles rise upward!" :
       "Tap two neighboring pieces or swipe to match 3.";
+  const mobileInstruction = rules.mechanic === "tap" ? "Tap matching groups of 2+" :
+    mode === "bubbles" ? "Match 3 bubbles to make them float!" : "Tap or swipe to match 3";
 
   useEffect(() => {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(saved)); }
@@ -304,7 +306,7 @@ export default function App() {
               aria-valuenow={Math.min(game.cleared, game.target)}>
               <span style={{ width: percent + "%" }}/>
             </div>
-            <p className="instruction">{instruction}</p>
+            <p className="instruction"><span className="desktop-tip">{instruction}</span><span className="mobile-tip">{mobileInstruction}</span></p>
             <div className={"board-wrap" + (busy ? " is-animating" : "")}>
               {stage?.type === "pop" && (
                 <div key={"combo-" + animation.index} className={"combo-toast" + (stage.combo >= 2 ? " big-combo" : "")}
