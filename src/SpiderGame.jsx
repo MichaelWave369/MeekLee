@@ -100,7 +100,7 @@ export default function SpiderGame({game,onChange,onLeave}){
           <div className="spider-columns">
             {game.columns.map((col,i)=>{
               const isDest=destinations.some(m=>m.to===i);
-              const height=Math.max(160,66+col.down.length*15+col.up.length*28);
+              const height=Math.max(170,108+col.down.length*15+col.up.length*28);
               return <div className={"spider-column"+(isDest?" destination":"")} key={i}
                 data-spider-column={i} style={{minHeight:height+"px"}}>
                 <button type="button" className="spider-column-head"
