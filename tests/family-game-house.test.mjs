@@ -32,8 +32,9 @@ test("War flips are immutable, conserve all 52 cards, handle ties and eventually
       assert.equal(move.game.round,game.round+1);
       assert.equal(move.game.piles[0].length+move.game.piles[1].length,52);
       const battle=move.game.lastBattle;
-      assert.equal(battle.battles.length,battle.warCount+1<=battle.battles.length?
-        battle.battles.length:battle.battles.length);
+      assert(battle.battles.length>=Math.max(1,battle.warCount));
+      assert(battle.battles.length<=battle.warCount+1,
+        "Each tie can require only one additional face-up comparison");
       assert(battle.won>=2);
       if(battle.warCount)ties++;
       game=move.game;
