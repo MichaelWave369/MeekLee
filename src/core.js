@@ -133,23 +133,36 @@ export function makeBoard(rng, mechanic = "swap", size = SIZE) {
   throw new Error("Could not generate a playable board");
 }
 
-export function collapse(board, rng, gravity = "down", size = boardSize(board)) {
+// Optional movement metadata is purely visual; game rules and randomness stay unchanged.
+export function collapse(board, rng, gravity = "down", size = boardSize(board), movements = null) {
   for (let col = 0; col < size; col++) {
     const values = [];
     if (gravity === "up") {
       for (let row = 0; row < size; row++) {
         const item = board[row * size + col];
-        if (item !== null) values.push(item);
+        if (item !== null) values.push({ piece: item, source: row * size + col });
       }
-      for (let row = 0; row < size; row++)
-        board[row * size + col] = row < values.length ? values[row] : Math.floor(rng() * 6);
+      for (let row = 0; row < size; row++) {
+        const to = row * size + col, source = values[row];
+        board[to] = source ? source.piece : Math.floor(rng() * 6);
+        if (movements) movements.push({
+          to, from: source ? source.source : to + size * size,
+          fresh: !source
+        });
+      }
     } else {
       for (let row = size - 1; row >= 0; row--) {
         const item = board[row * size + col];
-        if (item !== null) values.push(item);
+        if (item !== null) values.push({ piece: item, source: row * size + col });
       }
-      for (let row = size - 1, i = 0; row >= 0; row--, i++)
-        board[row * size + col] = i < values.length ? values[i] : Math.floor(rng() * 6);
+      for (let row = size - 1, i = 0; row >= 0; row--, i++) {
+        const to = row * size + col, source = values[i];
+        board[to] = source ? source.piece : Math.floor(rng() * 6);
+        if (movements) movements.push({
+          to, from: source ? source.source : to - size * size,
+          fresh: !source
+        });
+      }
     }
   }
   return board;
@@ -175,35 +188,46 @@ export function playTurn(game, first, second) {
   }
   const board = [...game.board], rng = rngFrom(game.seed, game.rngState);
   let cleared = 0, bonus = 0, cascades = 0;
+  const trace = [];
   if (rules.mechanic === "tap") {
     const group = connectedGroup(board, first, size);
     if (group.length < 2) return { valid: false, game };
+    trace.push({ type: "pop", board: [...board], matched: group, combo: 1, gained: group.length * (group.length + 2) * 10 });
     for (const i of group) board[i] = null;
     cleared = group.length;
     bonus = group.length * (group.length + 2) * 10;
-    collapse(board, rng, rules.gravity, size);
+    const movements = [];
+    collapse(board, rng, rules.gravity, size, movements);
+    trace.push({ type: "fall", board: [...board], movements, combo: 1 });
   } else {
     if (!adjacent(first, second, size) || board[first] === board[second]) return { valid: false, game };
     [board[first], board[second]] = [board[second], board[first]];
     let matches = findMatches(board, size);
     if (!matches.size) return { valid: false, game };
+    trace.push({ type: "swap", board: [...board], indices: [first, second] });
     while (matches.size && cascades < 100) {
       cascades++;
       cleared += matches.size;
-      bonus += matches.size * (10 + cascades * 5);
+      const gained = matches.size * (10 + cascades * 5);
+      bonus += gained;
+      trace.push({ type: "pop", board: [...board], matched: [...matches], combo: cascades, gained });
       for (const i of matches) board[i] = null;
-      collapse(board, rng, rules.gravity, size);
+      const movements = [];
+      collapse(board, rng, rules.gravity, size, movements);
+      trace.push({ type: "fall", board: [...board], movements, combo: cascades });
       matches = findMatches(board, size);
     }
     // Rare pathological cascade loops should not trap a player.
     if (matches.size) {
       const fresh = makeBoard(rng, rules.mechanic, size);
       board.splice(0, board.length, ...fresh);
+      trace.push({ type: "shuffle", board: [...board] });
     }
   }
   if (rules.mechanic === "tap" ? !hasGroup(board, size) : !hasSwap(board, size)) {
     const fresh = makeBoard(rng, rules.mechanic, size);
     board.splice(0, board.length, ...fresh);
+    trace.push({ type: "shuffle", board: [...board] });
   }
   const total = game.cleared + cleared;
   return {
@@ -212,6 +236,6 @@ export function playTurn(game, first, second) {
       ...game, board, rngState: rng.getState(), cleared: total,
       moves: game.moves + 1, score: game.score + bonus, won: total >= game.target
     },
-    cleared, cascades
+    cleared, cascades, trace
   };
 }
