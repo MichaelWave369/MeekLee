@@ -1248,3 +1248,125 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
  outline:4px solid #317fa9;outline-offset:2px;
  background:#fff4cf;
 }
+
+
+/* MeekLee's Rook family game night. Original CSS textures, no remote artwork. */
+.rook-game {
+  background:
+    radial-gradient(ellipse at top left,#fffce8 0%,transparent 48%),
+    linear-gradient(145deg,#fff3dc,#f8e9ce);
+  border-color:#ad8061;
+  box-shadow:0 6px 0 #d5baa1;
+}
+.rook-kitchen-welcome {
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:2px solid #d0a877;border-radius:14px;
+  background:linear-gradient(105deg,#fff3d2,#fffaf0 50%,#ffe9c1);
+  color:#634421;padding:7px 14px;margin:10px 0 8px;
+  box-shadow:inset 0 1px 0 #fff8e9;
+}
+.rook-kitchen-welcome>span {font-size:1.6rem;flex-shrink:0;}
+.rook-kitchen-welcome>div {display:flex;flex-direction:column;gap:2px;text-align:center;}
+.rook-kitchen-welcome strong {font-weight:950;font-size:1rem;}
+.rook-kitchen-welcome small {font-weight:850;font-size:.85rem;}
+.rook-game .cardgame-help{margin:8px 0;color:#5e513e;}
+.rook-records {
+  border:2px solid #ba9c72;background:#fffaf0;
+  border-radius:12px;margin:8px 0;color:#5d452b;overflow:hidden;
+}
+.rook-records>summary {
+  display:flex;align-items:center;min-height:45px;padding:8px 12px;
+  font-size:.9rem;font-weight:900;cursor:pointer;
+  list-style-position:inside;touch-action:manipulation;
+}
+.rook-records>summary::marker{color:#9d6d35;}
+.rook-record-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:0 9px 8px;}
+.rook-record-grid>div {display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:3px;min-height:63px;background:#fff1d9;border:1px solid #d7be95;border-radius:10px;}
+.rook-record-grid strong {font-weight:950;color:#5b4026;font-size:1.22rem;}
+.rook-record-grid small {font-size:.72rem;text-align:center;font-weight:850;color:#654d31;}
+.rook-current-streak {text-align:center;font-size:.8rem;font-weight:800;margin:2px 6px 9px;}
+.rook-game .rook-team-scores>div{background:#fff6e4;border-color:#ceaa7d;}
+.rook-game .rook-team-scores>div:nth-child(2){background:#fbede1;border-color:#c9ae95;}
+.rook-game .rook-family-cast {gap:8px;}
+.rook-game .rook-opponent{
+  background:linear-gradient(#fff9ea,#f2ead5);
+  border-color:#ba9d78;box-shadow:0 3px 0 #c7aa83;
+}
+.rook-game .rook-opponent.partner{border-color:#80ac80;background:#f2fae7;}
+.rook-game .rook-opponent.active{border-color:#dc9c3e;background:#fff1ca;}
+.rook-bot-line{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  width:100%;min-height:49px;margin:6px 0 0;padding:6px 5px;
+  border-radius:9px;background:#fffefa;border:1px solid #d1be9a;
+  text-align:center;color:#614c34;font-size:.79rem;font-weight:850;line-height:1.22;
+}
+.rook-game .rook-opponent.partner .rook-bot-line{
+  border-color:#b1d4aa;background:#f9fff3;color:#356043;
+}
+.rook-game .rook-table-area{
+  background:
+    radial-gradient(ellipse at 45% 35%,#e1f2df0d,#274a4088 90%),
+    repeating-linear-gradient(92deg,#518b66 0px,#518b66 7px,#4d8460 7px,#4d8460 14px);
+  border:9px solid #9d683f;
+  outline:2px solid #e4bd8f;
+  box-shadow:0 5px 0 #724b35,inset 0 0 0 3px #7c563a,inset 0 0 25px #173f2852;
+  border-radius:28px;padding:11px;margin:13px 3px 17px;
+}
+.rook-game .rook-trick-label{
+  background:#fff9ebf2;border-radius:12px;padding:6px 9px;
+  color:#35543d;font-weight:950;
+}
+.rook-game .rook-round-points{
+  background:#fff9ebed;border-radius:10px;padding:7px;
+  color:#35543e;font-weight:950;
+}
+.rook-game .rook-nest-closed{
+  color:#fff9e8;text-shadow:0 2px 3px #234f3399;
+  font-weight:900;
+}
+.rook-game .rook-trick-entry small{color:#fff;font-weight:950;text-shadow:0 1px 2px #173926;}
+.rook-game-result{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:linear-gradient(150deg,#fff6d9,#f1ffe5);border-color:#9eba84;
+  color:#3a673e;
+}
+.rook-game-result.rook-mom-victory{border-color:#d6a959;background:linear-gradient(#fff4c3,#e8f9df);}
+.rook-game-result>*:not(.rook-confetti){position:relative;z-index:1;}
+.rook-victory-trophy{font-size:clamp(2rem,7vw,3rem);line-height:1.4;}
+.rook-victory-quote{font-size:1.02rem;font-weight:950;color:#4b7242;line-height:1.45;}
+.rook-confetti{position:absolute;z-index:0;inset:0;overflow:hidden;pointer-events:none;}
+.rook-confetti>span{
+  position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;
+  opacity:0;transform:translateY(-25px) rotate(-15deg);
+  animation:rook-confetti-drop 2.6s cubic-bezier(.25,.65,.53,1) forwards;
+}
+@keyframes rook-confetti-drop{
+  0%{transform:translate3d(0,-30px,0) rotate(0deg);opacity:0;}
+  12%{opacity:1;}
+  95%{opacity:1;}
+  100%{transform:translate3d(var(--confetti-drift),300px,0) rotate(380deg);opacity:0;}
+}
+@media(max-width:600px){
+  .app-root .rook-kitchen-welcome{padding:5px 9px;margin:5px 0;gap:5px;}
+  .app-root .rook-kitchen-welcome>span{font-size:1.25rem;}
+  .app-root .rook-kitchen-welcome strong{font-size:.92rem;}
+  .app-root .rook-kitchen-welcome small{font-size:.76rem;}
+  .app-root .rook-records{margin:6px 0;}
+  .app-root .rook-records>summary{min-height:46px;padding:6px 8px;font-size:.84rem;}
+  .app-root .rook-record-grid{gap:4px;padding:0 5px 7px;}
+  .app-root .rook-record-grid>div{min-height:58px;}
+  .app-root .rook-record-grid strong{font-size:1rem;}
+  .app-root .rook-record-grid small{font-size:.64rem;}
+  .app-root .rook-bot-line{font-size:.7rem;min-height:46px;padding:4px 3px;margin:4px 0 0;}
+  .app-root .rook-game .rook-table-area{padding:7px;border-width:7px;margin:9px 2px 13px;}
+  .app-root .rook-trick-cards{gap:5px;}
+}
+@media(max-width:350px){
+  .app-root .rook-kitchen-welcome>span{font-size:1.05rem;}
+  .app-root .rook-bot-line{font-size:.64rem;}
+  .app-root .rook-records>summary{font-size:.76rem;}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-root:not(.motion-active) .rook-confetti>span{animation:none!important;}
+}

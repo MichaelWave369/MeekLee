@@ -18,7 +18,7 @@ const GAMES=[
     detail:"Mom + 3 bots • Color matching"}
 ];
 
-export default function CardCorner({cards,onChange,onBack}){
+export default function CardCorner({cards,onChange,onBack,settings}){
   const [active,setActive]=useState(null);
   const chosen=GAMES.find(g=>g.id===active);
   function launch(id){
@@ -36,7 +36,8 @@ export default function CardCorner({cards,onChange,onBack}){
   if(chosen&&cards?.[chosen.id]){
     const shared={game:cards[chosen.id],onChange:game=>onChange(chosen.id,game),onLeave:restart};
     return chosen.id==="solitaire"?<SolitaireGame {...shared}/>:
-      chosen.id==="rook"?<RookGame {...shared}/>:<ColorParadeGame {...shared}/>;
+      chosen.id==="rook"?<RookGame {...shared} stats={cards.rookStats} settings={settings}/>:
+      <ColorParadeGame {...shared}/>;
   }
   return <section className="card-corner" aria-label="Mom's Card Corner">
     <div className="cardgame-top">

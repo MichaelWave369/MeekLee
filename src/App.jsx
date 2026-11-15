@@ -7,6 +7,7 @@ import BubbleShooter from "./BubbleShooter.jsx";
 import Garden, { CompanionBadge } from "./Garden.jsx";
 import BonusBloom from "./BonusBloom.jsx";
 import CardCorner from "./CardCorner.jsx";
+import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration
@@ -262,7 +263,15 @@ export default function App() {
   function saveCardGame(kind,nextGame) {
     if (!["solitaire","rook","parade"].includes(kind)) return;
     setSaved(previous=>({
-      ...previous,cards:{...previous.cards,[kind]:nextGame}
+      ...previous,cards:{
+        ...previous.cards,
+        [kind]:nextGame,
+        // Count only actual game transitions; reloading a saved win cannot
+        // duplicate Mom's wins, streaks, or trump choices.
+        rookStats: kind==="rook" ?
+          recordRookTransition(previous.cards.rookStats,previous.cards.rook,nextGame):
+          previous.cards.rookStats
+      }
     }));
   }
 
@@ -525,7 +534,7 @@ export default function App() {
         </section>
         {view === "cards" ? (
           <CardCorner cards={saved.cards} onChange={saveCardGame}
-            onBack={leaveCardCorner}/>
+            settings={settings} onBack={leaveCardCorner}/>
         ) : view === "garden" ? (
           <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
             onToggleDecor={plantDecoration} onBonus={openBonus} onBack={leaveGarden} />

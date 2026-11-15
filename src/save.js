@@ -4,6 +4,7 @@ import { makeShooterLevel, validShooter, normalizeShooter } from "./shooter.js";
 import { normalizeCollection } from "./collection.js";
 import {validSolitaire} from "./solitaire.js";
 import {validRook} from "./rook.js";
+import {normalizeRookStats} from "./rook-night.js";
 import {validColorParade} from "./color-parade.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
@@ -88,6 +89,7 @@ export function createSaveState(raw = null, preferEasy = false) {
     cards: {
       solitaire: validSolitaire(previous.cards?.solitaire) ? previous.cards.solitaire : null,
       rook: validRook(previous.cards?.rook) ? previous.cards.rook : null,
+      rookStats: normalizeRookStats(previous.cards?.rookStats),
       parade: validColorParade(previous.cards?.parade) ? previous.cards.parade : null
     }
   };
