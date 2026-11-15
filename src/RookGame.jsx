@@ -2,10 +2,11 @@ import React, {useEffect,useState} from "react";
 import {RookTile} from "./CardTiles.jsx";
 import {
   ROOK_SUITS,ROOK_NAMES,ROOK_TARGET,rookLegalCards,rookBotAction,
-  rookAction,rookTeam,rookCardPoints,newRook
+  rookAction,newRook
 } from "./rook.js";
+import {normalizeRookStats, favoriteRookTrump, rookBotLine, ROOK_PERSONALITIES} from "./rook-night.js";
 
-export default function RookGame({game,onChange,onLeave}){
+export default function RookGame({game,onChange,onLeave,stats,settings}){
   const [nestPicks,setNestPicks]=useState([]);
   const [confirmFresh,setConfirmFresh]=useState(false);
   const [notice,setNotice]=useState("You and Pip are teammates. Willow and Fern are your opponents.");
@@ -35,14 +36,42 @@ export default function RookGame({game,onChange,onLeave}){
   }
   const bidMinimum=Math.max(70,game.bid+5);
   const winningTeam=game.winner===0?"Mom and Pip":"Willow and Fern";
+  const records=normalizeRookStats(stats);
+  const favorite=favoriteRookTrump(records);
+  const momWon=game.phase==="game-over"&&game.winner===0;
+  const confetti=Array.from({length:24},(_,i)=>({
+    left:(3+i*19%95)+"%",
+    delay:(i%12*-.13)+"s",
+    duration:(2.1+(i%5)*.24)+"s",
+    color:["#edb954","#e67e9d","#7fc1b1","#9d87ce","#ffffff"][i%5],
+    drift:((i*13)%70-35)+"px"
+  }));
   return <section className="cardgame rook-game" aria-label="Four-player Rook-style partnership cards">
     <div className="cardgame-top">
       <div><p className="trail-eyebrow">🐦 Four-player partnership</p>
         <h2>Rook Card Table</h2></div>
       <button type="button" className="trail-back" onClick={onLeave}>‹ Card Corner</button>
     </div>
+    <div className="rook-kitchen-welcome" aria-label="Cozy family game night">
+      <span aria-hidden="true">🫖</span>
+      <div><strong>Welcome to Family Game Night</strong>
+        <small>Pull up a chair. Pip's saving your seat!</small></div>
+      <span aria-hidden="true">🕯️</span>
+    </div>
     <p className="cardgame-help">Mom + Pip versus Willow + Fern. Bid, pick a trump color,
       take tricks and reach {ROOK_TARGET} team points. Classic 41-card partnership rules.</p>
+    <section className="rook-records" aria-label="Mom's saved Rook statistics">
+      <h3>🏆 Mom's Rook Record</h3>
+      <div className="rook-record-grid">
+        <div><strong>{records.played}</strong><small>Games played</small></div>
+        <div><strong>{records.wins}</strong><small>Team wins</small></div>
+        <div><strong>{records.bestStreak}</strong><small>Best win streak</small></div>
+        <div><strong>{favorite?.label || "—"}</strong><small>Favorite trump</small></div>
+      </div>
+      <p className="rook-current-streak">Current winning streak: <strong>{records.currentStreak}</strong>
+        <span> · {records.handsPlayed} completed hands</span>
+      </p>
+    </section>
     <div className="rook-team-scores" aria-label="Team scores">
       <div><strong>🌼 Mom + Pip</strong><span>{game.scores[0]} / {ROOK_TARGET}</span></div>
       <div><strong>🦊 Willow + Fern</strong><span>{game.scores[1]} / {ROOK_TARGET}</span></div>
@@ -52,11 +81,14 @@ export default function RookGame({game,onChange,onLeave}){
       <span>{game.bid?"Bid: "+game.bid+" by "+ROOK_NAMES[game.bidder]:"Bidding starts at 70"}</span>
       <span>{game.trump?"Trump: "+game.trump:"No trump chosen"}</span>
     </div>
-    <div className="rook-opponents" aria-label="Three computer players">
-      {[1,2,3].map(seat=><div key={seat} className={"rook-opponent"+(game.turn===seat?" active":"")}>
-        <span aria-hidden="true">{seat===1?"🌷":seat===2?"🐰":"🦊"}</span>
+    <div className="rook-opponents rook-family-cast" aria-label="Three computer players">
+      {[1,2,3].map(seat=><div key={seat} className={"rook-opponent"+(game.turn===seat?" active":"")+(seat===2?" partner":"")}>
+        <span aria-hidden="true">{ROOK_PERSONALITIES[seat].avatar}</span>
         <strong>{ROOK_NAMES[seat]}</strong><small>{game.hands[seat].length} cards</small>
         <small>{seat===2?"Your partner":"Computer"}</small>
+        <p className="rook-bot-line" aria-label={ROOK_PERSONALITIES[seat].name+" says: "+rookBotLine(game,seat)}>
+          “{rookBotLine(game,seat)}”
+        </p>
       </div>)}
     </div>
     <div className="rook-table-area">
@@ -119,9 +151,18 @@ export default function RookGame({game,onChange,onLeave}){
         🦊 Opponents: {game.lastResult.teamPoints[1]} captured.</p>
       <button type="button" className="rook-confirm" onClick={()=>act({type:"next"})}>Deal Next Hand →</button>
     </div>}
-    {game.phase==="game-over"&&<div className="cardgame-win" role="status">
+    {game.phase==="game-over"&&<div className={"cardgame-win rook-game-result"+(momWon?" rook-mom-victory":"")} role="status">
+      {momWon&&settings?.motion&&<div className="rook-confetti" aria-hidden="true">
+        {confetti.map((c,i)=><span key={i} style={{
+          left:c.left,animationDelay:c.delay,animationDuration:c.duration,
+          backgroundColor:c.color,"--confetti-drift":c.drift
+        }}/>)}
+      </div>}
+      <div className="rook-victory-trophy" aria-hidden="true">{momWon?"🏆 🌼 🐰":"🌷 🦊 🃏"}</div>
       <h3>🎉 {winningTeam} win the game!</h3>
       <p>Final score: {game.scores[0]} to {game.scores[1]}.</p>
+      <p className="rook-victory-quote">{momWon?"Pip: We did it, partner! That was a wonderful game!":
+        "Pip: We'll get the next one, Mom. I'm always on your team!"}</p>
       <button type="button" onClick={()=>onChange(newRook(Date.now()))}>Play Again (Free)</button>
     </div>}
     {(game.phase==="bid"||game.phase==="nest"||game.phase==="trump"||game.phase==="play")&&
