@@ -1,5 +1,6 @@
 import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel } from "./core.js";
 import { motionSpeed } from "./motion.js";
+import { makeShooterLevel, validShooter } from "./shooter.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -49,8 +50,21 @@ export function createSaveState(raw = null, preferEasy = false) {
     easyGames[mode] = validGame(previous.easyGames?.[mode], mode, EASY_SIZE) ?
       previous.easyGames[mode] : makeLevel(mode, easyProgress[mode], EASY_SIZE);
   }
+  // Keep the old Bubble Lagoon swap boards intact. The new bubble shooter has
+  // separate saves, and inherits each board size's unlocked level when first used.
+  const shooterProgress = { bubbles: positiveLevel(previous.shooterProgress?.bubbles, progress.bubbles) };
+  const easyShooterProgress = { bubbles: positiveLevel(previous.easyShooterProgress?.bubbles, easyProgress.bubbles) };
+  const shooterGames = {
+    bubbles: validShooter(previous.shooterGames?.bubbles, SIZE) ?
+      previous.shooterGames.bubbles : makeShooterLevel(shooterProgress.bubbles, SIZE)
+  };
+  const easyShooterGames = {
+    bubbles: validShooter(previous.easyShooterGames?.bubbles, EASY_SIZE) ?
+      previous.easyShooterGames.bubbles : makeShooterLevel(easyShooterProgress.bubbles, EASY_SIZE)
+  };
   return {
     mode: Object.hasOwn(MODES, previous.mode) ? previous.mode : "harvest",
-    games, progress, easyGames, easyProgress, settings
+    games, progress, easyGames, easyProgress, settings,
+    shooterGames, easyShooterGames, shooterProgress, easyShooterProgress
   };
 }

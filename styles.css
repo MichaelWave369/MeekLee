@@ -568,3 +568,67 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 @media(prefers-reduced-motion:reduce){
  .app-root:not(.motion-active) .trail-marker {animation:none!important;}
 }
+
+
+/* Bubble Lagoon: original, large-format hex bubble shooter. */
+.shooter-panel {
+  max-width:720px; margin:20px auto 0;padding:clamp(12px,3vw,22px);
+  border:2px solid #8ac8d5;border-radius:22px;
+  background:linear-gradient(#effaff,#e5f5fa);
+  box-shadow:0 8px 0 #c4e3e8;
+}
+.shooter-topline {display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.shooter-topline h2 {margin:0;color:#245e7e;font-size:clamp(1.5rem,5vw,2rem);}
+.shooter-topline .eyebrow {margin:0 0 4px;color:#3f7f9c;}
+.shooter-goal {text-align:center;font-weight:900;color:#245774;margin:12px 0 5px;font-size:1.12rem;}
+.shooter-goal strong {color:#155d86;}
+.shooter-instruction {color:#315d7b;text-align:center;font-weight:800;margin:5px 0 13px;font-size:1.04rem;}
+.shooter-arena {position:relative;margin:0 auto;max-width:520px;border:3px solid #3b90b6;border-radius:18px;overflow:hidden;box-shadow:0 6px 0 #82cfe6;}
+.shooter-svg {display:block;width:100%;height:auto;touch-action:none;user-select:none;cursor:crosshair;}
+.shooter-svg text {pointer-events:none;user-select:none;}
+.shooter-popping {transform-box:fill-box;transform-origin:center;animation:shooter-burst .63s ease-out both;}
+.shooter-dropping {transform-box:fill-box;transform-origin:center;animation:shooter-drop .66s ease-in both;}
+@keyframes shooter-burst {
+  0%{transform:scale(1);opacity:1;}
+  35%{transform:scale(1.28);opacity:1;filter:brightness(1.3);}
+  100%{transform:scale(.2);opacity:0;}
+}
+@keyframes shooter-drop{
+  0%{transform:translateY(0);opacity:1;}
+  100%{transform:translateY(85px) rotate(20deg);opacity:0;}
+}
+.shooter-combo {pointer-events:none;position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);z-index:4;
+  border-radius:15px;padding:12px 22px;border:3px solid #fff;background:#fff4a4e8;
+  color:#235f7d;font-size:clamp(1.3rem,4vw,2rem);font-weight:900;white-space:nowrap;
+  box-shadow:0 7px 24px #12516f7a;}
+.shooter-controls {display:flex;align-items:center;gap:6px;justify-content:space-between;margin:14px 0 10px;}
+.shooter-controls button {
+  min-height:54px;border:2px solid #4d86a6;border-radius:13px;background:#f8fcff;
+  color:#245374;font:inherit;font-weight:900;padding:8px 12px;
+}
+.shooter-controls .shooter-fire {background:#2d8dc5;color:#fff;border-color:#185982;font-size:1.14rem;flex:1;}
+.shooter-controls button:disabled {opacity:.5;}
+.shooter-next {display:flex;gap:6px;align-items:center;font-weight:900;color:#275b79;font-size:.83rem;}
+.shooter-next span {display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 0 #357ca0;
+  color:#fff;border-radius:50%;font-size:1.1rem;width:42px;height:42px;flex-shrink:0;}
+.shooter-rainbow {font:inherit;font-weight:900;border:2px solid #7e78b9;border-radius:13px;
+  min-height:52px;background:#f2eafd;color:#594a8c;width:100%;}
+.shooter-rainbow:disabled {opacity:.5;}
+.shooter-footnote {color:#3f657e;text-align:center;font-size:.92rem;font-weight:800;line-height:1.4;margin:15px 0 0;}
+@media(max-width:600px){
+ .app-root .shooter-panel {order:3;margin:3px 0;padding:8px 6px;border-radius:14px;}
+ .shooter-topline {gap:7px;}
+ .shooter-topline h2 {font-size:1.45rem;}
+ .shooter-topline .score-chip {padding:6px;font-size:.89rem;}
+ .shooter-goal,.shooter-instruction {margin:5px 0;font-size:1rem;}
+ .shooter-controls {margin:9px 0;gap:5px;}
+ .shooter-controls button {min-height:54px;padding:6px 7px;font-size:.91rem;}
+ .shooter-controls .shooter-fire {font-size:1rem;}
+ .shooter-next {font-size:.72rem;}
+ .shooter-next span {width:34px;height:34px;}
+ .shooter-arena {border-width:2px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .app-root:not(.motion-active) .shooter-popping,
+ .app-root:not(.motion-active) .shooter-dropping {animation:none!important;}
+}

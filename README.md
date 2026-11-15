@@ -135,3 +135,13 @@ Every world now has an illustrated, easy-to-see **Adventure Path** with ten numb
 Use **🗺️ Path** from the puzzle board to see progress. When the objective is completed, the board stops on a large **Level Complete!** screen with score and moves. Tapping **See My Adventure Path** returns to the trail and shows the next unlocked marker. Earlier completed levels can be replayed without reducing the highest unlocked level. Existing progress and saves are retained, with 6×6 and 8×8 progress remaining separate.
 
 All paths and illustrations use local CSS, SVG and original emoji scenery. There are no licensed commercial assets or paid dependencies. The new browser tests cover opening the map, selecting an unlocked level, and the boundary where winning Level 10 unlocks Level 11 and the next path page.
+
+## Bubble Lagoon: an original bubble shooter
+
+Bubble Lagoon is now a **real bubble-shooter world**, not a repainted match-3 board. Tap or drag on the big lagoon arena to choose an angle and release to shoot the bubble. The dotted guide previews the path, including reflections off the side walls. Matching three or more connected hex-grid bubbles clears the group, and any bubbles left disconnected from the ceiling fall away. A launcher shows the current and upcoming bubble, with large **Aim Left**, **Shoot!**, and **Aim Right** buttons for anyone who prefers buttons to precision dragging.
+
+There are **no lives, shot limits, purchases, or forced restarts**. An unlimited **🌈 Free Rainbow Rescue** clears a stubborn connected group and helps ensure progress is never paywalled or stuck. When the lagoon is cleared, the Level Complete screen returns to the ten-stop Adventure Path. The bubbles are distinguished by high-contrast symbols (star, heart, flower, diamond, sun) as well as color.
+
+The new deterministic shooter engine has its own \`shooterGames\`, \`easyShooterGames\`, \`shooterProgress\`, and \`easyShooterProgress\` local save slots. Old Bubble Lagoon match-3 saves are retained separately and the shooter inherits each difficulty mode's existing unlocked level on first launch. This keeps all of Mom's existing puzzle progress intact even though the bubble world now uses a completely different mechanic.
+
+Phone and logic tests cover seeded boards, hex adjacency, projectile paths and wall reflections, group popping, free completion by Rainbow Rescue, touch aiming, offline saves, and the Level 10-to-11 path transition. This is original code and artwork rather than a copy of any commercial game.
