@@ -1,24 +1,16 @@
 import React from "react";
+import { PAGE_SIZE, pageForLevel, levelStatus, maxPage, levelsForPage } from "./trail.js";
 
-export const PAGE_SIZE = 10;
 export const WORLD_TRAILS = {
   harvest: { icon: "🌻", title: "Garden Walk", marker: "🌼", scenery: ["🌳","🌾","🏡","🌷"] },
   sweets: { icon: "🍬", title: "Sugar Trail", marker: "🍭", scenery: ["🍩","🍒","🧁","🍬"] },
   rescue: { icon: "🐾", title: "Critter Path", marker: "🐞", scenery: ["🌲","🦊","🍄","🌿"] },
   bubbles: { icon: "🫧", title: "Lagoon Journey", marker: "🐚", scenery: ["🐠","🪸","🐟","⭐"] }
 };
-export function pageForLevel(level) {
-  return Math.floor((Math.max(1, level) - 1) / PAGE_SIZE);
-}
-export function levelStatus(level, unlocked) {
-  return level < unlocked ? "completed" : level === unlocked ? "current" : "locked";
-}
-export function maxPage(unlocked) { return pageForLevel(unlocked); }
-
 export default function LevelTrail({ mode, page, unlocked, current, onPage, onLevel, onBack }) {
   const world = WORLD_TRAILS[mode];
   const start = page * PAGE_SIZE + 1;
-  const nodes = Array.from({ length: PAGE_SIZE }, (_, i) => start + i);
+  const nodes = levelsForPage(page);
   const accessible = maxPage(unlocked);
   const atCurrentPage = page === pageForLevel(unlocked);
   return (
