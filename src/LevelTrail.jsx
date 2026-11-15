@@ -7,7 +7,7 @@ export const WORLD_TRAILS = {
   rescue: { icon: "🐾", title: "Critter Path", marker: "🐞", scenery: ["🌲","🦊","🍄","🌿"] },
   bubbles: { icon: "🫧", title: "Lagoon Journey", marker: "🐚", scenery: ["🐠","🪸","🐟","⭐"] }
 };
-export default function LevelTrail({ mode, page, unlocked, current, onPage, onLevel, onBack }) {
+export default function LevelTrail({ mode, page, unlocked, current, medals, onPage, onLevel, onBack }) {
   const world = WORLD_TRAILS[mode];
   const start = page * PAGE_SIZE + 1;
   const nodes = levelsForPage(page);
@@ -46,6 +46,10 @@ export default function LevelTrail({ mode, page, unlocked, current, onPage, onLe
                 aria-label={"Level " + level + ", " + status + (status === "current" ? ", play now" : "")}>
                 {status === "current" && <span className="trail-marker" aria-hidden="true">{world.marker}</span>}
                 <span className="trail-number">{level}</span>
+                {status === "completed" && medals?.[level] > 0 &&
+                  <span className="trail-medals" aria-label={medals[level] + " stars earned"}>
+                    {"★".repeat(Math.min(3, medals[level]))}
+                  </span>}
                 {status === "completed" && <span className="trail-check" aria-hidden="true">✓</span>}
                 {status === "locked" && <span className="trail-lock" aria-hidden="true">🔒</span>}
               </button>
