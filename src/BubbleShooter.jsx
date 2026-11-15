@@ -127,7 +127,7 @@ export default function BubbleShooter({ game, onChange, onPath, settings }) {
       <button type="button" className="map-shortcut" disabled={blocked} onClick={onPath}>🗺️ Path</button>
       <div className="score-chip">⭐ {game.score}</div>
     </div>
-    <p className="shooter-goal">Clear all bubbles! <strong>{remaining} left</strong></p>
+    <p className="shooter-goal">Clear all bubbles! <strong>{remaining} left</strong> · {game.moves} shots</p>
     <p className="shooter-instruction">Touch where you want to aim, then release to shoot!</p>
     <div className="shooter-arena">
       {flying?.phase==="pop" && (flying.result.popped.length+flying.result.dropped.length>0) &&
