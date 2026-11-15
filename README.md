@@ -6,6 +6,14 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## ⛰️ Solitaire Garden · TriPeaks Solitaire
+
+**Now playable:** TriPeaks joins Klondike and Pyramid in Mom's free, offline Solitaire Garden. A standard 52-card deck starts with **28 overlapping tableau cards across three peaks**, **23 stock cards**, and **1 starting waste card**. Initially only the 10 bottom cards are face-up. Choose an exposed card **one rank above or below the top waste card**, irrespective of suit. Ace and King connect in this cozy variant. Each chosen card becomes the next waste card; uncover both supporting cards to flip the one above. Draw another stock card whenever you cannot or choose not to build a sequence. Clear all 28 cards to win, with a streak score for consecutive removals.
+
+**Phone path:** ☰ Menu → 🃏 Cards → TriPeaks Solitaire. The game includes the scrollable three-peak board and **large alternative buttons for every playable card**, plus hints, unlimited undo within the most recent 20 moves, explicit new-game confirmation, and a clear blocked-game status. No timer, subscriptions, purchases, internet services or paid graphics.
+
+Progress saves independently under validated `cards.tripeaks`. The older `cards.solitaire`, `cards.pyramid`, other family games, puzzle worlds, pets, garden ornaments, and level 6001+ records remain unchanged.
+
 ## 🔺 Solitaire Garden · Pyramid Solitaire
 
 **Now playable offline:** Pyramid Solitaire joins Klondike in Mom's Card Corner. All 28 pyramid cards start face-up in seven rows. Remove **two exposed cards totaling 13**, or remove an **exposed king** by itself. The top waste card can pair with another available card; covered pyramid cards cannot be played until both cards directly beneath them are removed. Clear all 28 pyramid cards to win. The 24-card draw pile is draw-one, with **two recycles** for a relaxed total of three passes through the stock.
