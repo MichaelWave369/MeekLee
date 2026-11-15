@@ -1,6 +1,6 @@
 {
   "name": "meeklee-adventures",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Original endless and completely free React puzzle adventures, made for Mom.",
@@ -9,7 +9,8 @@
     "test": "node --test tests/*.test.mjs",
     "build": "vite build && node scripts/build-sw.mjs",
     "check": "node --check src/core.js && node --check scripts/build-sw.mjs && npm test && npm run build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "react": "19.1.1",
@@ -17,7 +18,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "5.0.4",
-    "vite": "7.1.10"
+    "vite": "7.1.10",
+    "@playwright/test": "1.56.1"
   },
-  "engines": { "node": ">=20.19" }
+  "engines": {
+    "node": ">=20.19"
+  }
 }
