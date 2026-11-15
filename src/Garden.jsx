@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  availableChests, chestReward, gardenInventory, GARDEN_PETS
+  availableChests, totalAvailableChests, gardenInventory
 } from "./collection.js";
 
 const WORLD_NAMES={
@@ -24,6 +24,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
   const collection=saved.collection;
   const {decor,pets,rewards}=gardenInventory(collection);
   const chests=availableChests(saved);
+  const pendingChests=totalAvailableChests(saved);
   const visible=decor.filter(item=>!collection.hiddenDecorations.includes(item.id));
   const chosen=pets.find(p=>p.id===collection.companion);
   const bonusKeys=Object.keys(collection.claimed).reverse();
@@ -62,7 +63,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     </div>
 
     <section className="garden-section" aria-labelledby="garden-chest-title">
-      <h3 id="garden-chest-title">🎁 Treasure Chests {chests.length>0?"("+chests.length+" ready)":""}</h3>
+      <h3 id="garden-chest-title">🎁 Treasure Chests {pendingChests>0?"("+pendingChests+" ready)":""}</h3>
       {chests.length===0 ?
         <p className="garden-section-help">Your next treasure chest appears after Level 10, 20, 30, and so on in any world.</p> :
         <div className="chest-list">
@@ -73,7 +74,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
               <span><strong>Open {WORLD_NAMES[reward.mode]} Chest</strong>
                 <small>Level {reward.level} completed · tap to reveal!</small></span>
             </button>)}
-          {chests.length>4&&<p className="garden-section-help">Plus {chests.length-4} more chests. Open these to see the next ones!</p>}
+          {pendingChests>4&&<p className="garden-section-help">Plus {pendingChests-4} more chests. Open these to see the next ones!</p>}
         </div>}
       {reveal && collection.claimed[reveal.key] &&
         <div className="chest-reveal" role="status" aria-label="Treasure opened">
