@@ -52,6 +52,7 @@ export default function App() {
   const [trailPage, setTrailPage] = useState(0);
   const busyRef = useRef(false);
   const boardRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(() =>
     typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const [message, setMessage] = useState("Every level is free, forever.");
@@ -179,6 +180,9 @@ export default function App() {
   function changeWorld(next) {
     if (!(next in MODES) || busyRef.current) return;
     clearSelection();
+    setMenuOpen(false);
+    setShowSettings(false);
+    setShowWorlds(false);
     setSaved({ ...saved, mode: next });
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
@@ -310,7 +314,18 @@ export default function App() {
   return (
     <div className={"app-root" + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "") + (settings.motion ? " motion-active" : "")}
       style={motionCssVariables(visualSpeed)}>
-      <header className="hero">
+      <header className={"hero" + (menuOpen ? " menu-open" : "")}>
+        <button type="button" className="mobile-menu-trigger"
+          aria-label={menuOpen ? "Close game menu" : "Open game menu"}
+          aria-expanded={menuOpen} aria-controls="meeklee-game-menu"
+          onClick={() => {
+            setMenuOpen(!menuOpen);
+            if (menuOpen) { setShowWorlds(false); setShowSettings(false); }
+          }}>
+          <span className="mobile-menu-brand">🌼 MeekLee <span>Adventures</span></span>
+          <span className="mobile-menu-action">{menuOpen ? "✕ Close" : "☰ Menu"}</span>
+        </button>
+        <div className="hero-content">
         <div className="sun" aria-hidden="true">☀️</div>
         <div className="brand-mark" aria-hidden="true">🌼</div>
         <p className="eyebrow">A little world of happiness</p>
@@ -319,9 +334,10 @@ export default function App() {
         <div className="promise">
           <span>💗 No payments</span><span>🌈 No timers</span><span>✨ No limits</span>
         </div>
+        </div>
       </header>
       <main className="main-shell">
-        <nav className="mobile-quickbar" aria-label="Game menu">
+        <nav id="meeklee-game-menu" className={"mobile-quickbar" + (menuOpen ? " menu-open" : "")} aria-label="Game menu">
           <button type="button" className="quick-toggle" disabled={busy}
             aria-expanded={showWorlds} aria-controls="meeklee-worlds"
             onClick={() => { setShowWorlds(!showWorlds); setShowSettings(false); }}>
@@ -399,7 +415,12 @@ export default function App() {
         {view === "trail" ? (
           <LevelTrail mode={mode} page={trailPage} unlocked={saved[progressKey][mode]}
             current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
-            onBack={() => { setShowWorlds(true); setShowSettings(false); }} />
+            onBack={() => {
+              setMenuOpen(true);
+              setShowWorlds(true);
+              setShowSettings(false);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }} />
         ) : mode === "bubbles" ? (
           <BubbleShooter game={game} settings={settings} onPath={showPath}
             onChange={nextGame => setSaved(previous => {
