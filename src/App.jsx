@@ -4,7 +4,7 @@ import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
 import BubbleShooter from "./BubbleShooter.jsx";
-import { nextShooterLevel } from "./shooter.js";
+import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
 import { motionCssVariables, stageDuration } from "./motion.js";
 
@@ -219,8 +219,10 @@ export default function App() {
         level > saved[progressKey][mode]) return;
     setSaved(previous => {
       const old = previous[gameKey][mode];
-      const replacement = old.level === level && !old.won ? old :
-        (mode === "bubbles" ? nextShooterLevel(level, size, old) : makeLevel(mode, level, size));
+      const replacement = old.level === level && !old.won && !old.failed ? old :
+        (mode === "bubbles" ?
+          (old.level === level && old.failed ? retryShooter(old).game : nextShooterLevel(level, size, old)) :
+          makeLevel(mode, level, size));
       return { ...previous, [gameKey]: { ...previous[gameKey], [mode]: replacement } };
     });
     clearSelection();
