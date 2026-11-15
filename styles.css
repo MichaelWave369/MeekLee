@@ -127,8 +127,15 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
  .goal-heading { font-size: .77rem; }
  .game-bottom { font-size: .74rem; }
 }
-@media(prefers-reduced-motion: reduce) {
- *, *::before, *::after { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+ /* Automatic motion reduction is the DEFAULT. An explicit in-game ON switch
+    overrides it, so the menu never promises animations that CSS hides. */
+ .app-root:not(.motion-active) *,
+ .app-root:not(.motion-active) *::before,
+ .app-root:not(.motion-active) *::after {
+   animation: none !important;
+   transition: none !important;
+ }
 }
 
 
@@ -284,32 +291,37 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 .game-board .tile:disabled:hover { transform: none; background: linear-gradient(145deg, #fff, #f9f7ef); }
 .tile.fx-swap {
   z-index: 5;
-  animation: meeklee-swap .2s ease-in-out both;
+  animation: meeklee-swap var(--meeklee-swap-ms, 470ms) cubic-bezier(.2,.65,.3,1) both;
 }
 .tile.fx-pop {
+  position: relative;
   z-index: 8;
-  animation: meeklee-pop .32s ease-in both;
+  animation: meeklee-pop var(--meeklee-active-pop-ms, var(--meeklee-pop-ms, 640ms)) ease-in-out both;
 }
 .tile.fx-fall {
-  animation: meeklee-fall .44s cubic-bezier(.19,.72,.23,1) both;
+  animation: meeklee-fall var(--meeklee-fall-ms, 760ms) cubic-bezier(.15,.75,.25,1) both;
 }
 .tile.fx-new { animation-name: meeklee-fresh; }
 @keyframes meeklee-swap {
-  from { transform: translate(calc(var(--from-cols) * (100% + var(--tile-gap))),calc(var(--from-rows) * (100% + var(--tile-gap)))) scale(1.04); }
+  from { transform: translate(var(--shift-x, 0px), var(--shift-y, 0px)) scale(1.06); }
+  75% { transform: translate(0,0) scale(1.08); }
   to { transform: translate(0,0) scale(1); }
 }
 @keyframes meeklee-pop {
   0% { transform: scale(1); opacity: 1; filter: brightness(1); }
-  35% { transform: scale(1.24) rotate(3deg); opacity: 1; filter: brightness(1.22); }
-  100% { transform: scale(.3) rotate(-13deg); opacity: 0; filter: brightness(1.35); }
+  22% { transform: scale(1.2) rotate(3deg); opacity: 1; filter: brightness(1.24); }
+  64% { transform: scale(1.21) rotate(3deg); opacity: 1; filter: brightness(1.24); }
+  100% { transform: scale(.3) rotate(-10deg); opacity: 0; filter: brightness(1.35); }
 }
 @keyframes meeklee-fall {
-  from { transform: translateY(calc(var(--from-rows) * (100% + var(--tile-gap)))) scale(.98); opacity: 1; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
+  from { transform: translate(var(--shift-x, 0px), var(--shift-y, 0px)) scale(.98); opacity: 1; }
+  82% { transform: translate(0,var(--meeklee-gravity-bounce, 6px)) scale(1.02); opacity: 1; }
+  to { transform: translate(0,0) scale(1); opacity: 1; }
 }
 @keyframes meeklee-fresh {
-  from { transform: translateY(calc(var(--from-rows) * (100% + var(--tile-gap)))) scale(.75); opacity: .1; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
+  from { transform: translate(var(--shift-x, 0px), var(--shift-y, 0px)) scale(.76); opacity: .25; }
+  82% { transform: translate(0,var(--meeklee-gravity-bounce, 6px)) scale(1.02); opacity: 1; }
+  to { transform: translate(0,0) scale(1); opacity: 1; }
 }
 .combo-toast {
   position: absolute; top: 22%; left: 50%; z-index: 25;
@@ -415,8 +427,11 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .app-root .game-heading h2 { font-size: 1.34rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tile.fx-pop, .tile.fx-fall, .tile.fx-swap, .tile.fx-new,
-  .combo-toast { animation: none !important; }
+  .app-root:not(.motion-active) .tile.fx-pop,
+  .app-root:not(.motion-active) .tile.fx-fall,
+  .app-root:not(.motion-active) .tile.fx-swap,
+  .app-root:not(.motion-active) .tile.fx-new,
+  .app-root:not(.motion-active) .combo-toast { animation: none !important; }
 }
 
 
@@ -472,8 +487,8 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   box-shadow: inset 0 0 0 3px #fff, 0 4px 0 #65a16b;
 }
 @media (prefers-reduced-motion: reduce) {
-  .game-board .tile.finger-dragging,
-  .game-board .tile.finger-drop-target {
+  .app-root:not(.motion-active) .game-board .tile.finger-dragging,
+  .app-root:not(.motion-active) .game-board .tile.finger-drop-target {
     animation: none !important;
     transition: none !important;
   }
