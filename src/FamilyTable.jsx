@@ -156,10 +156,9 @@ export default function FamilyTable({onLeave,onPractice}){
     open();
     return ()=>{
       live=false;window.clearTimeout(timer);
+      const socket=socketRef.current;
       socketRef.current=null;
-      setConnected(false);
-      try{if(wsOpen()){} }catch{/* best effort */}
-      function wsOpen(){if(socketRef.current?.readyState<=1)socketRef.current.close();}
+      try{if(socket?.readyState<=1)socket.close();}catch{/* best effort */}
     };
   },[Boolean(room),server,code,token]);
   // A very infrequent fallback refresh helps players whose network blocks WS.
