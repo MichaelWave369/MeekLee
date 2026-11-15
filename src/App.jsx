@@ -13,7 +13,7 @@ const WORLDS = [
   { id: "harvest", icon: "🌻", name: "Harvest Valley", desc: "Swap crops to grow a cheerful garden." },
   { id: "sweets", icon: "🍬", name: "Sugar Mountain", desc: "Sweet combinations and cascading treats." },
   { id: "rescue", icon: "🐾", name: "Critter Rescue", desc: "Tap matching groups to help the animals." },
-  { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Swap bubbles as they float upward." }
+  { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Aim, bounce and pop colorful bubbles." }
 ];
 
 function initialize() {
@@ -501,6 +501,9 @@ export default function App() {
                 <div className="victory-garden" aria-hidden="true">🌼 🎉 🌷</div>
                 <h3>Level {game.level} Complete!</h3>
                 <p>Beautifully done! Your marker moved one step farther along the Adventure Path.</p>
+                <div className="victory-stars" aria-label={worldStars(game) + " out of 3 stars"}>
+                  {"★".repeat(worldStars(game))}<span>{"☆".repeat(3 - worldStars(game))}</span>
+                </div>
                 <div className="victory-results"><span>⭐ {game.score.toLocaleString()} points</span><span>🌟 {game.moves} moves</span></div>
                 <button className="trail-play" type="button" onClick={showPath}>🌼 See My Adventure Path →</button>
                 <p className="victory-no-rush">No rush. Your next adventure is ready whenever you are.</p>
@@ -571,6 +574,8 @@ export default function App() {
             </div>
             )}
             {!game.won && worldPowers && (
+              <div className="world-powers-wrap">
+                <p className="world-powers-tip">Match 3: {worldPowers.small.icon} · 4+: {worldPowers.big.icon} · 5+: both!</p>
               <div className="world-powers" role="group" aria-label="Earned special powers">
                 {(["small", "big"]).map(kind => (
                   <button key={kind} type="button" className={"world-power " + kind}
@@ -582,6 +587,7 @@ export default function App() {
                     <strong>×{game.powers?.[kind] || 0}</strong>
                   </button>
                 ))}
+              </div>
               </div>
             )}
             <div className="game-bottom">
