@@ -1,0 +1,45 @@
+name: "🌼 Suggest a MeekLee Game"
+description: "Share a new free game idea for moms, grandparents, families, or anyone who loves cozy play."
+title: "[Game Idea] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping MeekLee grow! 🌷 Please keep suggestions kind and family-friendly.
+        Please do **not** post personal phone numbers, home addresses, private stories about others, or photos of children.
+        This form is on GitHub and needs a free GitHub account. For non-GitHub guests, MeekLee's Family Porch notebook can share a suggestion by text message.
+  - type: input
+    id: game-name
+    attributes:
+      label: What is your game idea?
+      placeholder: "Example: a new cozy picture puzzle"
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-play
+    attributes:
+      label: How should the game work?
+      description: "What makes it fun? What would you tap or move? Single player or family?"
+      placeholder: "I would love to..."
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What type of game?
+      options:
+        - Cards and Solitaire
+        - Puzzles and Jigsaws
+        - Board Games
+        - Garden and Collecting
+        - Family Stories / Recipes
+        - Accessibility or Ease of Use
+        - Something Else
+  - type: textarea
+    id: accessibility
+    attributes:
+      label: Anything that would make it easier for Mom?
+      description: "Large text, large buttons, slower play, drag controls, color contrast, or other ideas."
+      placeholder: "Optional..."
