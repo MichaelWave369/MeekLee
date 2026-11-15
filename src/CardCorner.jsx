@@ -6,6 +6,7 @@ import FamilyTable from "./FamilyTable.jsx";
 import WarGame from "./WarGame.jsx";
 import StackRaceGame from "./StackRaceGame.jsx";
 import JigsawGame from "./JigsawGame.jsx";
+import FamilyPorch from "./FamilyPorch.jsx";
 import {newSolitaire} from "./solitaire.js";
 import {newRook} from "./rook.js";
 import {newColorParade} from "./color-parade.js";
@@ -38,7 +39,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
   const [active,setActive]=useState(null);
   const chosen=GAMES.find(g=>g.id===active);
   function launch(id){
-    if(id==="family"){setActive(id);return;}
+    if(id==="family"||id==="porch"){setActive(id);return;}
     if(!cards?.[id]){
       const fresh=id==="solitaire"?newSolitaire(Date.now()):
         id==="rook"?newRook(Date.now()):
@@ -54,6 +55,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
     setActive(null);
     if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"auto"});
   }
+  if(active==="porch")return <FamilyPorch onLeave={restart}/>;
   if(active==="family")return <FamilyTable onLeave={restart}
     onPractice={()=>launch("rook")}/>;
   if(active==="jigsaw"&&cards?.jigsaw)return <JigsawGame game={cards.jigsaw}
@@ -96,6 +98,20 @@ export default function CardCorner({cards,onChange,onBack,settings}){
           Choose 9, 16 or 25 pieces; finish a picture to earn garden decorations.</small>
           <em>Offline · Easy touch controls</em>
           <span className="card-corner-launch">{cards?.jigsaw?"Continue Puzzle →":"Start Puzzling →"}</span>
+        </span>
+      </button>
+    </section>
+    <section className="card-corner-jigsaw" aria-label="Family Porch ideas and memories">
+      <h3>💌 The Family Porch</h3>
+      <p>Share a new game idea, or save a family recipe or story. Keep your memories close.</p>
+      <button type="button" className="card-corner-choice" onClick={()=>launch("porch")}
+        aria-label="Open Family Porch notebook">
+        <span className="corner-game-art" aria-hidden="true">📖</span>
+        <span className="corner-game-text"><strong>Family Porch Notebook</strong>
+          <small>A private notebook for recipes, family stories and game ideas.
+          Share by text or your phone's sharing menu.</small>
+          <em>Private on your device · No account</em>
+          <span className="card-corner-launch">Open Family Porch →</span>
         </span>
       </button>
     </section>
