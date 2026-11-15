@@ -1,4 +1,4 @@
-// MeekLee Card Corner: original Klondike Solitaire engine, draw-one.
+// MeekLee Card Corner: original Klondike Solitaire engine, draw-one or draw-three.
 // Seven tableau columns, four suit foundations, unlimited stock recycling.
 // All actions are immutable and deterministic for saved games and testing.
 import {rngFrom} from "./core.js";
@@ -27,7 +27,7 @@ export function shuffleCards(cards,seed) {
   return next;
 }
 const allCards=()=>STANDARD_SUITS.flatMap(s=>Array.from({length:13},(_,i)=>s.id+"-"+(i+1)));
-export function newSolitaire(seed=Date.now()){
+export function newSolitaire(seed=Date.now(),drawCount=1){
   const cards=shuffleCards(allCards(),seed),tableau=[];
   let p=0;
   for(let column=0;column<7;column++){
@@ -36,6 +36,7 @@ export function newSolitaire(seed=Date.now()){
   }
   return {
     kind:"solitaire",seed,tableau,stock:cards.slice(p),waste:[],
+    drawCount:drawCount===3?3:1,
     foundations:Object.fromEntries(STANDARD_SUITS.map(s=>[s.id,[]])),
     moves:0,draws:0,won:false,history:[]
   };
@@ -56,7 +57,8 @@ function clone(g){
     foundations: Object.fromEntries(STANDARD_SUITS.map(s => [s.id, [...(g.foundations[s.id] || [])]]))};
 }
 export function validSolitaire(g){
-  if(g?.kind!=="solitaire"||!Array.isArray(g.tableau)||g.tableau.length!==7||
+  if(g?.kind!=="solitaire"||![undefined,1,3].includes(g.drawCount)||
+    !Array.isArray(g.tableau)||g.tableau.length!==7||
     !Array.isArray(g.stock)||!Array.isArray(g.waste)||!g.foundations)return false;
   const piles=[g.stock,g.waste,...g.tableau.flatMap(c=>[c.down,c.up]),
     ...STANDARD_SUITS.map(s=>g.foundations[s.id])];
@@ -71,7 +73,9 @@ export function drawSolitaire(g){
   const next=clone(g);
   let label="Drew a card";
   if(next.stock.length){
-    next.waste.push(next.stock.pop());next.draws=(g.draws||0)+1;
+    const count=Math.min(next.drawCount===3?3:1,next.stock.length);
+    for(let i=0;i<count;i++)next.waste.push(next.stock.pop());
+    next.draws=(g.draws||0)+1;
   }else if(next.waste.length){
     next.stock=next.waste.reverse();next.waste=[];
     label="Turned over the draw pile";

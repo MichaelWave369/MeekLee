@@ -16,6 +16,20 @@ export const GARDEN_DECOR = Object.freeze([
   {id:"rainbow",icon:"🌈",name:"Rainbow Arch"},
   {id:"pond",icon:"🪷",name:"Lily Pond"}
 ]);
+// These decorations are earned from the NEW picture puzzles only. Never change
+// the historic treasure-chest schedule: Mom's claimed chests stay identical.
+export const JIGSAW_GARDEN_DECOR = Object.freeze([
+  {id:"jigsaw_harvest_3",icon:"🌾",name:"Golden Wheat Bundle",scene:"harvest",size:3},
+  {id:"jigsaw_harvest_4",icon:"🚜",name:"Little Farm Tractor",scene:"harvest",size:4},
+  {id:"jigsaw_harvest_5",icon:"🧺",name:"Harvest Basket",scene:"harvest",size:5},
+  {id:"jigsaw_pip_3",icon:"🪻",name:"Lavender Flowers",scene:"pip",size:3},
+  {id:"jigsaw_pip_4",icon:"🦔",name:"Hedgehog Visitor",scene:"pip",size:4},
+  {id:"jigsaw_pip_5",icon:"🍓",name:"Berry Patch",scene:"pip",size:5},
+  {id:"jigsaw_lagoon_3",icon:"🐚",name:"Pretty Seashell",scene:"lagoon",size:3},
+  {id:"jigsaw_lagoon_4",icon:"🪸",name:"Coral Garden",scene:"lagoon",size:4},
+  {id:"jigsaw_lagoon_5",icon:"🦀",name:"Friendly Crab",scene:"lagoon",size:5}
+]);
+export const jigsawPrizeKey=(scene,size)=>scene+":"+size;
 export const GARDEN_PETS = Object.freeze([
   {id:"bunny",icon:"🐰",name:"Pip the Bunny"},
   {id:"puppy",icon:"🐶",name:"Biscuit the Puppy"},
@@ -68,10 +82,15 @@ export function normalizeCollection(raw = {}) {
   const petIds=new Set(Object.keys(claimed).map(k=>{
     const [mode,ch]=k.split(":"); return chestReward(mode,Number(ch))?.pet.id;
   }));
+  const jigsawPrizes=Array.isArray(previous.jigsawPrizes)?
+    [...new Set(previous.jigsawPrizes.filter(k=>typeof k==="string" &&
+      JIGSAW_GARDEN_DECOR.some(d=>jigsawPrizeKey(d.scene,d.size)===k)))]:[];
+  for(const reward of JIGSAW_GARDEN_DECOR)
+    if(jigsawPrizes.includes(jigsawPrizeKey(reward.scene,reward.size)))decorIds.add(reward.id);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -133,6 +152,8 @@ export function gardenInventory(collection) {
     decor.set(item.decor.id,item.decor);
     pets.set(item.pet.id,item.pet);
   }
+  for(const reward of JIGSAW_GARDEN_DECOR)if(normalized.jigsawPrizes.includes(
+    jigsawPrizeKey(reward.scene,reward.size)))decor.set(reward.id,reward);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
 export function selectCompanion(collection,petId) {
@@ -172,4 +193,12 @@ export function completeBonus(collection,key,moves) {
       completedBonuses:{...current.completedBonuses,[key]:best===undefined?moves:Math.min(best,moves)}
     }
   };
+}
+
+export function recordJigsawGardenReward(collection,previousGame,nextGame){
+  const current=normalizeCollection(collection);
+  if(nextGame?.kind!=="jigsaw"||!nextGame.won||previousGame?.won)return current;
+  const key=jigsawPrizeKey(nextGame.scene,nextGame.size);
+  if(!JIGSAW_GARDEN_DECOR.some(d=>jigsawPrizeKey(d.scene,d.size)===key))return current;
+  return normalizeCollection({...current,jigsawPrizes:[...current.jigsawPrizes,key]});
 }
