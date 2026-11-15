@@ -13,7 +13,7 @@ export const MODES = Object.freeze({
   harvest: { name: "Harvest Valley", mechanic: "swap", gravity: "down", pieces: ["🍓","🥕","🌽","🍇","🍋","🍎"], color: "#6da74d" },
   sweets: { name: "Sugar Mountain", mechanic: "swap", gravity: "down", pieces: ["🍬","🍭","🍒","🧁","🍫","🍪"], color: "#d56c9e" },
   rescue: { name: "Critter Rescue", mechanic: "tap", gravity: "down", pieces: ["🐶","🐱","🐰","🦊","🐼","🐻"], color: "#df9b53" },
-  bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","💜","🩵","💛","💚","🩷"], color: "#62a5c6" }
+  bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","⭐","🐚","🐠","🌸","🐙"], color: "#62a5c6" }
 });
 
 export function seedFor(mode, level) {
