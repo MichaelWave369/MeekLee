@@ -7,7 +7,7 @@ export function ClassicCard({card,back=false,selected=false,disabled=false,onCli
   const suit=STANDARD_SUITS.find(s=>s.id===String(card||"").split("-")[0]);
   return <button type="button" disabled={disabled||!onClick}
     onClick={onClick} title={title||(!back?cardLabel(card):"Face-down card")}
-    className={"playing-card classic"+(back?" back":"")+(selected?" selected":"")+
+    className={"playing-card classic"+(!back && cardRed(card)?" red":"")+(back?" back":"")+(selected?" selected":"")+
       (small?" small":"")+(highlight?" legal":"")}>
       {back?<span aria-hidden="true">🌼</span>:
         <><span className="card-corner-label">{cardLabel(card)}</span>
