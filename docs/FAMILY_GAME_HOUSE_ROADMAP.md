@@ -13,6 +13,12 @@ MeekLee began as a gift for Mom. Keep the game **free, cozy, accessible, offline
 
 The key `meeklee-adventures-save-v1` and original four world engines remain unchanged. All new games store separate slots under `saved.cards`. The notebook has an independent local storage key. Completing a picture writes its award in the same state update as the completed puzzle.
 
+## Family Game House: Five Dice with Pip
+
+**Now playable and offline:** Mom's favorite five-dice scorecard game joins Card Corner under MeekLee's original name **Five Dice with Pip**, inspired by the classic Yahtzee-style rules. Five tappable dice, up to three rolls, held-dice indicators and roll persistence, 13 real score categories, the upper-section 63-point threshold/35-point bonus, multiple five-of-a-kind 100-point bonuses, forced upper placement and Joker rules are supported. Pip plays locally with a lightweight heuristic opponent, and solo mode is available. No internet, timer, payment or sign-up required.
+
+Dice games have a separate validated `cards.dice` save slot. Score rows can be scratched for zero, games have a 13-round completion, and new games require a second confirmation before clearing only the dice match. Include 320px phone tests, exact roll constraints, Joker scoring and saved-farm regressions before merging. The game's artwork and branding are MeekLee originals.
+
 ## Board Game Nook: Checkers with Pip
 
 **Now playable and offline:** American 8×8 Checkers, with Mom playing red against Pip. The rules engine enforces forward movement for men, compulsory captures, same-piece multiple jumps, promotion that ends the current turn, and kings moving in both directions. A deterministic local bot, optional hint and full-turn undo are included. Checkers is saved separately from all other games, and the board has large touch controls and accessible square labels.
