@@ -6,6 +6,9 @@ import {validSolitaire} from "./solitaire.js";
 import {validRook} from "./rook.js";
 import {normalizeRookStats} from "./rook-night.js";
 import {validColorParade} from "./color-parade.js";
+import {validWar} from "./war.js";
+import {validStack} from "./stack-race.js";
+import {validJigsaw} from "./jigsaw.js";
 
 export const SAVE_KEY = "meeklee-adventures-save-v1";
 
@@ -90,7 +93,10 @@ export function createSaveState(raw = null, preferEasy = false) {
       solitaire: validSolitaire(previous.cards?.solitaire) ? previous.cards.solitaire : null,
       rook: validRook(previous.cards?.rook) ? previous.cards.rook : null,
       rookStats: normalizeRookStats(previous.cards?.rookStats),
-      parade: validColorParade(previous.cards?.parade) ? previous.cards.parade : null
+      parade: validColorParade(previous.cards?.parade) ? previous.cards.parade : null,
+      war: validWar(previous.cards?.war) ? previous.cards.war : null,
+      stack: validStack(previous.cards?.stack) ? previous.cards.stack : null,
+      jigsaw: validJigsaw(previous.cards?.jigsaw) ? previous.cards.jigsaw : null
     }
   };
 }
