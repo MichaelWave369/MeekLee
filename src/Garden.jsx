@@ -35,7 +35,8 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
         <h2>Mom's Happy Garden</h2></div>
     </header>
     <p className="garden-intro">Every ten completed levels earns a treasure chest.
-      Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!</p>
+      Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!
+      Complete picture puzzles to earn nine extra garden treasures, too!</p>
 
     <div className="garden-landscape" aria-label="Your collected garden decorations and companion">
       <span className="garden-sun" aria-hidden="true">☀️</span>
@@ -45,7 +46,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
       <div className="garden-fence" aria-hidden="true">🌱 🌱 🌱 🌱 🌱</div>
       <div className="garden-placed" aria-label={visible.length+" displayed decorations"}>
         {visible.length===0 ?
-          <div className="garden-starter">🌱 <strong>Your garden begins here!</strong><small>Complete ten levels to open your first chest.</small></div> :
+          <div className="garden-starter">🌱 <strong>Your garden begins here!</strong><small>Complete ten levels or a picture puzzle to earn your first decoration.</small></div> :
           visible.map((item,i)=><div className="garden-ornament" key={item.id}
             title={item.name} style={{"--ornament-delay":(i%6)*-0.18+"s"}}
             aria-label={item.name}><span aria-hidden="true">{item.icon}</span></div>)}
