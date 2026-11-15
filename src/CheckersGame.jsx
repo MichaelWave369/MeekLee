@@ -117,7 +117,6 @@ export default function CheckersGame({game,onChange,onLeave}){
                   <span className="checkers-piece-mark">{redPiece?"🌼":"🐰"}</span>}
               </span>}
               {dest&&<span className="checkers-target" aria-hidden="true"/>}
-              {source&&!piece?.toUpperCase?.()===piece&&null}
             </button>;
           })}
         </div>
