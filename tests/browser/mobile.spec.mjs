@@ -1,4 +1,9 @@
 import { test, expect } from "@playwright/test";
+async function revealMenu(page) {
+  const open = page.getByRole("button", { name: "Open game menu" });
+  if (await open.count()) await open.click();
+}
+
 
 test("320px phones default to a readable 6x6 board without sideways scrolling", async ({ browser }) => {
   const context = await browser.newContext({
@@ -7,10 +12,11 @@ test("320px phones default to a readable 6x6 board without sideways scrolling", 
   });
   const page = await context.newPage();
   await page.goto("./");
-  await expect(page.getByRole("heading", { name: /MeekLee Adventures/i })).toBeVisible();
+  await expect(page.locator(".mobile-menu-brand")).toBeVisible();
   await expect(page.locator(".tile")).toHaveCount(36);
   const boardBeforeSettings = await page.locator(".board-wrap").boundingBox();
   expect(boardBeforeSettings.y).toBeLessThan(280);
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Big pieces/i })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: /High contrast/i })).toHaveAttribute("aria-pressed", "true");
@@ -37,6 +43,7 @@ test("390px phones have larger easy tiles and retain saved puzzles on reload", a
   await expect(page.locator(".tile")).toHaveCount(36);
   const firstTile = await page.locator(".tile").first().boundingBox();
   expect(firstTile.width).toBeGreaterThanOrEqual(48);
+  await revealMenu(page);
   await page.getByRole("button", { name: /Worlds/ }).click();
   await page.getByRole("button", { name: /Critter Rescue/ }).click();
   await expect(page.locator(".tile")).toHaveCount(36);
@@ -48,6 +55,7 @@ test("390px phones have larger easy tiles and retain saved puzzles on reload", a
   await page.reload();
   await expect(page.getByText("Critter Rescue", { exact: true }).first()).toBeVisible();
   await expect(page.locator(".game-bottom")).toContainText("1 moves played");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await page.getByRole("button", { name: /Big pieces/i }).click();
   await expect(page.locator(".tile")).toHaveCount(64);
@@ -77,8 +85,10 @@ test("rotated phone still defaults to big tiles and keeps its change-world butto
   const page = await context.newPage();
   await page.goto("./");
   await expect(page.locator(".tile")).toHaveCount(36);
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Big pieces/i })).toHaveAttribute("aria-pressed", "true");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Worlds/ }).click();
   await expect(page.getByRole("button", { name: /Sugar Mountain/ })).toBeVisible();
   await page.getByRole("button", { name: /Sugar Mountain/ }).click();
@@ -117,8 +127,10 @@ test("Mom can turn animations off and reduced-motion devices default to off", as
   });
   const page = await context.newPage();
   await page.goto("./");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Match animations/i })).toHaveAttribute("aria-pressed", "false");
+  await revealMenu(page);
   await page.getByRole("button", { name: /Worlds/ }).click();
   await page.getByRole("button", { name: /Critter Rescue/ }).click();
   await page.getByRole("button", { name: /Free hint/ }).click();
@@ -126,6 +138,7 @@ test("Mom can turn animations off and reduced-motion devices default to off", as
   await expect(page.locator(".game-bottom")).toContainText("1 moves played");
   await expect(page.locator(".tile.fx-pop")).toHaveCount(0);
   await page.reload();
+  await revealMenu(page);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Match animations/i })).toHaveAttribute("aria-pressed", "false");
   await context.close();

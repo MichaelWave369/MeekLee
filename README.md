@@ -145,3 +145,11 @@ There are **no lives, shot limits, purchases, or forced restarts**. An unlimited
 The new deterministic shooter engine has its own \`shooterGames\`, \`easyShooterGames\`, \`shooterProgress\`, and \`easyShooterProgress\` local save slots. Old Bubble Lagoon match-3 saves are retained separately and the shooter inherits each difficulty mode's existing unlocked level on first launch. This keeps all of Mom's existing puzzle progress intact even though the bubble world now uses a completely different mechanic.
 
 Phone and logic tests cover seeded boards, hex adjacency, projectile paths and wall reflections, group popping, free completion by Rainbow Rescue, touch aiming, offline saves, and the Level 10-to-11 path transition. This is original code and artwork rather than a copy of any commercial game.
+
+## Focused full-screen phone play
+
+On phones, **MeekLee Adventures** now opens in a **game-first layout**: the large title and the always-visible **Worlds / Display** controls are replaced by one small, high-contrast, full-width **🌼 MeekLee Adventures · ☰ Menu** bar. It is easy to tap, works as a sticky header while scrolling, and opens a menu containing the same Worlds and Display controls. Close the menu to put the board first again. The menu starts closed on each visit; accessibility settings and progress remain saved unchanged. Desktop keeps its original header and controls.
+
+Bubble Lagoon scales its whole SVG arena uniformly, rather than squishing circles, with a viewport-aware maximum width. On ordinary portrait phones this brings **Shoot** and **Free Rainbow Rescue** into the first screen while retaining large aiming buttons and visible shape symbols. The Adventure Path is more compact too, so **Play Level** is reachable without a long scroll. Extremely short screens may still scroll rather than shrink the pieces below a usable size.
+
+New real Chromium phone tests verify opening/closing the menu, access to the settings and worlds after rotation, a 44px+ menu target, no sideways overflow, visible shooter controls within a 390×780 viewport, and an immediately accessible ten-level map button. The game rules, per-world saved levels, combo timing and shot trajectories are unchanged.

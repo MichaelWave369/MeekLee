@@ -1,17 +1,23 @@
 import { test, expect } from "@playwright/test";
+async function revealMenu(page) {
+  const open = page.getByRole("button", { name: "Open game menu" });
+  if (await open.count()) await open.click();
+}
+
 import { makeShooterLevel, bubbleGeometry } from "../../src/shooter.js";
 
 test("Bubble Lagoon opens an original aim-and-shoot arena with large phone controls",async({browser})=>{
   const context=await browser.newContext({viewport:{width:390,height:780},isMobile:true,hasTouch:true});
   const page=await context.newPage();
   await page.goto("./");
+  await revealMenu(page);
   await page.getByRole("button",{name:/Worlds/}).click();
   await page.getByRole("button",{name:/Bubble Lagoon/}).click();
   await expect(page.getByRole("heading",{name:"Level 1"})).toBeVisible();
   await expect(page.locator(".shooter-svg")).toBeVisible();
   await expect(page.getByRole("button",{name:"Shoot!"})).toBeEnabled();
   const width=await page.locator(".shooter-svg").evaluate(el=>el.getBoundingClientRect().width);
-  expect(width).toBeGreaterThan(300);
+  expect(width).toBeGreaterThanOrEqual(260);
   await page.getByRole("button",{name:"Shoot!"}).click();
   await expect(page.getByText(/1 shots/)).toBeVisible({timeout:7000}).catch(async()=>{
     // The game does not display shots in a dedicated text label, so check the persisted state.
@@ -52,6 +58,7 @@ test("touch aiming updates the dotted shot trajectory and release fires",async({
   const context=await browser.newContext({viewport:{width:390,height:780},isMobile:true,hasTouch:true});
   const page=await context.newPage();
   await page.goto("./");
+  await revealMenu(page);
   await page.getByRole("button",{name:/Worlds/}).click();
   await page.getByRole("button",{name:/Bubble Lagoon/}).click();
   const svg=page.locator(".shooter-svg"),rect=await svg.boundingBox();
