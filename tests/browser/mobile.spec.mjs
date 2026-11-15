@@ -9,6 +9,8 @@ test("320px phones default to a readable 6x6 board without sideways scrolling", 
   await page.goto("./");
   await expect(page.getByRole("heading", { name: /MeekLee Adventures/i })).toBeVisible();
   await expect(page.locator(".tile")).toHaveCount(36);
+  const boardBeforeSettings = await page.locator(".board-wrap").boundingBox();
+  expect(boardBeforeSettings.y).toBeLessThan(280);
   await page.getByRole("button", { name: /Display/ }).click();
   await expect(page.getByRole("button", { name: /Big pieces/i })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: /High contrast/i })).toHaveAttribute("aria-pressed", "true");
@@ -22,9 +24,6 @@ test("320px phones default to a readable 6x6 board without sideways scrolling", 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))
     .toBe(true);
   await expect(page.getByRole("button", { name: /Worlds/ })).toBeVisible();
-  // Puzzle begins within the top portion of the first screen, not after menus.
-  const board = await page.locator(".board-wrap").boundingBox();
-  expect(board.y).toBeLessThan(280);
   await context.close();
 });
 
