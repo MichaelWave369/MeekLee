@@ -4,8 +4,13 @@ async function openChess(browser,width=390,saved=null){
   const context=await browser.newContext({viewport:{width,height:780},
     isMobile:true,hasTouch:true,deviceScaleFactor:2,reducedMotion:"reduce"});
   const page=await context.newPage();
-  if(saved)await page.addInitScript(value=>
-    localStorage.setItem("meeklee-adventures-save-v1",JSON.stringify(value)),saved);
+  if(saved)await page.addInitScript(value=>{
+    // Init scripts also run on page.reload(): seed only once per test tab.
+    if(!sessionStorage.getItem("meeklee-chess-fixture-seeded")){
+      localStorage.setItem("meeklee-adventures-save-v1",JSON.stringify(value));
+      sessionStorage.setItem("meeklee-chess-fixture-seeded","1");
+    }
+  },saved);
   await page.goto("./");
   await page.getByRole("button",{name:"Open game menu"}).click();
   await page.getByRole("button",{name:/Cards/}).click();
