@@ -4,7 +4,7 @@ import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
 import BubbleShooter from "./BubbleShooter.jsx";
-import { makeShooterLevel } from "./shooter.js";
+import { nextShooterLevel } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
 import { motionCssVariables, stageDuration } from "./motion.js";
 
@@ -219,7 +219,8 @@ export default function App() {
         level > saved[progressKey][mode]) return;
     setSaved(previous => {
       const old = previous[gameKey][mode];
-      const replacement = old.level === level && !old.won ? old : (mode === "bubbles" ? makeShooterLevel(level, size) : makeLevel(mode, level, size));
+      const replacement = old.level === level && !old.won ? old :
+        (mode === "bubbles" ? nextShooterLevel(level, size, old) : makeLevel(mode, level, size));
       return { ...previous, [gameKey]: { ...previous[gameKey], [mode]: replacement } };
     });
     clearSelection();
@@ -416,6 +417,7 @@ export default function App() {
         </section>
         {view === "trail" ? (
           <LevelTrail mode={mode} page={trailPage} unlocked={saved[progressKey][mode]}
+            medals={mode === "bubbles" ? saved[settings.easy ? "easyShooterStars" : "shooterStars"].bubbles : null}
             current={game.level} onPage={setTrailPage} onLevel={startTrailLevel}
             onBack={() => {
               setMenuOpen(true);
@@ -427,11 +429,17 @@ export default function App() {
           <BubbleShooter game={game} settings={settings} onPath={showPath}
             onChange={nextGame => setSaved(previous => {
               const high = { ...previous[progressKey] };
+              const starsKey = settings.easy ? "easyShooterStars" : "shooterStars";
+              const previousStars = previous[starsKey]?.bubbles || {};
               if (nextGame.won) high.bubbles = Math.max(high.bubbles, nextGame.level + 1);
               return {
                 ...previous,
                 [gameKey]: { ...previous[gameKey], bubbles: nextGame },
-                [progressKey]: high
+                [progressKey]: high,
+                [starsKey]: { bubbles: nextGame.won ? {
+                  ...previousStars,
+                  [nextGame.level]: Math.max(previousStars[nextGame.level] || 0, nextGame.stars || 1)
+                } : previousStars }
               };
             })}/>
         ) : (
