@@ -241,3 +241,13 @@
 @media(prefers-reduced-motion:reduce){
   .family-preview,.family-table-page{animation:none!important;transition:none!important;}
 }
+
+/* The new fourth Card Corner tile uses comfortable two-across discovery. */
+.card-corner-choices.card-corner-four{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+@media(max-width:600px){
+  .app-root .card-corner-choices.card-corner-four{
+    grid-template-columns:1fr;
+  }
+}
