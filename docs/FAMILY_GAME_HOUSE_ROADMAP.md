@@ -13,13 +13,16 @@ MeekLee began as a gift for Mom. Keep the game **free, cozy, accessible, offline
 
 The key `meeklee-adventures-save-v1` and original four world engines remain unchanged. All new games store separate slots under `saved.cards`. The notebook has an independent local storage key. Completing a picture writes its award in the same state update as the completed puzzle.
 
-## Next: Chess, Checkers and Backgammon Nook
+## Board Game Nook: Checkers with Pip
 
-Don't ship blank buttons or incomplete rules disguised as games. Build a dedicated **Board Game Nook** one verified engine at a time:
+**Now playable and offline:** American 8×8 Checkers, with Mom playing red against Pip. The rules engine enforces forward movement for men, compulsory captures, same-piece multiple jumps, promotion that ends the current turn, and kings moving in both directions. A deterministic local bot, optional hint and full-turn undo are included. Checkers is saved separately from all other games, and the board has large touch controls and accessible square labels.
 
-- **Checkers first:** American 8×8 draughts with diagonal moves, forced captures, multiple jumps, king promotion, local bot opponent, large tap targets, undo and save.
+## Next: Chess and Backgammon
+
+Don't ship blank buttons or incomplete rules disguised as games. Add them only with verified complete rules:
+
 - **Chess:** full legal moves, checks/checkmates/stalemates, castling, en passant, promotion, move hints and an adjustable offline opponent. Accessible board coordinates and optional large pieces. Respect the complexity: no false victories or illegal moves.
-- **Backgammon:** two players or a bot, dice (secure or suitably random), move legality, bearing off, bar, doubles, points and match scoring, with a gentle optional tutorial.
+- **Backgammon:** two players or a bot, dice (suitably random), move legality, bearing off, bar, doubles, points and match scoring, with a gentle optional tutorial.
 
 Start offline and local; extend to private family sessions only after the server is safely deployed and independent per-seat state is tested.
 

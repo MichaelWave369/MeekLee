@@ -1,0 +1,106 @@
+/* Checkers at the MeekLee Board Game Nook: large, high-contrast, cozy felt board. */
+.checkers-page{background:linear-gradient(150deg,#fffdf4,#eef8e9);}
+.checkers-score{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:12px auto;}
+.checkers-score strong{
+  border:2px solid #b8d3af;border-radius:12px;background:#fffdf7;color:#45644a;
+  min-height:44px;padding:9px 13px;font-size:.95rem;display:grid;place-items:center;
+}
+.checkers-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,260px);gap:18px;align-items:start;}
+.checkers-center{min-width:0;}
+.checkers-turn{
+  color:#3e704c;text-align:center;font-size:1.12rem;font-weight:950;
+  padding:10px;border:2px solid #c3dcae;background:#f8fbe8;border-radius:12px;
+  margin:5px auto 12px;max-width:530px;
+}
+.checkers-board{
+  width:100%;max-width:530px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));aspect-ratio:1;
+  border:clamp(5px,1.2vw,11px) solid #9b6f48;border-radius:15px;
+  overflow:hidden;box-shadow:0 6px #785233,0 8px 15px #0002;background:#e4e9c7;
+}
+.checkers-square{
+  border:0;border-radius:0;min-width:0;min-height:0;padding:0;
+  aspect-ratio:1;display:grid;place-items:center;position:relative;
+  touch-action:manipulation;user-select:none;color:#385d45;
+}
+.checkers-square.light{background:#f5edcf;}
+.checkers-square.dark{background:#7aa481;}
+.checkers-square.dark:nth-child(16n+1),
+.checkers-square.dark:nth-child(16n+3),
+.checkers-square.dark:nth-child(16n+5){background:#7aa481;}
+.checkers-square.source::before{
+  content:"";position:absolute;inset:9%;border-radius:50%;
+  box-shadow:0 0 0 3px #ffe39c;pointer-events:none;z-index:1;
+}
+.checkers-square.selected{box-shadow:inset 0 0 0 5px #ffd269;}
+.checkers-square.suggested{box-shadow:inset 0 0 0 5px #ffb85a;}
+.checkers-square.destination{background:#a9cd86;}
+.checkers-square.destination::before{
+  content:"";position:absolute;inset:3px;border:3px dashed #fff6ad;
+  border-radius:10px;pointer-events:none;
+}
+.checkers-square:focus-visible{z-index:4;outline:4px solid #433e9d;outline-offset:-4px;}
+.checkers-piece{
+  width:79%;height:79%;border-radius:50%;display:grid;place-items:center;
+  box-shadow:inset 0 4px 5px #fff8,inset 0 -5px 5px #0003,0 3px 4px #0003;
+  border:clamp(2px,.5vw,4px) solid #fff8;position:relative;
+}
+.checkers-piece.red{background:radial-gradient(circle at 35% 28%,#f48a7d,#b93e50);color:#fff8d9;}
+.checkers-piece.blue{background:radial-gradient(circle at 35% 28%,#8dd5d7,#347eaa);color:#fff9da;}
+.checkers-piece.king{border-color:#ffda83;box-shadow:inset 0 3px 6px #fff8,0 3px 4px #0004,0 0 0 2px #eacb6c;}
+.checkers-piece-mark{font-size:clamp(.68rem,3vw,1.4rem);line-height:1;}
+.checkers-crown{font-size:clamp(1.1rem,4.3vw,2rem);line-height:1;font-weight:900;}
+.checkers-target{
+  position:absolute;z-index:2;width:32%;height:32%;border-radius:50%;
+  background:#fdf4af;border:2px solid #507b4b;box-shadow:0 1px 4px #0002;pointer-events:none;
+}
+.checkers-board-help{
+  margin:16px auto 10px;max-width:530px;
+  padding:10px;border-radius:11px;background:#fff7db;border:1px solid #d4bf89;
+  color:#516545;text-align:center;font-size:.91rem;font-weight:850;line-height:1.45;
+}
+.checkers-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;}
+.checkers-controls button{
+  min-height:49px;border:2px solid #6b9b76;border-radius:12px;
+  padding:9px 13px;background:#e1f2d8;color:#3b5f45;font:inherit;font-weight:950;
+  font-size:.94rem;flex:1;min-width:112px;
+}
+.checkers-controls button.confirm-new{background:#fff1ca;border-color:#c1945b;}
+.checkers-controls button:disabled{opacity:.5;cursor:default;}
+.checkers-rules{
+  border:2px solid #c2d7b7;border-radius:16px;background:#fffef6;
+  padding:12px 15px;color:#526956;
+}
+.checkers-rules h3{margin:3px 0 11px;color:#3b6b47;}
+.checkers-rules>p{line-height:1.5;font-size:.92rem;margin:9px 0;}
+.checkers-cozy-note{background:#e9f4e0;border-radius:11px;padding:11px;margin-top:14px;}
+.checkers-cozy-note p{line-height:1.5;font-size:.88rem;margin:7px 0 0;}
+.checkers-nook-links{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
+  margin:10px 0;
+}
+.checkers-nook-links>div{
+  display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
+  border:2px solid #c8dbbc;border-radius:12px;padding:10px 5px;
+  background:#f5faee;
+}
+.checkers-nook-links span{font-size:1.8rem;}
+.checkers-nook-links strong{font-size:.85rem;color:#4c6752;}
+.checkers-nook-links small{font-size:.72rem;color:#69816c;}
+@media(max-width:820px){
+  .checkers-layout{grid-template-columns:1fr;}
+  .checkers-rules{max-width:530px;width:100%;margin:0 auto;}
+}
+@media(max-width:360px){
+  .checkers-page{padding:7px 5px;}
+  .checkers-board{border-width:5px;border-radius:8px;}
+  .checkers-piece-mark{font-size:.78rem;}
+  .checkers-crown{font-size:1.1rem;}
+  .checkers-controls button{min-width:90px;font-size:.82rem;padding:7px;}
+  .checkers-score strong{font-size:.8rem;padding:7px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .checkers-page *, .checkers-page *::after,.checkers-page *::before{
+    animation-duration:.001ms!important;transition-duration:.001ms!important;
+  }
+}

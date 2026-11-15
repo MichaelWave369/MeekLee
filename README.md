@@ -6,6 +6,14 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## ♟️ Board Game Nook · Checkers with Pip
+
+**Now playable:** free, offline, phone-friendly **American Checkers** against Pip. Mom controls red; Pip controls blue. The game enforces 8×8 standard moves, mandatory captures, multi-jumps with the same piece, king promotion, and king movement in both directions. Human-friendly hints, turn-level undo, automatic saves, and a no-pressure new game button are included.
+
+On a phone, open **☰ Menu → 🃏 Cards → Checkers with Pip** in the new Board Game Nook section. Tap a red piece and then a glowing destination. If a jump is available, it must be taken. Pip plays his turn automatically. Every match uses its own `cards.checkers` save, so Harvest Valley, Mom's garden, other puzzle worlds, and the rest of Card Corner are untouched.
+
+**Chess and Backgammon are labeled as future projects**, not playable buttons. The [Family Game House roadmap](docs/FAMILY_GAME_HOUSE_ROADMAP.md) tracks the next stage.
+
 ## 🌼 Family Game House · More ways to play
 
 The expanded **Card Corner** now contains **War (Mom vs. Pip)**, **Stack & Bloom** (an original 1–12 stockpile-card race inspired by traditional family card play), and the original Solitaire, Rook, and Color Parade. Stack & Bloom offers short and longer deals, shared numbered building piles, wild stars, four discard piles and an offline Pip opponent.

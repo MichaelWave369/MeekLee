@@ -7,12 +7,14 @@ import WarGame from "./WarGame.jsx";
 import StackRaceGame from "./StackRaceGame.jsx";
 import JigsawGame from "./JigsawGame.jsx";
 import FamilyPorch from "./FamilyPorch.jsx";
+import CheckersGame from "./CheckersGame.jsx";
 import {newSolitaire} from "./solitaire.js";
 import {newRook} from "./rook.js";
 import {newColorParade} from "./color-parade.js";
 import {newWar} from "./war.js";
 import {newStack} from "./stack-race.js";
 import {newJigsaw} from "./jigsaw.js";
+import {newCheckers} from "./checkers.js";
 
 const GAMES=[
   {id:"solitaire",icon:"♠️",title:"Klondike Solitaire",
@@ -46,6 +48,7 @@ export default function CardCorner({cards,onChange,onBack,settings}){
         id==="war"?newWar(Date.now()):
         id==="stack"?newStack(Date.now()):
         id==="jigsaw"?newJigsaw(Date.now()):
+        id==="checkers"?newCheckers(Date.now()):
         newColorParade(Date.now());
       onChange(id,fresh);
     }
@@ -60,6 +63,8 @@ export default function CardCorner({cards,onChange,onBack,settings}){
     onPractice={()=>launch("rook")}/>;
   if(active==="jigsaw"&&cards?.jigsaw)return <JigsawGame game={cards.jigsaw}
     onChange={game=>onChange("jigsaw",game)} onLeave={restart}/>;
+  if(active==="checkers"&&cards?.checkers)return <CheckersGame game={cards.checkers}
+    onChange={game=>onChange("checkers",game)} onLeave={restart}/>;
   if(chosen&&cards?.[chosen.id]){
     const shared={game:cards[chosen.id],onChange:game=>onChange(chosen.id,game),onLeave:restart};
     return chosen.id==="solitaire"?<SolitaireGame {...shared}/>:
@@ -115,11 +120,27 @@ export default function CardCorner({cards,onChange,onBack,settings}){
         </span>
       </button>
     </section>
-    <section className="card-corner-jigsaw family-game-house-coming" aria-label="Future board game nook">
-      <h3>♟️ The Board Game Nook · Next on the List</h3>
-      <p>We're planning Checkers, Chess, and Backgammon with big, easy controls and real computer players.
-        They're not playable yet, so there are no pretend Play buttons.</p>
-      <p>More Solitaire styles, puzzle worlds, and garden treasures are also on the way.</p>
+    <section className="card-corner-jigsaw checkers-nook" aria-label="Board Game Nook">
+      <h3>♟️ The Board Game Nook</h3>
+      <p>Pull up a chair for a classic board game. First up: real Checkers against Pip!</p>
+      <button type="button" className="card-corner-choice"
+        onClick={()=>launch("checkers")} aria-label="Play Checkers with Pip">
+        <span className="corner-game-art" aria-hidden="true">♟️</span>
+        <span className="corner-game-text">
+          <strong>Checkers with Pip</strong>
+          <small>Classic 8×8 Checkers, forced jumps, double jumps, kings, hints, undo and a cozy bot opponent.</small>
+          <em>Offline · Mom + Pip · No timer</em>
+          <span className="card-corner-launch">
+            {cards?.checkers?"Continue Checkers →":"Play Checkers →"}
+          </span>
+        </span>
+      </button>
+      <div className="checkers-nook-links" aria-label="Coming in future updates">
+        <div><span aria-hidden="true">♟️</span><strong>Chess</strong><small>Coming later</small></div>
+        <div><span aria-hidden="true">🎲</span><strong>Backgammon</strong><small>Coming later</small></div>
+        <div><span aria-hidden="true">🃏</span><strong>More Solitaire</strong><small>Coming later</small></div>
+      </div>
+      <p>More puzzle worlds and garden treasures remain on the roadmap, too.</p>
     </section>
     <p className="cardgame-foot">Solitaire, Color Parade, Offline Rook, War, Stack & Bloom and picture puzzles
       are free to play even offline. Family Rook requires a separate online room service.</p>
