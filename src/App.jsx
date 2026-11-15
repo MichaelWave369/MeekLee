@@ -225,6 +225,7 @@ export default function App() {
     setSaved({ ...saved, mode: next });
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 600px), (pointer: coarse)").matches) setShowWorlds(false);
     setMessage("Welcome to " + MODES[next].name + "!");
+    if (view === "garden" || view === "bonus") setView("play");
     if (view === "trail") {
       const nextProgressKey = next === "bubbles" ?
         (settings.easy ? "easyShooterProgress" : "shooterProgress") :
