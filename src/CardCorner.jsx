@@ -115,6 +115,12 @@ export default function CardCorner({cards,onChange,onBack,settings}){
         </span>
       </button>
     </section>
+    <section className="card-corner-jigsaw family-game-house-coming" aria-label="Future board game nook">
+      <h3>♟️ The Board Game Nook · Next on the List</h3>
+      <p>We're planning Checkers, Chess, and Backgammon with big, easy controls and real computer players.
+        They're not playable yet, so there are no pretend Play buttons.</p>
+      <p>More Solitaire styles, puzzle worlds, and garden treasures are also on the way.</p>
+    </section>
     <p className="cardgame-foot">Solitaire, Color Parade, Offline Rook, War, Stack & Bloom and picture puzzles
       are free to play even offline. Family Rook requires a separate online room service.</p>
   </section>;
