@@ -227,3 +227,20 @@ Tap **☰ Menu → 🃏 Cards** on a phone or **Card Corner** beside the world s
 Each card game has an isolated local save under \`cards.solitaire\`, \`cards.rook\`, or \`cards.parade\` in the existing \`meeklee-adventures-save-v1\` record. Existing puzzle levels, powers, garden decorations and bonus matches remain untouched. Games auto-resume on reopening Card Corner. No account or remote service is used for bots.
 
 Automated engine tests cover Klondike's 52 unique cards, legal red/black descending tableau runs, foundations, recycling and undo; Rook's 41-card deal, bidding, kitty, follow-color enforcement, tricks, scoring and many full bot games; and Color Parade's action cards, wild colors, draws, reshuffles and complete multi-bot matches. Phone browser tests cover each game at 390px and 320px, menu navigation, saving/reloading, and readability without horizontal page overflow.
+
+
+### Rook Family Game Night
+
+The Rook table now feels like a cozy family kitchen game night, with warm wood-texture table edges, bright readable cards, a welcome sign, and three distinct computer-player personalities. **Pip** cheers Mom as her teammate, **Willow** offers thoughtful competitive encouragement, and **Fern** provides playful challenges. Their remarks respond to public bids, trick outcomes, turn changes, and the final score; they never look at hidden opponent cards or change the actual Rook rules.
+
+When Mom and Pip win the match, the victory screen shows a special trophy, Pip's congratulations, and a gentle burst of decorative confetti. The confetti is disabled when **Animations** is switched off (and new reduced-motion visitors have animations off by default). Winning and losing messages remain readable without any motion.
+
+A compact **🏆 Rook Records** panel expands on tap to reveal locally saved statistics:
+- Games played and partnership wins
+- Current and best consecutive-win streak
+- Total hands completed
+- Favorite trump color, counted **only when Mom personally names trump**, not when the other players do
+
+Stats are updated only on real game transitions. Reloading a completed match, reopening Card Corner, starting a new deal, or reviewing the victory screen does **not** award duplicate wins. All records migrate safely into \`cards.rookStats\` in the existing local save. Existing Solitaire, Color Parade, puzzle and Happy Garden progress remains intact. No analytics service, account, ads, purchases, or new dependency is required.
+
+Phone-browser regressions exercise the kitchen-table scene, individual bot remarks, tap-to-expand records, Mom's trump selection and reload, real last-trick victory and single-count stats, celebratory confetti, and a 320px reduced-motion layout. The original multi-round bidding/trick/scoring engine tests remain in place.
