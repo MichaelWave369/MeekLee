@@ -12,7 +12,7 @@ test("320px phones default to a readable 6x6 board without sideways scrolling", 
   });
   const page = await context.newPage();
   await page.goto("./");
-  await expect(page.getByRole("heading", { name: /MeekLee Adventures/i })).toBeVisible();
+  await expect(page.locator(".mobile-menu-brand")).toBeVisible();
   await expect(page.locator(".tile")).toHaveCount(36);
   const boardBeforeSettings = await page.locator(".board-wrap").boundingBox();
   expect(boardBeforeSettings.y).toBeLessThan(280);
