@@ -447,3 +447,34 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
   .app-root .comfort-bar.open { display: flex; margin-bottom: 12px; }
   .app-root .world-chooser, .app-root .side-note { display: none; }
 }
+
+
+/* Direct-manipulation puzzle input. The source follows the finger until the
+   release event, and its destination is highlighted without changing the board. */
+.game-board .tile.finger-dragging,
+.high-contrast .game-board .tile.finger-dragging {
+  position: relative;
+  z-index: 15;
+  cursor: grabbing;
+  border: 3px solid #fff;
+  background: #fffdf2;
+  box-shadow: 0 6px 0 #4d875b, 0 13px 18px #263f2c80, 0 0 0 4px #356d46;
+  will-change: transform;
+  pointer-events: auto;
+}
+.game-board .tile.finger-drop-target,
+.high-contrast .game-board .tile.finger-drop-target {
+  position: relative;
+  z-index: 3;
+  outline: 4px solid #2f8853;
+  outline-offset: -3px;
+  background: #d8f5cd;
+  box-shadow: inset 0 0 0 3px #fff, 0 4px 0 #65a16b;
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-board .tile.finger-dragging,
+  .game-board .tile.finger-drop-target {
+    animation: none !important;
+    transition: none !important;
+  }
+}
