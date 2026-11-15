@@ -273,3 +273,148 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 @media (pointer: coarse) {
   .world-chooser { display: block; min-height: 52px; }
 }
+
+
+/* MeekLee animation system: transitions represent the actual intermediate
+   game-engine boards and the exact original source cell of each falling piece. */
+.game-board { --tile-gap: clamp(2px, .55vw, 6px); gap: var(--tile-gap); }
+.easy-see .game-board { --tile-gap: 5px; gap: var(--tile-gap); }
+.board-wrap { position: relative; isolation: isolate; overflow: hidden; }
+.is-animating .game-board { pointer-events: none; }
+.game-board .tile:disabled:hover { transform: none; background: linear-gradient(145deg, #fff, #f9f7ef); }
+.tile.fx-swap {
+  z-index: 5;
+  animation: meeklee-swap .2s ease-in-out both;
+}
+.tile.fx-pop {
+  z-index: 8;
+  animation: meeklee-pop .32s ease-in both;
+}
+.tile.fx-fall {
+  animation: meeklee-fall .44s cubic-bezier(.19,.72,.23,1) both;
+}
+.tile.fx-new { animation-name: meeklee-fresh; }
+@keyframes meeklee-swap {
+  from { transform: translate(calc(var(--from-cols) * (100% + var(--tile-gap))),calc(var(--from-rows) * (100% + var(--tile-gap)))) scale(1.04); }
+  to { transform: translate(0,0) scale(1); }
+}
+@keyframes meeklee-pop {
+  0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+  35% { transform: scale(1.24) rotate(3deg); opacity: 1; filter: brightness(1.22); }
+  100% { transform: scale(.3) rotate(-13deg); opacity: 0; filter: brightness(1.35); }
+}
+@keyframes meeklee-fall {
+  from { transform: translateY(calc(var(--from-rows) * (100% + var(--tile-gap)))) scale(.98); opacity: 1; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes meeklee-fresh {
+  from { transform: translateY(calc(var(--from-rows) * (100% + var(--tile-gap)))) scale(.75); opacity: .1; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.combo-toast {
+  position: absolute; top: 22%; left: 50%; z-index: 25;
+  pointer-events: none; text-align: center; white-space: nowrap;
+  transform: translateX(-50%) rotate(-4deg);
+  padding: 11px 20px; border-radius: 20px;
+  border: 4px solid #f5c850; background: #fff8d8ef;
+  box-shadow: 0 7px 0 #d2a43a99, 0 12px 26px #33491a6b;
+  font-size: clamp(1.12rem, 4vw, 1.65rem); line-height: 1.2;
+  font-weight: 900; color: #75431b;
+  animation: meeklee-celebrate .33s cubic-bezier(.2,1.5,.5,1) both;
+}
+.combo-toast span, .combo-toast small { display: block; }
+.combo-toast small { font-size: .76em; color: #4c7138; padding-top: 4px; }
+.combo-toast.big-combo {
+  color: #96325a; background: #fff0f6f5; border-color: #ed91b4;
+  box-shadow: 0 7px 0 #b94e8399, 0 12px 26px #33491a6b;
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+}
+@keyframes meeklee-celebrate {
+  from { opacity: 0; transform: translate(-50%,12px) rotate(-8deg) scale(.7); }
+  to { opacity: 1; transform: translate(-50%,0) rotate(-4deg) scale(1); }
+}
+.mobile-quickbar { display: none; }
+.mobile-tip { display: none; }
+@media (max-width: 600px) {
+  /* The board comes first. Display and world selection are opt-in drawers. */
+  .app-root .hero { padding: 6px 6px 10px; }
+  .app-root .hero .sun,
+  .app-root .hero .brand-mark,
+  .app-root .hero .eyebrow,
+  .app-root .hero .tagline,
+  .app-root .hero .promise { display: none; }
+  .app-root .hero h1 {
+    font-size: clamp(1.4rem, 5.8vw, 1.75rem); margin: 3px 0;
+    letter-spacing: -.02em;
+  }
+  .app-root .hero::before, .app-root .hero::after { display: none; }
+  .app-root .main-shell {
+    display: flex; flex-direction: column; padding: 5px 6px 30px;
+  }
+  .mobile-quickbar {
+    order: 0; display: flex; gap: 8px; margin: 0 0 7px;
+  }
+  .quick-toggle {
+    flex: 1; min-height: 45px; padding: 7px 10px;
+    border: 2px solid #52785e; border-radius: 11px;
+    background: #f3f9eb; color: #255139; font: inherit;
+    font-weight: 900; font-size: 1rem;
+  }
+  .quick-toggle[aria-expanded="true"] { background: #dbf0da; border-color: #367843; }
+  .quick-toggle:disabled { opacity: .65; }
+  .app-root .world-section { order: 1; }
+  .app-root .comfort-bar { order: 2; }
+  .app-root .play-section { order: 3; margin-top: 0; }
+  .app-root .world-section:not(.open), .app-root .comfort-bar:not(.open) { display: none; }
+  .app-root .world-section.open { display: block; margin: 5px 0 12px; }
+  .app-root .comfort-bar.open { display: flex; margin: 4px 0 12px; }
+  .app-root .comfort-actions { flex-wrap: wrap; }
+  .app-root .comfort-actions .comfort-button {
+    flex: 1 1 calc(50% - 8px); font-size: .95rem;
+  }
+  .app-root .world-chooser { display: none; }
+  .app-root .game-panel { padding: 8px 6px 12px; }
+  .app-root .game-heading h2, .app-root.easy-see .game-heading h2 {
+    font-size: 1.46rem; margin: 0 0 3px;
+  }
+  .app-root .game-heading .world-label {
+    font-size: .71rem; margin: 0 0 4px; letter-spacing: .15em;
+  }
+  .app-root .score-chip {
+    flex-direction: row; font-size: .93rem; gap: 4px;
+    padding: 5px 9px; border-radius: 10px;
+  }
+  .app-root .score-chip strong { font-size: 1.05rem; }
+  .app-root .score-chip small { display: none; }
+  .app-root .goal-heading, .app-root.easy-see .goal-heading {
+    font-size: .98rem; line-height: 1.3;
+  }
+  .app-root .progress-track { height: 10px; margin: 5px 0 5px; }
+  .app-root .instruction, .app-root.easy-see .instruction {
+    margin: 5px 0 7px; min-height: 0; font-size: .98rem; line-height: 1.2;
+  }
+  .app-root .desktop-tip { display: none; }
+  .app-root .mobile-tip { display: inline; }
+  .app-root .board-wrap { padding: 2px; }
+  .app-root .game-board, .app-root.easy-see .game-board {
+    --tile-gap: 3px; gap: var(--tile-gap);
+  }
+  .app-root .game-bottom, .app-root.easy-see .game-bottom {
+    margin: 8px 0; font-size: .87rem;
+  }
+  .app-root .message, .app-root.easy-see .message {
+    margin: 10px 0 2px; font-size: .96rem; min-height: 22px;
+  }
+  .app-root .combo-toast { border-width: 3px; padding: 8px 13px; }
+}
+@media (max-width: 350px) {
+  .app-root .game-board, .app-root.easy-see .game-board {
+    --tile-gap: 2px; gap: var(--tile-gap);
+  }
+  .app-root .goal-heading { font-size: .92rem; }
+  .app-root .game-heading h2 { font-size: 1.34rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile.fx-pop, .tile.fx-fall, .tile.fx-swap, .tile.fx-new,
+  .combo-toast { animation: none !important; }
+}
