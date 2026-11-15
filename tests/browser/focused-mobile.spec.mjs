@@ -41,11 +41,13 @@ test("bubble launcher and Shoot action fit on a 390px phone before scrolling", a
   await expect(page.locator(".mobile-quickbar")).toBeHidden();
   const arena=await page.locator(".shooter-arena").boundingBox();
   const shoot=await page.getByRole("button",{name:"Shoot!"}).boundingBox();
-  const rescue=await page.getByRole("button",{name:/Free Rainbow Rescue/}).boundingBox();
+  const pearl=await page.getByRole("button",{name:/Use Pearl Boost/}).boundingBox();
+  const rainbow=await page.getByRole("button",{name:/Use Rainbow Burst/}).boundingBox();
   expect(arena.width).toBeGreaterThanOrEqual(260);
   expect(arena.height/arena.width).toBeGreaterThan(1.5);
   expect(shoot.y + shoot.height).toBeLessThanOrEqual(780);
-  expect(rescue.y + rescue.height).toBeLessThanOrEqual(780);
+  expect(pearl.y + pearl.height).toBeLessThanOrEqual(780);
+  expect(rainbow.y + rainbow.height).toBeLessThanOrEqual(780);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);
   await page.getByRole("button",{name:"Shoot!"}).click();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem("meeklee-adventures-save-v1"))?.easyShooterGames?.bubbles?.moves),{timeout:8000}).toBe(1);
