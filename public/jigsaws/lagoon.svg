@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Blue lagoon with friendly tropical fish, coral and sparkling bubbles">
+<defs><linearGradient id="sea" x2="0" y2="1"><stop stop-color="#b0f3fc"/><stop offset="1" stop-color="#3eacc6"/></linearGradient></defs>
+<rect width="600" height="600" fill="url(#sea)"/><g opacity=".32" stroke="#fff" stroke-width="18" fill="none"><path d="M0 125Q90 75 190 124T380 124T600 124M0 200Q120 150 240 198T490 194T660 194M0 312Q110 268 230 313T460 311T640 309"/></g>
+<g fill="#ecfbff" opacity=".65"><circle cx="85" cy="119" r="28"/><circle cx="460" cy="90" r="48"/><circle cx="533" cy="310" r="31"/><circle cx="85" cy="375" r="19"/><circle cx="339" cy="440" r="44"/><circle cx="220" cy="84" r="16"/><circle cx="417" cy="250" r="13"/></g>
+<g fill="none" stroke="#fff" opacity=".85" stroke-width="6"><circle cx="85" cy="119" r="28"/><circle cx="460" cy="90" r="48"/><circle cx="533" cy="310" r="31"/><circle cx="85" cy="375" r="19"/><circle cx="339" cy="440" r="44"/></g>
+<path d="M150 265Q267 146 374 258Q275 367 150 265Z" fill="#ffe66c" stroke="#d6ad42" stroke-width="8"/><path d="M154 263L73 205V322Z" fill="#5ac4ea" stroke="#2792bc" stroke-width="8"/>
+<path d="M250 222Q268 273 251 312M302 230Q322 269 303 298" fill="none" stroke="#6dbfce" stroke-width="13"/><circle cx="334" cy="261" r="10" fill="#294a69"/>
+<path d="M0 580Q75 520 150 580T300 580T450 580T600 576V600H0Z" fill="#f2d7a2"/>
+<path d="M82 591Q108 495 58 445M83 591Q90 519 128 473M502 591Q488 498 531 441M502 591Q530 513 477 459" fill="none" stroke="#ed897e" stroke-width="27" stroke-linecap="round"/>
+<g fill="#facd8b"><path d="M267 567Q296 520 326 567Z"/><path d="M337 580Q368 531 404 579Z"/></g>
+<g fill="#ffeeca" opacity=".9"><circle cx="265" cy="503" r="7"/><circle cx="390" cy="145" r="8"/><circle cx="495" cy="377" r="8"/><circle cx="120" cy="390" r="6"/></g>
+</svg>
