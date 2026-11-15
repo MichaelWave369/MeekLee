@@ -53,7 +53,7 @@ function finish(previous,next,label){
 function clone(g){
   return {...g,stock:[...g.stock],waste:[...g.waste],
     tableau:g.tableau.map(c=>({down:[...c.down],up:[...c.up]})),
-    foundations:Object.fromEntries(STANDARD_SUITS.map(s=>[s.id,[...(g.foundations[s.id]||[])]))};
+    foundations: Object.fromEntries(STANDARD_SUITS.map(s => [s.id, [...(g.foundations[s.id] || [])]]))};
 }
 export function validSolitaire(g){
   if(g?.kind!=="solitaire"||!Array.isArray(g.tableau)||g.tableau.length!==7||
