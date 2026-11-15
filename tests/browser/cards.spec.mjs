@@ -71,7 +71,7 @@ test("Rook partner game permits human nest, trump, legal trick and bot responses
   for(let i=0;i<5;i++)await page.locator(".rook-hand-cards .rook-card").nth(i).click();
   await page.getByRole("button",{name:/Set Aside Five Cards/}).click();
   await expect(page.getByRole("heading",{name:/Choose trump/})).toBeVisible();
-  await page.getByRole("button",{name:/Green/}).click();
+  await page.locator(".rook-suit-row").getByRole("button",{name:/Green/}).click();
   await expect(page.getByText(/Trump: green/)).toBeVisible();
   await expect(page.locator(".rook-your-hand .rook-card")).toHaveCount(9);
   await page.locator(".rook-your-hand .rook-card.legal").first().click();
@@ -101,7 +101,7 @@ test("Color Parade wilds choose a color, next bot acts and progress is saved",as
   await expect(page.locator(".parade-opponent")).toHaveCount(3);
   await page.getByRole("button",{name:"Wild color card"}).first().click();
   await expect(page.getByRole("group",{name:"Choose a new color"})).toBeVisible();
-  await page.getByRole("button",{name:/Leaf/}).click();
+  await page.locator(".parade-wild-picker").getByRole("button",{name:/Leaf/}).click();
   await expect.poll(async()=>(await saved(page)).cards.parade.hands[0].length).toBe(6);
   await expect.poll(async()=>(await saved(page)).cards.parade.discard.at(-1).type).toBe("wild");
   await page.reload();
