@@ -122,8 +122,8 @@ export default function App() {
       setAnimation({
         trace, index: 0, result, turnMode: mode, turnGameKey: gameKey, turnProgressKey: progressKey,
         speed: settings.motionSpeed,
-        cellX: (tileRect?.width || 50) + gapX,
-        cellY: (tileRect?.height || 50) + gapY
+        cellX: (tile?.offsetWidth || tileRect?.width || 50) + gapX,
+        cellY: (tile?.offsetHeight || tileRect?.height || 50) + gapY
       });
     } else {
       commitTurn(result);
