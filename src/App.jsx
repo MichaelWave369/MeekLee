@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
+import { motionCssVariables, stageDuration } from "./motion.js";
 
 const WORLDS = [
   { id: "harvest", icon: "🌻", name: "Harvest Valley", desc: "Swap crops to grow a cheerful garden." },
@@ -44,6 +45,7 @@ export default function App() {
   const [hint, setHint] = useState([]);
   const [animation, setAnimation] = useState(null);
   const busyRef = useRef(false);
+  const boardRef = useRef(null);
   const [showSettings, setShowSettings] = useState(() =>
     typeof window === "undefined" || !window.matchMedia("(max-width: 600px), (pointer: coarse)").matches);
   const [message, setMessage] = useState("Every level is free, forever.");
@@ -60,6 +62,7 @@ export default function App() {
   const rules = MODES[mode];
   const busy = Boolean(animation);
   const stage = animation?.trace[animation.index] ?? null;
+  const visualSpeed = animation?.speed ?? settings.motionSpeed;
   const shownBoard = stage?.board ?? game.board;
   const movements = new Map((stage?.movements ?? []).map(move => [move.to, move]));
   const percent = Math.min(100, Math.round(game.cleared * 100 / game.target));
@@ -109,7 +112,19 @@ export default function App() {
       // Long cascades remain playable without trapping someone in an animation.
       const trace = result.trace.length > 16 ?
         [...result.trace.slice(0, 15), { type: "shuffle", board: [...result.game.board] }] : result.trace;
-      setAnimation({ trace, index: 0, result, turnMode: mode, turnGameKey: gameKey, turnProgressKey: progressKey });
+      // Pixel distances avoid CSS calc multiplication that some phone browsers ignore.
+      const board = boardRef.current;
+      const tile = board?.querySelector(".tile");
+      const tileRect = tile?.getBoundingClientRect();
+      const boardStyle = board && window.getComputedStyle(board);
+      const gapX = Number.parseFloat(boardStyle?.columnGap) || 0;
+      const gapY = Number.parseFloat(boardStyle?.rowGap) || 0;
+      setAnimation({
+        trace, index: 0, result, turnMode: mode, turnGameKey: gameKey, turnProgressKey: progressKey,
+        speed: settings.motionSpeed,
+        cellX: (tileRect?.width || 50) + gapX,
+        cellY: (tileRect?.height || 50) + gapY
+      });
     } else {
       commitTurn(result);
     }
@@ -120,9 +135,7 @@ export default function App() {
   useEffect(() => {
     if (!animation) return;
     const frame = animation.trace[animation.index];
-    const delay = frame.type === "swap" ? 200 :
-      frame.type === "pop" ? (frame.combo >= 2 ? 450 : 320) :
-      frame.type === "fall" ? 450 : 260;
+    const delay = stageDuration(frame, animation.speed);
     const timer = window.setTimeout(() => {
       if (animation.index + 1 < animation.trace.length) {
         setAnimation({ ...animation, index: animation.index + 1 });
@@ -259,7 +272,8 @@ export default function App() {
 
 
   return (
-    <div className={"app-root" + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "")}>
+    <div className={"app-root" + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "") + (settings.motion ? " motion-active" : "")}
+      style={motionCssVariables(visualSpeed)}>
       <header className="hero">
         <div className="sun" aria-hidden="true">☀️</div>
         <div className="brand-mark" aria-hidden="true">🌼</div>
@@ -309,6 +323,14 @@ export default function App() {
               aria-label={"Match animations, " + (settings.motion ? "on" : "off")}
               onClick={() => setSaved({ ...saved, settings: { ...settings, motion: !settings.motion } })}>
               ✨ Animations: <strong>{settings.motion ? "ON" : "OFF"}</strong>
+            </button>
+            <button type="button" className="comfort-button" disabled={busy || !settings.motion}
+              aria-label={"Animation pace, " + (settings.motionSpeed === "relaxed" ? "relaxed" : "quick")}
+              onClick={() => setSaved({
+                ...saved,
+                settings: { ...settings, motionSpeed: settings.motionSpeed === "relaxed" ? "classic" : "relaxed" }
+              })}>
+              🐢 Animation pace: <strong>{settings.motionSpeed === "relaxed" ? "Relaxed" : "Quick"}</strong>
             </button>
           </div>
         </section>
@@ -366,7 +388,9 @@ export default function App() {
                 </div>
               )}
               <div className={"game-board " + (rules.gravity === "up" ? "floaty" : "")}
-                style={{ "--grid-size": size }}
+                ref={boardRef}
+                style={{ "--grid-size": size, "--meeklee-active-pop-ms": stage?.type === "pop" ? stageDuration(stage, visualSpeed) + "ms" : undefined,
+                  "--meeklee-gravity-bounce": rules.gravity === "up" ? "-6px" : "6px" }}
                 role="group" aria-label={rules.name + " puzzle board, " + size + " by " + size}
                 aria-busy={busy}
                 >
@@ -376,8 +400,8 @@ export default function App() {
                     (stage.indices[0] === index ? stage.indices[1] : stage.indices[0]) : null;
                   const from = move ? move.from : swappedFrom;
                   const tileStyle = from == null ? undefined : {
-                    "--from-cols": (((from % size) + size) % size) - (index % size),
-                    "--from-rows": Math.floor(from / size) - Math.floor(index / size)
+                    "--shift-x": (((from % size) + size) % size - (index % size)) * (animation?.cellX || 50) + "px",
+                    "--shift-y": (Math.floor(from / size) - Math.floor(index / size)) * (animation?.cellY || 50) + "px"
                   };
                   const matching = stage?.type === "pop" && stage.matched.includes(index);
                   const lifted = drag?.index === index && !busy;
