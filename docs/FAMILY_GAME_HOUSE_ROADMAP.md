@@ -17,12 +17,17 @@ The key `meeklee-adventures-save-v1` and original four world engines remain unch
 
 **Now playable and offline:** American 8×8 Checkers, with Mom playing red against Pip. The rules engine enforces forward movement for men, compulsory captures, same-piece multiple jumps, promotion that ends the current turn, and kings moving in both directions. A deterministic local bot, optional hint and full-turn undo are included. Checkers is saved separately from all other games, and the board has large touch controls and accessible square labels.
 
-## Next: Chess and Backgammon
+## Board Game Nook: Backgammon with Pip
 
-Don't ship blank buttons or incomplete rules disguised as games. Add them only with verified complete rules:
+**Now playable and offline:** Backgammon joins Checkers. Mom moves 15 cream checkers from Point 24 to Point 1 against Pip's 15 blue checkers traveling the other way. The engine enforces a separate higher-player opening roll, mandatory maximum dice usage, choosing the higher die when only one can be played, doubles as four moves, blocked points, blot hits, bar re-entry, home-board bearing off, and single/gammon/backgammon points. A friendly doubling cube (no money) and first-to-five-point match scores are supported, along with move hints, full-turn undo and local bot turns.
+
+The 24-point board scrolls inside its own area on small phones, **but every legal move is also offered as a large button** for players who don't want to tap small triangles. Dice are generated from a deterministic pseudo-random state so a saved game and automated tests remain repeatable. This is a casual five-point family match, **not a rated/tournament mode**: the optional Crawford and Jacoby conventions are not applied. The opponent has a basic heuristic, not a tournament-strength engine.
+
+## Next: Chess
+
+Don't ship blank buttons or incomplete rules disguised as games:
 
 - **Chess:** full legal moves, checks/checkmates/stalemates, castling, en passant, promotion, move hints and an adjustable offline opponent. Accessible board coordinates and optional large pieces. Respect the complexity: no false victories or illegal moves.
-- **Backgammon:** two players or a bot, dice (suitably random), move legality, bearing off, bar, doubles, points and match scoring, with a gentle optional tutorial.
 
 Start offline and local; extend to private family sessions only after the server is safely deployed and independent per-seat state is tested.
 
