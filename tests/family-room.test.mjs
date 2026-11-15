@@ -123,7 +123,7 @@ test("illegal moves, spoofed turns, bot actions and unapproved replacement are b
   const first=familyAction(room,tokens[0],{type:"bid",value:70,seat:3,winner:0});
   assert(first.ok);
   assert.equal(first.room.game.winner,null);
-  assert.equal(first.room.game.bid,70);
+  assert(first.room.game.bid>=70,"Bots may legitimately outbid Mom after her 70 bid.");
   assert.equal(first.room.players[0].name,"Mom");
 });
 
@@ -133,6 +133,8 @@ test("text chat is invite-only, bounded, rate-limited and plain text; guests can
   assert.equal(cleanFamilyName(" \n  "), "");
   assert.equal(familyChat(room,"not-a-token","hello").ok,false);
   room=ok(joinFamilyRoom(room,"Aunt",tokens[1],1100));
+  room=ok(joinFamilyRoom(room,"Uncle",tokens[2],1101));
+  room=ok(joinFamilyRoom(room,"Sister",tokens[3],1102));
   room=ok(familyChat(room,tokens[0]," Hello family! ",2000,"m1"));
   assert.equal(room.chat.at(-1).text,"Hello family!");
   assert.equal(room.chat.at(-1).name,"Mom");
