@@ -102,9 +102,9 @@ export function normalizeShooter(game) {
     failed: !game.won && shotsLeft === 0 && pearls === 0 && rainbows === 0
   };
 }
-export function retryShooter(game) {
+export function retryShooter(game, allowRestart = false) {
   const previous = normalizeShooter(game);
-  if (!previous || !previous.failed) return { valid: false, game };
+  if (!previous || previous.won || (!previous.failed && !allowRestart)) return { valid: false, game };
   const next = makeShooterLevel(previous.level, previous.size, {
     retries: previous.retries + 1,
     pearls: previous.startPearls,
