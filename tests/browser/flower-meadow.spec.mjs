@@ -73,7 +73,7 @@ test("a completed Meadow Level 3 awards Daisy Wreath, plants it and persists rew
   expect((await saved(page)).collection.hiddenDecorations).toContain("meadow_daisy_wreath");
   await page.reload();
   await page.getByRole("button",{name:"Open game menu"}).click();
-  await page.getByRole("button",{name:/Garden/}).click();
+  await page.locator(".mobile-quickbar").getByRole("button",{name:/Garden/}).click();
   await expect(page.getByRole("button",{name:/Daisy Wreath, put away/})).toBeVisible();
   await context.close();
 });
@@ -86,6 +86,10 @@ test("Meadow Adventure Path marks six flower reward milestones",async({browser})
   await page.getByRole("button",{name:"Open Adventure Path"}).click();
   await expect(page.getByRole("heading",{name:"Adventure Path"})).toBeVisible();
   await expect(page.locator(".trail-meadow")).toBeVisible();
+  // Path opens at the unlocked level (11), on page two.
+  await expect(page.getByText("Page 2",{exact:true})).toBeVisible();
+  await expect(page.locator(".trail-node .trail-milestone")).toHaveCount(3);
+  await page.getByRole("button",{name:/Previous 10/}).click();
   await expect(page.locator(".trail-node .trail-milestone")).toHaveCount(3);
   await expect(page.getByRole("button",{name:/Level 3, completed/})).toBeEnabled();
   await page.getByRole("button",{name:/Next 10/}).click();
