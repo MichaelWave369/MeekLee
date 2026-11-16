@@ -16,7 +16,8 @@ export const MODES = Object.freeze({
   bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","⭐","🐚","🐠","🌸","🐙"], color: "#62a5c6" },
   meadow: { name: "Flower Meadow", mechanic: "bouquet", gravity: "down", pieces: ["🌷","🌼","🌸","🪻","🌺","💐"], color: "#88b98b" },
   pumpkin: { name: "Pumpkin Patch", mechanic: "cross", gravity: "down", pieces: ["🎃","🍎","🌽","🍁","🍐","🌰"], color: "#bf874a" },
-  moonlight: { name: "Moonlight Orchard", mechanic: "moon", gravity: "down", pieces: ["🍎","🍐","🍑","🍒","🫐","🍇"], color: "#6676b0" }
+  moonlight: { name: "Moonlight Orchard", mechanic: "moon", gravity: "down", pieces: ["🍎","🍐","🍑","🍒","🫐","🍇"], color: "#6676b0" },
+  kitchen: { name: "Grandma's Kitchen", mechanic: "recipe", gravity: "down", pieces: ["🍎","🍓","🥕","🥚","🥛","🌾"], color: "#c7895f" }
 });
 
 export function seedFor(mode, level) {
@@ -208,6 +209,44 @@ export function hasMoonlightHarvest(board,size=boardSize(board),radius=1){
   return board.some((_,i)=>moonlightHarvest(board,i,size,radius).length>=3);
 }
 
+// Grandma's Kitchen is an ordered, three-ingredient cooking puzzle.
+// Unlike matching groups, cross-harvests or halo taps, a player must find the
+ // NEXT requested ingredient anywhere on the board, in the proper order.
+ // These are playful mini recipes, never cooking instructions or private notes.
+export const KITCHEN_RECIPES=Object.freeze([
+  Object.freeze({name:"Apple Crumble",ingredients:Object.freeze([0,5,4])}),
+  Object.freeze({name:"Berry Tart",ingredients:Object.freeze([1,5,4])}),
+  Object.freeze({name:"Garden Soup",ingredients:Object.freeze([2,4,5])}),
+  Object.freeze({name:"Breakfast Bake",ingredients:Object.freeze([3,4,5])}),
+  Object.freeze({name:"Fruit Custard",ingredients:Object.freeze([0,3,4])}),
+  Object.freeze({name:"Berry Pancakes",ingredients:Object.freeze([3,1,5])}),
+  Object.freeze({name:"Farmhouse Pie",ingredients:Object.freeze([2,5,3])}),
+  Object.freeze({name:"Berry Milkshake",ingredients:Object.freeze([1,4,0])}),
+  Object.freeze({name:"Apple Breakfast",ingredients:Object.freeze([0,3,5])})
+]);
+export function kitchenNextIngredient(game){
+  if(game?.mode!=="kitchen"||!Number.isInteger(game.recipeId)||
+    game.recipeId<0||game.recipeId>=KITCHEN_RECIPES.length||
+    !Number.isInteger(game.recipeStep)||game.recipeStep<0||game.recipeStep>2)return null;
+  return KITCHEN_RECIPES[game.recipeId].ingredients[game.recipeStep];
+}
+export function kitchenCanCook(game){
+  const next=kitchenNextIngredient(game);
+  return next!==null&&Array.isArray(game.board)&&game.board.includes(next);
+}
+export function validKitchenState(game){
+  return game?.mode==="kitchen"&&Number.isSafeInteger(game.recipeId)&&
+    game.recipeId>=0&&game.recipeId<KITCHEN_RECIPES.length&&
+    Number.isSafeInteger(game.recipeStep)&&game.recipeStep>=0&&game.recipeStep<3&&
+    Number.isSafeInteger(game.dishes)&&game.dishes>=0&&
+    Number.isSafeInteger(game.moves)&&game.moves>=0&&
+    game.dishes*3+game.recipeStep===game.moves&&
+    kitchenCanCook(game);
+}
+function kitchenBoardReady(board){
+  return [0,1,2,3,4,5].every(x=>board.includes(x));
+}
+
 export function makeBoard(rng, mechanic = "swap", size = SIZE) {
   if (size !== SIZE && size !== EASY_SIZE) throw new Error("Invalid board size");
   for (let attempt = 0; attempt < 250; attempt++) {
@@ -220,7 +259,8 @@ export function makeBoard(rng, mechanic = "swap", size = SIZE) {
       const options = [0,1,2,3,4,5].filter(p => !banned.has(p));
       board[i] = options[Math.floor(rng() * options.length)];
     }
-    if (mechanic === "moon" ? hasMoonlightHarvest(board,size,1) :
+    if (mechanic === "recipe" ? kitchenBoardReady(board) :
+      mechanic === "moon" ? hasMoonlightHarvest(board,size,1) :
       mechanic === "cross" ? hasPumpkinHarvest(board,size) :
       mechanic === "bouquet" ? hasBouquet(board,size) :
       mechanic === "tap" ? hasGroup(board, size) : hasSwap(board, size)) return board;
@@ -272,10 +312,13 @@ export function makeLevel(mode, level, size = SIZE) {
   // A gentle repeating difficulty wave, rather than difficulty growing forever.
   const wave = (level - 1) % 9;
   const base=size===EASY_SIZE ?
-    (rules.mechanic==="moon"?28:rules.mechanic==="bouquet"?26:rules.mechanic==="cross"?25:rules.mechanic==="tap"?24:22) :
-    (rules.mechanic==="moon"?46:rules.mechanic==="bouquet"?42:rules.mechanic==="cross"?39:rules.mechanic==="tap"?36:30);
-  const target=base+wave*(size===EASY_SIZE?2:3);
-  return { mode, level, size, seed, rngState: rng.getState(), board, target, cleared: 0, score: 0, moves: 0, won: false };
+    (rules.mechanic==="recipe"?12:rules.mechanic==="moon"?28:rules.mechanic==="bouquet"?26:rules.mechanic==="cross"?25:rules.mechanic==="tap"?24:22) :
+    (rules.mechanic==="recipe"?18:rules.mechanic==="moon"?46:rules.mechanic==="bouquet"?42:rules.mechanic==="cross"?39:rules.mechanic==="tap"?36:30);
+  const target=base+wave*(size===EASY_SIZE?(rules.mechanic==="recipe"?3:2):3);
+  const kitchen=rules.mechanic==="recipe"?
+    {recipeId:Math.floor(rng()*KITCHEN_RECIPES.length),recipeStep:0,dishes:0}:null;
+  return { mode, level, size, seed, rngState:rng.getState(), board, target, cleared:0,
+    score:0,moves:0,won:false,...(kitchen||{}) };
 }
 
 export function playTurn(game, first, second) {
@@ -287,7 +330,26 @@ export function playTurn(game, first, second) {
   const board = [...game.board], rng = rngFrom(game.seed, game.rngState);
   let cleared = 0, bonus = 0, cascades = 0;
   const trace = [];
-  if(rules.mechanic==="moon"){
+  if(rules.mechanic==="recipe"){
+    const next=kitchenNextIngredient(game);
+    if(next===null||!validKitchenState(game)||!Number.isInteger(first)||
+      first<0||first>=board.length||board[first]!==next)
+      return {valid:false,game};
+    const completing=game.recipeStep===2;
+    const gained=completing?180:40;
+    trace.push({type:"pop",board:[...board],matched:[first],
+      kitchenDish:completing?KITCHEN_RECIPES[game.recipeId].name:null,
+      kitchenStep:game.recipeStep,gained,combo:1});
+    board[first]=null;cleared=1;bonus=gained;
+    const movements=[];
+    collapse(board,rng,rules.gravity,size,movements);
+    trace.push({type:"fall",board:[...board],movements,combo:1});
+    if(!kitchenBoardReady(board)){
+      const fresh=makeBoard(rng,rules.mechanic,size);
+      board.splice(0,board.length,...fresh);
+      trace.push({type:"shuffle",board:[...board]});
+    }
+  } else if(rules.mechanic==="moon"){
     const phase=moonPhase(game.moves),group=moonlightHarvest(board,first,size,phase.radius);
     if(group.length<3)return {valid:false,game};
     const chosen=new Set(group);
@@ -367,7 +429,8 @@ export function playTurn(game, first, second) {
       trace.push({ type: "shuffle", board: [...board] });
     }
   }
-  if (rules.mechanic === "moon" ? !hasMoonlightHarvest(board,size,1) :
+  if (rules.mechanic === "recipe" ? !kitchenBoardReady(board) :
+    rules.mechanic === "moon" ? !hasMoonlightHarvest(board,size,1) :
     rules.mechanic === "cross" ? !hasPumpkinHarvest(board,size) :
     rules.mechanic === "bouquet" ? !hasBouquet(board,size) :
     rules.mechanic === "tap" ? !hasGroup(board,size) : !hasSwap(board,size)) {
@@ -376,11 +439,17 @@ export function playTurn(game, first, second) {
     trace.push({ type: "shuffle", board: [...board] });
   }
   const total = game.cleared + cleared;
+  const kitchen=rules.mechanic==="recipe"?
+    (game.recipeStep===2?
+      {recipeId:Math.floor(rng()*KITCHEN_RECIPES.length),
+        recipeStep:0,dishes:game.dishes+1}:
+      {recipeId:game.recipeId,recipeStep:game.recipeStep+1,dishes:game.dishes}):null;
   return {
     valid: true,
     game: {
-      ...game, board, rngState: rng.getState(), cleared: total,
-      moves: game.moves + 1, score: game.score + bonus, won: total >= game.target
+      ...game, board, rngState:rng.getState(), cleared:total,
+      moves:game.moves+1, score:game.score+bonus, won:total>=game.target,
+      ...(kitchen||{})
     },
     cleared, cascades, trace
   };
