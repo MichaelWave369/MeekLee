@@ -631,6 +631,10 @@ export default function App() {
                   <button type="button" className="victory-chest" onClick={showGarden}>
                     {meadowPrizeForLevel(game.level).icon} You've earned the {meadowPrizeForLevel(game.level).name}! Visit Your Garden →
                   </button>}
+                {mode==="pumpkin"&&pumpkinPrizeForLevel(game.level)&&
+                  <button type="button" className="victory-chest" onClick={showGarden}>
+                    {pumpkinPrizeForLevel(game.level).icon} You've earned the {pumpkinPrizeForLevel(game.level).name}! Visit Your Garden →
+                  </button>}
                 <div className="victory-stars" aria-label={worldStars(game) + " out of 3 stars"}>
                   {"★".repeat(worldStars(game))}<span>{"☆".repeat(3 - worldStars(game))}</span>
                 </div>
@@ -650,6 +654,7 @@ export default function App() {
                     stage.reward?.big ? worldPowers?.big.icon + " " + worldPowers?.big.name + "!" :
                     stage.reward?.small ? worldPowers?.small.icon + " " + worldPowers?.small.name + "!" :
                     stage.pollen?.length ? "POLLEN BLOOM! +" + stage.pollen.length + "!" :
+                     stage.gust?.length ? "LEAF GUST! +" + stage.gust.length + "!" :
                      stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
                   <small>+{stage.gained} points ✨</small>
                 </div>
