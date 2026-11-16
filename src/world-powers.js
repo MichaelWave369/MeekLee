@@ -35,6 +35,9 @@ export function nextWorldLevel(mode, level, size, previous = null) {
 
 export function worldStars(game) {
   if (!game?.won) return 0;
+  // A careful three-step recipe has no wrong-turn penalty; award cozy stars
+  // for completing dishes rather than comparing single taps to match-3 runs.
+  if(game.mode==="kitchen")return 3;
   const moves = Math.max(0,game.moves);
   const target = Math.max(1,game.target);
   if (moves <= Math.ceil(target / 3)) return 3;
