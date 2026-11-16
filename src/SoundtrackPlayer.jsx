@@ -183,7 +183,7 @@ export default function SoundtrackPlayer(){
         creator's eight original recordings in the right spots, including the
         welcome theme, four puzzle themes, Pip's Garden, Rook and Solitaire.
         Or add up to eight individual MP3, WAV, OGG, M4A, AAC or FLAC files.
-        Music starts only when you press Play. Files stay in this browser,
+        Music starts only when you press Play. Files are stored in this browser,
         never uploaded or synced to a server.</p>
       <div className="soundtrack-import">
         <label className="soundtrack-file-label soundtrack-zip-label">
