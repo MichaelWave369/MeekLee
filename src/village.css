@@ -315,3 +315,142 @@
     animation:none!important;transition:none!important;
   }
 }
+
+
+/* Garden Village After Dark: manual presets, no clock or network access.
+   Glow overlays are decorative scenery, never collectible decorations. */
+.village-atmosphere {
+  margin:14px 0;padding:16px;border:2px solid #bccdb3;border-radius:18px;
+  background:linear-gradient(135deg,#f6fbef,#fbf8f1);color:#355c44;
+}
+.village-atmosphere h3 {margin:0 0 8px;font-size:1.2rem;color:#355c44}
+.village-atmosphere > p {margin:8px 0 12px;line-height:1.44;font-size:.91rem}
+.village-sky-choices {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:11px 0}
+.village-sky-choices button {
+  font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;min-height:74px;min-width:0;border:2px solid #afc5af;border-radius:13px;
+  background:#fffdf7;color:#2f5840;padding:9px 6px;
+}
+.village-sky-choices button > span {font-size:1.65rem}
+.village-sky-choices button strong {font-size:.94rem}
+.village-sky-choices button.chosen {
+  border-color:#3768aa;background:#e4edf9;box-shadow:inset 0 0 0 2px #b4cce8;
+}
+.village-glow-choices {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0}
+.village-glow-choices button {
+  font:inherit;display:flex;justify-content:center;align-items:center;gap:9px;
+  min-height:48px;min-width:0;border:2px solid #aec3aa;border-radius:12px;
+  background:#f9fcf3;color:#315b43;padding:10px;
+}
+.village-glow-choices button[aria-pressed="true"] {
+  border-color:#5a8a56;background:#e3f3de;
+}
+.village-glow-choices button > span:first-child {font-size:1.35rem}
+.village-sky-description {
+  background:#eef6ed;border-radius:11px;padding:11px 12px;color:#355b45;
+  font-size:.87rem;margin:11px 0 0!important;line-height:1.45;
+}
+.village-atmosphere button:focus-visible {
+  outline:3px solid #306aaf;outline-offset:2px;
+}
+.village-scene.village-time-sunset {
+  background:linear-gradient(180deg,#5c65a3 0%,#e89983 34%,#ffc990 54%,#799e78 100%);
+}
+.village-scene.village-time-night {
+  background:linear-gradient(180deg,#121e49 0%,#273963 38%,#385878 68%,#547f75 100%);
+  border-color:#9ab9d0;
+}
+.village-scene-pond.village-time-night {
+  background:linear-gradient(180deg,#101b42 0%,#263963 36%,#2e557a 60%,#3c7183 100%);
+}
+.village-scene.village-time-sunset .village-sky,
+.village-scene.village-time-night .village-sky {
+  color:#fff6d4;text-shadow:0 0 10px #e7f1ff88;
+}
+.village-scene.village-time-night .village-landmark-interactive,
+.village-scene.village-time-sunset .village-landmark-interactive {
+  background:#fef9e8f2;color:#254734;border-color:#c2cbb4;
+  text-shadow:none;position:relative;z-index:2;
+}
+.village-scene.village-time-night .village-companion,
+.village-scene.village-time-sunset .village-companion {
+  color:#fffdf0;text-shadow:0 1px 3px #122941,0 0 3px #122941;
+}
+.village-scene.village-time-night .village-visitors,
+.village-scene.village-time-sunset .village-visitors {
+  position:relative;z-index:2;background:#fffdf2f0;color:#2c5942;
+}
+.village-scene.village-time-night .village-plots,
+.village-scene.village-time-sunset .village-plots {z-index:2}
+.village-scene.village-time-night .village-landmark-feedback,
+.village-scene.village-time-sunset .village-landmark-feedback {
+  background:#fffdf3;color:#284c39;position:relative;z-index:2;
+}
+.village-ambient-lanterns {
+  display:flex;justify-content:space-around;align-items:center;gap:8px;
+  max-width:660px;margin:0 auto 6px;padding:5px 8px;
+  pointer-events:none;position:relative;z-index:1;
+}
+.village-ambient-lanterns > span {
+  font-size:1.65rem;line-height:1;
+  filter:drop-shadow(0 0 9px #ffe29d) drop-shadow(0 0 3px #f7a152);
+}
+.village-ambient-fireflies {
+  position:absolute;inset:15px 0 0;
+  overflow:hidden;pointer-events:none;z-index:1;
+}
+.village-firefly {
+  position:absolute;color:#fffcb6;font-size:1.2rem;
+  text-shadow:0 0 6px #ffff90,0 0 12px #ffef8b;
+}
+.village-firefly-0 {top:13%;left:13%}
+.village-firefly-1 {top:18%;left:67%}
+.village-firefly-2 {top:27%;left:44%}
+.village-firefly-3 {top:36%;left:83%}
+.village-firefly-4 {top:45%;left:24%}
+.village-firefly-5 {top:57%;left:71%}
+.village-firefly-6 {top:69%;left:12%}
+.village-ambient-fireflies.moving .village-firefly {
+  animation:village-firefly-glimmer 5s ease-in-out infinite;
+}
+.village-ambient-fireflies.moving .village-firefly:nth-child(2n) {animation-delay:-2s}
+.village-ambient-fireflies.moving .village-firefly:nth-child(3n) {animation-delay:-3.5s}
+@keyframes village-firefly-glimmer {
+  0%,100%{opacity:.65;transform:translate(0,0) scale(.85)}
+  50%{opacity:1;transform:translate(3px,-5px) scale(1.1)}
+}
+.village-moonlit-pond {
+  display:flex;justify-content:center;gap:12px;align-items:center;
+  width:min(100%,420px);margin:3px auto 10px;padding:8px;
+  border-radius:45%;pointer-events:none;position:relative;z-index:1;
+  background:radial-gradient(ellipse,#c7ebff75 0%,#75c1e454 45%,transparent 76%);
+  color:#d7f3ff;text-shadow:0 0 12px #d7ecff;
+}
+.village-moonlit-pond span:first-child {font-size:1.4rem}
+.village-moonlit-pond span:last-child {font-size:1.1rem;letter-spacing:3px}
+.high-contrast .village-atmosphere {
+  background:#fffef9;color:#192f23;border-color:#35563d;
+}
+.high-contrast .village-atmosphere h3,
+.high-contrast .village-sky-description {color:#192f23}
+.high-contrast .village-sky-choices button.chosen,
+.high-contrast .village-glow-choices button[aria-pressed="true"] {
+  background:#edf8e4;color:#1c422e;border-color:#164f35;
+}
+.high-contrast .village-scene.village-time-night {
+  border-color:#edf7ff;background:linear-gradient(180deg,#111a30,#2b4967 68%,#547784);
+}
+@media(max-width:400px){
+  .village-atmosphere{padding:10px}
+  .village-sky-choices{gap:6px}
+  .village-sky-choices button{min-height:70px;padding:7px 3px}
+  .village-sky-choices button > span {font-size:1.4rem}
+  .village-glow-choices {gap:6px}
+  .village-glow-choices button {padding:7px 4px;gap:5px;font-size:.84rem}
+  .village-ambient-lanterns>span {font-size:1.35rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .village-ambient-fireflies.moving .village-firefly {
+    animation:none!important;transition:none!important;
+  }
+}
