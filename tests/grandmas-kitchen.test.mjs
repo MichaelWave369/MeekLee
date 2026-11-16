@@ -121,7 +121,7 @@ test("kitchen validation rejects damaged recipe state while preserving original 
   for(const broken of [
     {...g,recipeId:-1},{...g,recipeStep:3},{...g,recipeStep:-1},
     {...g,dishes:-1},{...g,dishes:5},{...g,recipeStep:2,moves:0},
-    {...g,board:Array(36).fill(0)}
+    {...g,board:Array(36).fill((kitchenNextIngredient(g)+1)%6)}
   ]){
     assert(!validGame(broken,"kitchen",EASY_SIZE));
   }
