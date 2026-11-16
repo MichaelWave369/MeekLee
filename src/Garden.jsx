@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  availableChests, totalAvailableChests, gardenInventory, MEADOW_GARDEN_DECOR, PUMPKIN_GARDEN_DECOR
+  availableChests, totalAvailableChests, gardenInventory, MEADOW_GARDEN_DECOR, PUMPKIN_GARDEN_DECOR, MOONLIGHT_GARDEN_DECOR
 } from "./collection.js";
 
 const WORLD_NAMES={
@@ -37,7 +37,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     <p className="garden-intro">Every ten completed levels in the four original worlds earns a treasure chest.
       Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!
       Complete picture puzzles to earn nine extra treasures, explore Flower Meadow for
-      six spring decorations, or visit Pumpkin Patch for six autumn decorations!</p>
+      six spring decorations, Pumpkin Patch for six autumn decorations, or Moonlight Orchard for six evening treasures!</p>
 
     <div className="garden-landscape" aria-label="Your collected garden decorations and companion">
       <span className="garden-sun" aria-hidden="true">☀️</span>
@@ -67,7 +67,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     <section className="garden-section" aria-labelledby="garden-chest-title">
       <h3 id="garden-chest-title">🎁 Treasure Chests {pendingChests>0?"("+pendingChests+" ready)":""}</h3>
       {chests.length===0 ?
-        <p className="garden-section-help">Your next chest appears after Level 10, 20, 30, and so on in the original four worlds. Flower Meadow and Pumpkin Patch have their own decorations.</p> :
+        <p className="garden-section-help">Your next chest appears after Level 10, 20, 30, and so on in the original four worlds. Flower Meadow, Pumpkin Patch and Moonlight Orchard have their own decorations.</p> :
         <div className="chest-list">
           {chests.slice(0,4).map(reward=>
             <button className="chest-button" type="button" key={reward.key}
@@ -122,6 +122,26 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
             <strong>{prize.name}</strong>
             <small>{owned?"✓ Earned! Plant from the garden list":
               "Complete Pumpkin Level "+prize.level}</small>
+          </div>;
+        })}
+      </div>
+    </section>
+
+    <section className="garden-section" aria-labelledby="moonlight-prize-title">
+      <h3 id="moonlight-prize-title">🌙 Moonlight Orchard Rewards</h3>
+      <p className="garden-section-help">Follow the moon phases and collect fruit to earn six
+        evening garden decorations at levels 3, 6, 9, 12, 15 and 18. Each prize is
+        earned only once across both board sizes. No accounts, purchases or timers.</p>
+      <div className="garden-collection-grid" aria-label="Moonlight Orchard earned decorations">
+        {MOONLIGHT_GARDEN_DECOR.map(prize=>{
+          const owned=collection.moonlightPrizes?.includes(prize.id);
+          return <div key={prize.id}
+            className={"garden-collectible moonlight-prize"+(owned?" showing":"")}
+            aria-label={prize.name+(owned?", earned":", unlock at Moonlight Orchard level "+prize.level)}>
+            <span aria-hidden="true">{owned?prize.icon:"🌙"}</span>
+            <strong>{prize.name}</strong>
+            <small>{owned?"✓ Earned! Plant from the garden list":
+              "Complete Orchard Level "+prize.level}</small>
           </div>;
         })}
       </div>

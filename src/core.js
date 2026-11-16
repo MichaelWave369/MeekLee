@@ -15,7 +15,8 @@ export const MODES = Object.freeze({
   rescue: { name: "Critter Rescue", mechanic: "tap", gravity: "down", pieces: ["🐶","🐱","🐰","🦊","🐼","🐻"], color: "#df9b53" },
   bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","⭐","🐚","🐠","🌸","🐙"], color: "#62a5c6" },
   meadow: { name: "Flower Meadow", mechanic: "bouquet", gravity: "down", pieces: ["🌷","🌼","🌸","🪻","🌺","💐"], color: "#88b98b" },
-  pumpkin: { name: "Pumpkin Patch", mechanic: "cross", gravity: "down", pieces: ["🎃","🍎","🌽","🍁","🍐","🌰"], color: "#bf874a" }
+  pumpkin: { name: "Pumpkin Patch", mechanic: "cross", gravity: "down", pieces: ["🎃","🍎","🌽","🍁","🍐","🌰"], color: "#bf874a" },
+  moonlight: { name: "Moonlight Orchard", mechanic: "moon", gravity: "down", pieces: ["🍎","🍐","🍑","🍒","🫐","🍇"], color: "#6676b0" }
 });
 
 export function seedFor(mode, level) {
@@ -177,6 +178,36 @@ export function hasPumpkinHarvest(board,size=boardSize(board)) {
   return false;
 }
 
+// Moonlight Orchard: gather all matching fruit in a moonlit SQUARE halo
+// centered on the tapped piece. Crops do not need to touch. The moon cycles
+// through three radii as moves are made, unlike Pumpkin Patch's long cross.
+export const MOON_PHASES=Object.freeze([
+  Object.freeze({name:"Crescent",icon:"🌒",radius:1}),
+  Object.freeze({name:"Half Moon",icon:"🌓",radius:2}),
+  Object.freeze({name:"Full Moon",icon:"🌕",radius:3})
+]);
+export function moonPhase(moves=0){
+  return MOON_PHASES[Number.isSafeInteger(moves)&&moves>=0?moves%3:0];
+}
+export function moonlightHarvest(board,index,size=boardSize(board),radius=1){
+  if(!Array.isArray(board)||!size||!Number.isInteger(index)||
+      index<0||index>=size*size||!Number.isInteger(radius)||
+      radius<1||radius>3||!Number.isInteger(board[index]))return [];
+  const kind=board[index],row=Math.floor(index/size),col=index%size;
+  const found=[];
+  for(let r=Math.max(0,row-radius);r<=Math.min(size-1,row+radius);r++){
+    for(let c=Math.max(0,col-radius);c<=Math.min(size-1,col+radius);c++){
+      const i=r*size+c;
+      if(board[i]===kind)found.push(i);
+    }
+  }
+  return found;
+}
+export function hasMoonlightHarvest(board,size=boardSize(board),radius=1){
+  if(!size)return false;
+  return board.some((_,i)=>moonlightHarvest(board,i,size,radius).length>=3);
+}
+
 export function makeBoard(rng, mechanic = "swap", size = SIZE) {
   if (size !== SIZE && size !== EASY_SIZE) throw new Error("Invalid board size");
   for (let attempt = 0; attempt < 250; attempt++) {
@@ -189,7 +220,8 @@ export function makeBoard(rng, mechanic = "swap", size = SIZE) {
       const options = [0,1,2,3,4,5].filter(p => !banned.has(p));
       board[i] = options[Math.floor(rng() * options.length)];
     }
-    if (mechanic === "cross" ? hasPumpkinHarvest(board,size) :
+    if (mechanic === "moon" ? hasMoonlightHarvest(board,size,1) :
+      mechanic === "cross" ? hasPumpkinHarvest(board,size) :
       mechanic === "bouquet" ? hasBouquet(board,size) :
       mechanic === "tap" ? hasGroup(board, size) : hasSwap(board, size)) return board;
   }
@@ -240,8 +272,8 @@ export function makeLevel(mode, level, size = SIZE) {
   // A gentle repeating difficulty wave, rather than difficulty growing forever.
   const wave = (level - 1) % 9;
   const base=size===EASY_SIZE ?
-    (rules.mechanic==="bouquet"?26:rules.mechanic==="cross"?25:rules.mechanic==="tap"?24:22) :
-    (rules.mechanic==="bouquet"?42:rules.mechanic==="cross"?39:rules.mechanic==="tap"?36:30);
+    (rules.mechanic==="moon"?28:rules.mechanic==="bouquet"?26:rules.mechanic==="cross"?25:rules.mechanic==="tap"?24:22) :
+    (rules.mechanic==="moon"?46:rules.mechanic==="bouquet"?42:rules.mechanic==="cross"?39:rules.mechanic==="tap"?36:30);
   const target=base+wave*(size===EASY_SIZE?2:3);
   return { mode, level, size, seed, rngState: rng.getState(), board, target, cleared: 0, score: 0, moves: 0, won: false };
 }
@@ -255,7 +287,25 @@ export function playTurn(game, first, second) {
   const board = [...game.board], rng = rngFrom(game.seed, game.rngState);
   let cleared = 0, bonus = 0, cascades = 0;
   const trace = [];
-  if (rules.mechanic === "cross") {
+  if(rules.mechanic==="moon"){
+    const phase=moonPhase(game.moves),group=moonlightHarvest(board,first,size,phase.radius);
+    if(group.length<3)return {valid:false,game};
+    const chosen=new Set(group);
+    // Five matching fruit awaken starlight around the tapped fruit. A stardust
+    // bonus never double-counts the fruit already collected by the moon halo.
+    const stardust=group.length>=5?
+      flowerNeighbors(first,size).filter(i=>!chosen.has(i)):[];
+    const collected=[...group,...stardust];
+    const gained=group.length*(group.length+3)*10+stardust.length*40;
+    trace.push({type:"pop",board:[...board],matched:collected,
+      moonPhase:phase.name,stardust,groupSize:group.length,combo:1,gained});
+    for(const i of collected)board[i]=null;
+    cleared=collected.length;
+    bonus=gained;
+    const movements=[];
+    collapse(board,rng,rules.gravity,size,movements);
+    trace.push({type:"fall",board:[...board],movements,combo:1});
+  } else if (rules.mechanic === "cross") {
     const group=pumpkinHarvest(board,first,size);
     if(group.length<3)return {valid:false,game};
     const groupSet=new Set(group);
@@ -317,7 +367,8 @@ export function playTurn(game, first, second) {
       trace.push({ type: "shuffle", board: [...board] });
     }
   }
-  if (rules.mechanic === "cross" ? !hasPumpkinHarvest(board,size) :
+  if (rules.mechanic === "moon" ? !hasMoonlightHarvest(board,size,1) :
+    rules.mechanic === "cross" ? !hasPumpkinHarvest(board,size) :
     rules.mechanic === "bouquet" ? !hasBouquet(board,size) :
     rules.mechanic === "tap" ? !hasGroup(board,size) : !hasSwap(board,size)) {
     const fresh = makeBoard(rng, rules.mechanic, size);

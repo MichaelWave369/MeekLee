@@ -59,6 +59,19 @@ export const PUMPKIN_GARDEN_DECOR=Object.freeze([
 export function pumpkinPrizeForLevel(level){
   return PUMPKIN_GARDEN_DECOR.find(item=>item.level===level)||null;
 }
+
+// Moonlight Orchard has separate earned prizes. Never add it to CHEST_WORLDS.
+export const MOONLIGHT_GARDEN_DECOR=Object.freeze([
+  {id:"moonlight_glow_lantern",icon:"🏮",name:"Moonlit Glow Lantern",level:3},
+  {id:"moonlight_starry_birdbath",icon:"🐦",name:"Starry Birdbath",level:6},
+  {id:"moonlight_silver_tree",icon:"🌳",name:"Silver Blossom Tree",level:9},
+  {id:"moonlight_firefly_jar",icon:"✨",name:"Firefly Lantern Jar",level:12},
+  {id:"moonlight_night_swing",icon:"🪑",name:"Moonlit Garden Swing",level:15},
+  {id:"moonlight_moonbeam_arch",icon:"🌙",name:"Moonbeam Garden Arch",level:18}
+]);
+export function moonlightPrizeForLevel(level){
+  return MOONLIGHT_GARDEN_DECOR.find(item=>item.level===level)||null;
+}
 export const GARDEN_PETS = Object.freeze([
   {id:"bunny",icon:"🐰",name:"Pip the Bunny"},
   {id:"puppy",icon:"🐶",name:"Biscuit the Puppy"},
@@ -126,10 +139,15 @@ export function normalizeCollection(raw = {}) {
       typeof id==="string"&&PUMPKIN_GARDEN_DECOR.some(item=>item.id===id)))]:[];
   for(const item of PUMPKIN_GARDEN_DECOR)
     if(pumpkinPrizes.includes(item.id))decorIds.add(item.id);
+  const moonlightPrizes=Array.isArray(previous.moonlightPrizes)?
+    [...new Set(previous.moonlightPrizes.filter(id=>
+      typeof id==="string"&&MOONLIGHT_GARDEN_DECOR.some(item=>item.id===id)))]:[];
+  for(const item of MOONLIGHT_GARDEN_DECOR)
+    if(moonlightPrizes.includes(item.id))decorIds.add(item.id);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -197,6 +215,8 @@ export function gardenInventory(collection) {
     if(normalized.meadowPrizes.includes(item.id))decor.set(item.id,item);
   for(const item of PUMPKIN_GARDEN_DECOR)
     if(normalized.pumpkinPrizes.includes(item.id))decor.set(item.id,item);
+  for(const item of MOONLIGHT_GARDEN_DECOR)
+    if(normalized.moonlightPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
 export function selectCompanion(collection,petId) {
@@ -236,6 +256,14 @@ export function completeBonus(collection,key,moves) {
       completedBonuses:{...current.completedBonuses,[key]:best===undefined?moves:Math.min(best,moves)}
     }
   };
+}
+
+export function recordMoonlightReward(collection,previousGame,nextGame){
+  const current=normalizeCollection(collection);
+  if(nextGame?.mode!=="moonlight"||!nextGame.won||previousGame?.won)return current;
+  const prize=moonlightPrizeForLevel(nextGame.level);
+  if(!prize||current.moonlightPrizes.includes(prize.id))return current;
+  return normalizeCollection({...current,moonlightPrizes:[...current.moonlightPrizes,prize.id]});
 }
 
 export function recordPumpkinReward(collection,previousGame,nextGame){

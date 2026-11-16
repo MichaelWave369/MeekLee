@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   MODES, SIZE, EASY_SIZE, adjacent, connectedGroup, findMatches,
-  hasGroup, hasBouquet, connectedBouquet, pumpkinHarvest, hasPumpkinHarvest, hasSwap, makeLevel, neighbors, playTurn
+  hasGroup, hasBouquet, connectedBouquet, pumpkinHarvest, hasPumpkinHarvest, moonlightHarvest, hasMoonlightHarvest, moonPhase, hasSwap, makeLevel, neighbors, playTurn
 } from "../src/core.js";
 import { createSaveState, validGame } from "../src/save.js";
 
@@ -14,7 +14,8 @@ test("6x6 Easy-to-See boards generate reproducibly and always have a move", () =
       assert.equal(game.size, EASY_SIZE);
       assert.deepEqual(game, makeLevel(mode, level, EASY_SIZE));
       assert.equal(findMatches(game.board).size, 0);
-      assert(MODES[mode].mechanic === "cross" ? hasPumpkinHarvest(game.board) :
+      assert(MODES[mode].mechanic === "moon" ? hasMoonlightHarvest(game.board) :
+        MODES[mode].mechanic === "cross" ? hasPumpkinHarvest(game.board) :
         MODES[mode].mechanic === "bouquet" ? hasBouquet(game.board) :
         MODES[mode].mechanic === "tap" ? hasGroup(game.board) : hasSwap(game.board));
     }
@@ -37,9 +38,10 @@ test("each accessible world completes levels through legal turns", () => {
       let turns = 0;
       while (!game.won && turns < 300) {
         let turn = null;
-        if (["tap","bouquet","cross"].includes(MODES[mode].mechanic)) {
+        if (["tap","bouquet","cross","moon"].includes(MODES[mode].mechanic)) {
           const mechanic=MODES[mode].mechanic;
           const first=game.board.findIndex((_,i)=>
+            mechanic==="moon"?moonlightHarvest(game.board,i,EASY_SIZE,moonPhase(game.moves).radius).length>=3:
             mechanic==="cross"?pumpkinHarvest(game.board,i,EASY_SIZE).length>=3:
             mechanic==="bouquet"?connectedBouquet(game.board,i,EASY_SIZE).length>=3:
               connectedGroup(game.board,i,EASY_SIZE).length>=2);
@@ -57,8 +59,9 @@ test("each accessible world completes levels through legal turns", () => {
         assert(turn?.valid, "no legal turn " + mode + "/" + level);
         assert.equal(turn.game.board.length, 36);
         if (MODES[mode].mechanic === "swap") assert.equal(findMatches(turn.game.board).size, 0);
-        assert.equal(MODES[mode].mechanic === "cross" ?
-          hasPumpkinHarvest(turn.game.board) :
+        assert.equal(MODES[mode].mechanic === "moon" ?
+          hasMoonlightHarvest(turn.game.board) :
+          MODES[mode].mechanic === "cross" ? hasPumpkinHarvest(turn.game.board) :
           MODES[mode].mechanic === "bouquet" ? hasBouquet(turn.game.board) :
           MODES[mode].mechanic === "tap" ?
             hasGroup(turn.game.board) : hasSwap(turn.game.board), true);

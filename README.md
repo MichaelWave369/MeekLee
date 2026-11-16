@@ -6,6 +6,24 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🌙 Moonlight Orchard: seventh world with changing moon phases
+
+**Now playable, free and offline:** Moonlight Orchard joins the original four worlds, Flower Meadow and Pumpkin Patch as MeekLee's **seventh puzzle world**, featuring a brand-new **moon-halo** mechanic with its own Adventure Path, star medals and separate 6×6/8×8 puzzle saves.
+
+### Three phases make every turn different
+A tap gathers **3+ matching fruit inside a square halo around the selected fruit**. The same fruit can be picked even if it is **not touching** the other matching fruit; this isn't Flower Meadow's diagonal connected groups or Pumpkin Patch's long row-and-column harvest. The range changes after **each successful move**, cycling forever:
+
+- **🌒 Crescent:** gather within **one square** in any direction (3×3 halo).
+- **🌓 Half Moon:** gather within **two squares** (up to 5×5).
+- **🌕 Full Moon:** gather within **three squares** (up to 7×7).
+
+After Full Moon, Crescent returns. The current and next phase are always displayed in a dark, high-contrast status banner. A harvest of **five or more** matching fruit awakens **stardust** that also gathers immediately neighboring fruit not already in the chosen group, with bonus points. Hints illuminate a guaranteed legal **center fruit**, not misleading every fruit in the halo. The generator guarantees at least one Crescent-legal move after each refill, so every phase remains playable. No countdowns, energy meters, accounts or purchases.
+
+### Six night garden treasures
+Complete Moonlight Orchard levels **3, 6, 9, 12, 15 and 18** to earn Moonlit Glow Lantern, Starry Birdbath, Silver Blossom Tree, Firefly Lantern Jar, Moonlit Garden Swing and Moonbeam Garden Arch. All six are earned **once across both sizes**, stored in validated `collection.moonlightPrizes` and shown in Mom's existing Garden, where each can be planted or hidden. The four original worlds' chest milestones, Flower Meadow and Pumpkin Patch prizes, pets, cards and every previous high-level save are unchanged.
+
+**Phone path:** ☰ Menu → 🌍 Worlds → Moonlight Orchard. Tap the glowing hint fruit or any eligible fruit. Big tiles, keyboard access, motion settings, high contrast, offline saves and infinite levels work as before.
+
 ## 🎃 Pumpkin Patch: sixth world with autumn harvests
 
 **Now playable, free and offline:** Pumpkin Patch joins Flower Meadow and the original four puzzle adventures as MeekLee's **sixth world**, with its own endless Adventure Path, medal progression, and completely separate 6×6 and 8×8 saves.
