@@ -6,6 +6,23 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🥣 Grandma's Kitchen: eighth world, recipe puzzles and the private Family Porch
+
+**Now playable, free and offline:** Grandma's Kitchen joins the seven existing puzzle worlds as the **eighth world**, with its own 6×6 Easy-to-See and 8×8 classic boards, endless levels, stars, Adventure Path, earned garden decorations and independent progress under the original save key.
+
+### Three ingredients, in the right order
+The game shows a **playful recipe card**, for example Apple Crumble, Berry Tart, Garden Soup or Breakfast Bake. Mom chooses the **first ingredient anywhere on the board**, then the second, then the third, **in that exact order**. Correct selections gently refill the board, earn points and advance the recipe card. A finished three-step recipe **serves a dish** and earns a completion bonus before the next recipe appears. Tapping the wrong ingredient does not spend a turn or alter a saved board. Hints highlight precisely one correct next ingredient; free shuffles keep all six ingredients accessible without discarding the recipe in progress.
+
+This is a new **ordered-ingredient mechanic**, not match-three swapping, diagonal bouquet groups, Pumpkin Patch crosses or Moonlight Orchard halos. The engine supplies deterministic mini recipes with guaranteed available ingredients, without timers, lives, paid hints or in-game purchases. Both board sizes retain their own saved work; there are no game-over countdowns.
+
+### Mom's real recipes stay private
+The recipe card includes **📖 My Private Family Recipes**, a shortcut directly into the already-existing **Family Porch** recipe and story notebook. The puzzle's playful ingredient patterns are **not real cooking instructions**, and do not read or modify the notebook. Family Porch keeps its independent `meeklee-family-porch-notes-v1` localStorage key, so recipes remain solely on the device unless Mom intentionally chooses to share an individual note. No account, public posting or unrequested upload is involved.
+
+### Six earned kitchen decorations
+Complete Grandma's Kitchen levels **3, 6, 9, 12, 15 and 18** to earn Grandma's Herb Basket, Strawberry Window Planter, Farmhouse Flour Sack, Afternoon Tea Table, Family Picnic Bench and Grandma's Cozy Porch. Each decoration is awarded **once** across both board sizes, placed in its own validated `collection.kitchenPrizes` slot and shown in Mom's existing Garden, where it can be planted or hidden. The four original worlds' chest milestones, pets, Meadow/Pumpkin/Moonlight rewards, previous high-level progress, other puzzles and every Card Corner save remain untouched.
+
+**Phone path:** ☰ Menu → 🌍 Worlds → Grandma's Kitchen. The current and upcoming ingredient steps are displayed on a large, high-contrast card and save automatically offline.
+
 ## 🌙 Moonlight Orchard: seventh world with changing moon phases
 
 **Now playable, free and offline:** Moonlight Orchard joins the original four worlds, Flower Meadow and Pumpkin Patch as MeekLee's **seventh puzzle world**, featuring a brand-new **moon-halo** mechanic with its own Adventure Path, star medals and separate 6×6/8×8 puzzle saves.
