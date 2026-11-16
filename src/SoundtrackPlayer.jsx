@@ -7,12 +7,13 @@ import {
   loadSoundtrack,saveSoundtrackTrack,removeSoundtrackTrack
 } from "./soundtrack-storage.js";
 import {extractSoundtrackZip} from "./soundtrack-zip.js";
-import {parseBundledSoundtrack} from "./bundled-soundtrack.js";
+import {parseBundledSoundtrack,soundtrackManifestUrl} from "./bundled-soundtrack.js";
 import "./soundtrack.css";
 
 export default function SoundtrackPlayer(){
   const [tracks,setTracks]=useState(()=>Array(MAX_SOUNDTRACK_TRACKS).fill(null));
   const [onlineTracks,setOnlineTracks]=useState(()=>Array(MAX_SOUNDTRACK_TRACKS).fill(null));
+  const [musicRefresh,setMusicRefresh]=useState(0);
   const [continuous,setContinuous]=useState(true);
   const [ready,setReady]=useState(false);
   const [status,setStatus]=useState("Reading the local soundtrack shelf...");
@@ -24,11 +25,14 @@ export default function SoundtrackPlayer(){
   const [unpackingZip,setUnpackingZip]=useState(false);
   const importBusyRef=useRef(false);
 
-  // The public manifest is tiny. MP3 bytes are never fetched until the
-  // listener deliberately presses Play (audio has preload="none").
+  // Older offline service workers could cache the pre-release *empty* manifest.
+  // Query-bust the URL, then explicitly ask the browser for fresh metadata.
+  // MP3 bytes are not downloaded until a listener presses Play.
   useEffect(()=>{
     let active=true;
-    fetch(import.meta.env.BASE_URL+"audio/manifest.json")
+    const url=soundtrackManifestUrl(import.meta.env.BASE_URL,
+      Date.now()+"-"+musicRefresh);
+    fetch(url,{cache:"no-store"})
       .then(r=>r.ok?r.json():null)
       .then(data=>{
         if(!active)return;
@@ -36,10 +40,16 @@ export default function SoundtrackPlayer(){
         if(files.length===8){
           setOnlineTracks(files);
           setStatus("Eight original songs included! Tap Play to listen.");
+        }else{
+          setOnlineTracks(Array(MAX_SOUNDTRACK_TRACKS).fill(null));
+          if(musicRefresh>0)setStatus("Public songs are not available yet. Check your connection, then try again.");
         }
-      }).catch(()=>{/* Offline without a cached manifest: private imports still work. */});
+      }).catch(()=>{
+        if(active&&musicRefresh>0)
+          setStatus("Couldn't check for new music. Check your internet connection and try again.");
+      });
     return()=>{active=false;};
-  },[]);
+  },[musicRefresh]);
   useEffect(()=>{
     if(onlineTracks[7]&&!tracks.some(Boolean)&&!playing)setSelected(7);
   },[onlineTracks,tracks]);
@@ -228,6 +238,10 @@ export default function SoundtrackPlayer(){
         <span>Keep playing the next song (after I press Play)</span>
       </label>
       <div className="soundtrack-import">
+        <button type="button" data-soundtrack-refresh
+          className="soundtrack-refresh" onClick={()=>setMusicRefresh(v=>v+1)}>
+          ↻ Check for included songs
+        </button>
         <label className="soundtrack-file-label soundtrack-zip-label">
           {unpackingZip?"⏳ Unpacking your soundtrack...":"🎼 Import MeekLeeAdventures ZIP"}
           <input type="file" data-soundtrack-zip
