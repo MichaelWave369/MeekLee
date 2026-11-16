@@ -7,6 +7,7 @@ import BubbleShooter from "./BubbleShooter.jsx";
 import Garden, { CompanionBadge } from "./Garden.jsx";
 import BonusBloom from "./BonusBloom.jsx";
 import CardCorner from "./CardCorner.jsx";
+import SoundtrackPlayer from "./SoundtrackPlayer.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
@@ -642,6 +643,7 @@ export default function App() {
             ))}
           </div>}
         </section>
+        <SoundtrackPlayer />
         {view === "cards" ? (
           <CardCorner key={cardStartAt||"shelf"} startAt={cardStartAt}
             cards={saved.cards} onChange={saveCardGame}
