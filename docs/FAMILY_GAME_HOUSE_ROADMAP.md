@@ -67,6 +67,14 @@ Private live family Chess sessions are still future work and require separately 
 
 Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks, one-suit Spider and FreeCell. Optional later difficulties: two/four-suit Spider, additional Solitaire varieties and accessible drag gestures. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
+## New Puzzle World: Grandma's Kitchen
+
+**Now playable and offline:** The eighth puzzle world has a new **ordered ingredient** mechanic, distinct from every existing world. Each recipe card has three distinct ingredients selected from six icons. Mom collects the first, second and third ingredients **in order** by tapping a matching tile anywhere on the board. Correct taps consume one ingredient, refill the board, advance the recipe step and score points; after three, a dish is served, completion points awarded, and a fresh deterministic recipe begins. Wrong taps have no effect, and the board always contains every ingredient so the next step is available. All recipe state (`recipeId`, `recipeStep`, `dishes`, `rngState`) is validated, durable in 6×6 and 8×8 saves, and independent of earlier worlds. Kitchen play is intentionally unhurried and earns its three stars for completing a dish-based level, not speed.
+
+**Private Family Porch connection:** The recipe card opens the existing Family Porch notebook directly in Card Corner. The game's fictional three-icon orders are not cooking instructions and **never read, post or copy real family recipes**; those notes remain in the separate `meeklee-family-porch-notes-v1` local-only storage unless a family member manually shares one. Test a saved family note can be opened unchanged and the puzzle resumes after navigation.
+
+**Six additional earned garden ornaments:** complete kitchen levels 3, 6, 9, 12, 15 and 18 for Grandma's Herb Basket, Strawberry Window Planter, Farmhouse Flour Sack, Afternoon Tea Table, Family Picnic Bench and Grandma's Cozy Porch. The new normalized `collection.kitchenPrizes` saves rewards once per milestone across both board sizes, displayed and toggled in Mom's existing garden. Do not modify the original four-world chest schedule, Flower Meadow/Pumpkin Patch/Moonlight Orchard prizes, jigsaws, pets or card saves. Verify deterministic recipe rotation, invalid choices, 100 seeded levels, corrupt-save repair, 320px phone accessibility and high-level 6001+ progress.
+
 ## New Puzzle World: Moonlight Orchard
 
 **Now playable and offline:** The seventh world is built around an original three-phase **moon-halo** mechanic. Tap a chosen fruit to gather **at least three identical fruit inside a square halo** centered on that tile. Matching fruit need not touch. The halo expands with each successful turn: **Crescent** has a 1-square radius (3×3), **Half Moon** has a 2-square radius (5×5), and **Full Moon** has a 3-square radius (7×7); phase then resets to Crescent. A harvest of 5+ matching fruit adds a **stardust** bonus of surrounding nonmatching fruit near the tap point. Generate and refill deterministic 6×6/8×8 boards with a guaranteed Crescent-legal harvest, so all three phases always remain playable. Phone hints illuminate a guaranteed legal center, with phase and next-phase announced accessibly. No timers, lives or paid hints.
@@ -92,7 +100,7 @@ Prioritize meaningfully distinct mechanics, not a reskinned copy of Harvest Vall
 - **Flower Meadow**: now playable with diagonal bouquets, pollen bursts and earned decorations.
 - **Pumpkin Patch**: now playable with autumn row-and-column harvests and leaf gusts.
 - **Moonlight Orchard**: now playable with three moon phases, changing halo radius and night garden prizes.
-- **Grandma's Kitchen**: ingredient arrangement/cooking puzzles, tied to the recipe notebook.
+- **Grandma's Kitchen**: now playable with three-stage orders, dish bonuses and private Family Porch notebook access.
 
 More collectible garden ornaments, seasonal flowers, new animal companions and cozy furniture should always be earned, never purchased. Avoid changing existing chest rewards or taking away old pets.
 
