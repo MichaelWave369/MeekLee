@@ -6,6 +6,26 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 📱 Mobile music update and offline cache recovery
+
+If the eight original songs appear on a PC but not on a phone after publishing,
+the phone may still have a **pre-release, empty** `audio/manifest.json` in its
+service-worker cache. Keep the old puzzle save! Clearing website storage can
+remove offline saves, garden arrangements and local notes.
+
+The Music Box now makes a fresh, **cache-busted** request to check for the eight
+included tracks each time the game opens. Its **↻ Check for included songs**
+button retries from the expanded music shelf. The service worker no longer
+pre-caches or intercepts the dynamic soundtrack manifest; it continues to
+cache the game itself and leaves MP3 streaming on demand.
+
+**Phone quick check:** Open the live GitHub Pages game in a fresh private tab
+while online, scroll **below** the puzzle to the Music Box, and check for
+**Eight songs included**. If a previously opened phone tab is stale, reload
+it, or fully close and reopen a home-screen app. Do **not** clear website
+data or uninstall the app without exporting or safeguarding saved progress.
+Press Play to start the main Welcome track; audio never starts by itself.
+
 ## 🎵 Built-in original MeekLee soundtrack for everyone, including Mom's phone
 
 **No ZIP, MP3 knowledge, account or PC needed for listeners.** After the original eight MP3s are published with the game, **MeekLee Music Box automatically discovers all eight**, showing a big **▶ Play** button that starts with **Main Theme A · The Welcome**. Songs stream directly from the same GitHub Pages site, one at a time, only after Play is pressed. Once started, the playlist can continue through the remaining songs, with Play/Pause, Previous/Next, an adjustable volume and a **Keep playing the next song** toggle. Private user-imported songs can still override individual built-in songs without altering the public originals.

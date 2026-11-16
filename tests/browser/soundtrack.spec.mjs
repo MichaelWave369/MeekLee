@@ -30,7 +30,7 @@ async function phone(browser,raw=null,width=390,notes=null){
   },{raw,notes});
   // These older tests explicitly exercise the local-import fallback, even once
   // all eight original songs are publicly included with the game.
-  await page.route("**/audio/manifest.json",route=>route.fulfill({
+  await page.route("**/audio/manifest.json*",route=>route.fulfill({
     status:200,contentType:"application/json",
     body:JSON.stringify({version:1,tracks:[]})
   }));

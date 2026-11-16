@@ -79,3 +79,14 @@
 .soundtrack-included{display:block;color:#34684b;font-size:.78rem;
   font-weight:800;margin:5px 0}
 @media(max-width:400px){.soundtrack-continuous{font-size:.83rem;padding:9px}}
+
+/* Public soundtrack refresh avoids deleting phone saves to fix stale caches. */
+.soundtrack-refresh{
+  min-height:46px;padding:9px 13px;
+  border-radius:11px;border:2px solid #65946b;
+  background:#eff8ec;color:#24563b;
+  font:inherit;font-size:.88rem;font-weight:850;
+  cursor:pointer;
+}
+.soundtrack-refresh:focus-visible{outline:3px solid #306aaf;outline-offset:2px}
+@media(max-width:400px){.soundtrack-refresh{width:100%}}

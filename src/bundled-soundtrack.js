@@ -30,3 +30,15 @@ export function parseBundledSoundtrack(payload,base="/MeekLee/"){
   }
   return result.every(Boolean)?result:[];
 }
+
+/**
+ * Use a fresh same-origin request on each soundtrack check.
+ * Older phone service workers pre-cached a zero-track manifest at the exact
+ * unversioned URL; a new query parameter avoids that cache-first match.
+ * HTTP cache:no-store cannot by itself bypass an older SW's cache-first fetch.
+ */
+export function soundtrackManifestUrl(base="/MeekLee/",nonce=Date.now()){
+  if(typeof base!=="string"||!/^\/(?:[a-zA-Z0-9_-]+\/)*$/.test(base))
+    return null;
+  return base+"audio/manifest.json?refresh="+encodeURIComponent(String(nonce));
+}

@@ -4,7 +4,7 @@ import {readFile,mkdtemp,writeFile,rm,stat} from "node:fs/promises";
 import {join} from "node:path";
 import {tmpdir} from "node:os";
 import {execFileSync} from "node:child_process";
-import {BUNDLED_AUDIO_FILES,parseBundledSoundtrack} from "../src/bundled-soundtrack.js";
+import {BUNDLED_AUDIO_FILES,parseBundledSoundtrack,soundtrackManifestUrl} from "../src/bundled-soundtrack.js";
 import {MEEKLEE_ORIGINAL_TRACKS} from "../src/soundtrack.js";
 
 const expected=JSON.parse(await readFile("scripts/original-soundtrack.json","utf8"));
@@ -52,9 +52,24 @@ test("an unbundled checkout generates a truthful empty manifest; partial sets fa
     }),/partial bundled soundtrack/);
   }finally{await rm(temp,{recursive:true,force:true});}
 });
-test("service worker explicitly does not precache or intercept large streamed music",async()=>{
+test("published manifest uses unique same-origin cache-busted URLs on phones",()=>{
+  assert.equal(soundtrackManifestUrl("/MeekLee/","phone-1"),
+    "/MeekLee/audio/manifest.json?refresh=phone-1");
+  assert.equal(soundtrackManifestUrl("/MeekLee/","phone-2"),
+    "/MeekLee/audio/manifest.json?refresh=phone-2");
+  assert.equal(soundtrackManifestUrl("/","2026"),
+    "/audio/manifest.json?refresh=2026");
+  assert.equal(soundtrackManifestUrl("https://evil.example/","phone-1"),null);
+  assert.equal(soundtrackManifestUrl("//evil.example/","phone-1"),null);
+  assert.equal(soundtrackManifestUrl("/MeekLee","phone-1"),null);
+});
+test("service worker never precaches or intercepts changing music metadata or streamed MP3s",async()=>{
   const text=await readFile("scripts/build-sw.mjs","utf8");
+  assert.match(text,/url !== "\.\/audio\/manifest\.json"/);
   assert.match(text,/url\.startsWith\("\.\/audio\/"\)/);
   assert.match(text,/endsWith\('\.mp3'\)/);
-  assert.match(text,/Range requests/);
+  assert.match(text,/audioPath\.endsWith\('\/audio\/manifest\.json'\)/);
+  const player=await readFile("src/SoundtrackPlayer.jsx","utf8");
+  assert.match(player,/cache:"no-store"/);
+  assert.match(player,/soundtrackManifestUrl/);
 });
