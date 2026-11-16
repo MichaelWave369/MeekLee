@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, moonlightHarvest, moonPhase, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
+import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, moonlightHarvest, moonPhase, KITCHEN_RECIPES, kitchenNextIngredient, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
@@ -12,7 +12,8 @@ import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward,
   recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel,
-  recordMoonlightReward, moonlightPrizeForLevel
+  recordMoonlightReward, moonlightPrizeForLevel,
+  recordKitchenReward, kitchenPrizeForLevel
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
@@ -26,7 +27,8 @@ const WORLDS = [
   { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Aim, bounce and pop colorful bubbles." },
   { id: "meadow", icon: "🌷", name: "Flower Meadow", desc: "Tap diagonal bouquets of 3+ flowers. Larger clusters scatter pollen!" },
   { id: "pumpkin", icon: "🎃", name: "Pumpkin Patch", desc: "Gather matching crops across rows and columns; big harvests create leaf gusts!" },
-  { id: "moonlight", icon: "🌙", name: "Moonlight Orchard", desc: "Gather fruits within a growing moonlit halo. Crescent, half and full moon!" }
+  { id: "moonlight", icon: "🌙", name: "Moonlight Orchard", desc: "Gather fruits within a growing moonlit halo. Crescent, half and full moon!" },
+  { id: "kitchen", icon: "🥣", name: "Grandma's Kitchen", desc: "Find the next ingredient in order and finish cozy pretend recipes, one dish at a time!" }
 ];
 
 function initialize() {
@@ -39,8 +41,13 @@ function initialize() {
 
 function hintFor(game) {
   const size = game.size ?? SIZE;
-  if (["tap","bouquet","cross","moon"].includes(MODES[game.mode].mechanic)) {
+  if (["tap","bouquet","cross","moon","recipe"].includes(MODES[game.mode].mechanic)) {
     const mechanic=MODES[game.mode].mechanic;
+    if(mechanic==="recipe"){
+      const next=kitchenNextIngredient(game);
+      const index=game.board.indexOf(next);
+      return index>=0?[index]:[];
+    }
     for (let i = 0; i < game.board.length; i++) {
       const group=mechanic==="moon"?
         moonlightHarvest(game.board,i,size,moonPhase(game.moves).radius):
@@ -69,6 +76,7 @@ export default function App() {
   const [hint, setHint] = useState([]);
   const [animation, setAnimation] = useState(null);
   const [view, setView] = useState("play");
+  const [cardStartAt,setCardStartAt]=useState(null);
   const [trailPage, setTrailPage] = useState(0);
   const [activeBonusId, setActiveBonusId] = useState(null);
   const [gardenReturnView, setGardenReturnView] = useState("play");
@@ -112,12 +120,15 @@ export default function App() {
     "Tap a crop to gather 3+ matching crops along its row and column. Five or more create a leaf gust!" :
     rules.mechanic === "moon" ?
     "Tap a fruit to gather 3+ matching fruit within its moonlit halo. The halo grows with each moon phase, then starts again. 5+ add stardust!" :
+    rules.mechanic === "recipe" ?
+    "Read Grandma's recipe card, then tap the three ingredients in the right order. Each finished dish brings a cozy bonus!" :
     mode === "bubbles" ? "Swap neighbors to match 3. Bubbles rise upward!" :
       "Drag a piece onto its neighbor and release, or tap two neighbors to match 3.";
   const mobileInstruction = rules.mechanic === "tap" ? "Tap matching groups of 2+" :
     rules.mechanic === "bouquet" ? "Tap bouquets of 3+; diagonals count!" :
     rules.mechanic === "cross" ? "Tap 3+ matching crops in a row-and-column cross!" :
     rules.mechanic === "moon" ? "Tap 3+ matching fruit in the moon's glowing halo!" :
+    rules.mechanic === "recipe" ? "Find the next recipe ingredient in order!" :
     mode === "bubbles" ? "Drag & release to match bubbles!" : "Drag & release to match 3";
 
   useEffect(() => {
@@ -144,6 +155,8 @@ export default function App() {
         recordPumpkinReward(previous.collection,previousGame,result.game):
         turnMode==="moonlight"&&result.game.won?
         recordMoonlightReward(previous.collection,previousGame,result.game):
+        turnMode==="kitchen"&&result.game.won?
+        recordKitchenReward(previous.collection,previousGame,result.game):
         previous.collection;
       return {
         ...previous,collection,
@@ -202,6 +215,8 @@ export default function App() {
         "Look for three matching crops across one row and column!" :
         mode === "moonlight" ?
         "Choose a fruit with at least three of its kind inside the glowing moon halo!" :
+        mode === "kitchen" ?
+        "Look at the next ingredient highlighted on Grandma's recipe card!" :
         "Try swapping pieces to make a row of three!");
       return;
     }
@@ -236,7 +251,7 @@ export default function App() {
 
   function chooseTile(index) {
     if (game.won || busyRef.current) return;
-    if (["tap","bouquet","cross","moon"].includes(rules.mechanic)) { takeTurn(index); return; }
+    if (["tap","bouquet","cross","moon","recipe"].includes(rules.mechanic)) { takeTurn(index); return; }
     if (selected === null) {
       setSelected(index);
       setHint([]);
@@ -542,7 +557,7 @@ export default function App() {
         <section id="meeklee-worlds" className={"world-section" + (showWorlds ? " open" : "")} aria-labelledby="world-heading">
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
-            <span>7 happy worlds</span>
+            <span>8 happy worlds</span>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
               onClick={showGarden}>🌷 Mom's Garden</button>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
@@ -634,6 +649,29 @@ export default function App() {
               <span style={{ width: percent + "%" }}/>
             </div>
             <p className="instruction"><span className="desktop-tip">{instruction}</span><span className="mobile-tip">{mobileInstruction}</span></p>
+            {mode==="kitchen"&&
+              <section className="kitchen-order" aria-label={"Kitchen recipe: "+KITCHEN_RECIPES[game.recipeId].name}>
+                <div className="kitchen-order-heading">
+                  <div><span aria-hidden="true">🥣</span>
+                    <strong>Grandma's Recipe Card</strong>
+                    <p>{KITCHEN_RECIPES[game.recipeId].name} · {game.dishes} {game.dishes===1?"dish":"dishes"} served</p>
+                  </div>
+                  <button type="button" className="kitchen-notebook-link"
+                    onClick={showKitchenNotebook}>📖 My Private Family Recipes</button>
+                </div>
+                <div className="kitchen-steps" role="group" aria-label="Three ordered recipe ingredients">
+                  {KITCHEN_RECIPES[game.recipeId].ingredients.map((ingredient,i)=>
+                    <div key={i} className={"kitchen-step"+
+                      (i<game.recipeStep?" gathered":i===game.recipeStep?" next":"")}
+                      aria-label={"Step "+(i+1)+": "+rules.pieces[ingredient]+
+                        (i<game.recipeStep?", gathered":i===game.recipeStep?", gather next":", coming next")}>
+                      <span aria-hidden="true">{rules.pieces[ingredient]}</span>
+                      <strong>{i<game.recipeStep?"✓ Added":i===game.recipeStep?"Gather next":"Step "+(i+1)}</strong>
+                    </div>)}
+                </div>
+                <p className="kitchen-order-note">Playful recipe patterns only.
+                  Your family's real recipes stay private in the Family Porch notebook on this device.</p>
+              </section>}
             {mode==="moonlight"&&
               <div className="moonlight-phase" role="status" aria-label={"Moon phase: "+moonPhase(game.moves).name}>
                 <span className="moonlight-phase-icon" aria-hidden="true">{moonPhase(game.moves).icon}</span>
@@ -658,6 +696,10 @@ export default function App() {
                   <button type="button" className="victory-chest" onClick={showGarden}>
                     {moonlightPrizeForLevel(game.level).icon} You've earned the {moonlightPrizeForLevel(game.level).name}! Visit Your Garden →
                   </button>}
+                {mode==="kitchen"&&kitchenPrizeForLevel(game.level)&&
+                  <button type="button" className="victory-chest" onClick={showGarden}>
+                    {kitchenPrizeForLevel(game.level).icon} You've earned the {kitchenPrizeForLevel(game.level).name}! Visit Your Garden →
+                  </button>}
                 <div className="victory-stars" aria-label={worldStars(game) + " out of 3 stars"}>
                   {"★".repeat(worldStars(game))}<span>{"☆".repeat(3 - worldStars(game))}</span>
                 </div>
@@ -679,6 +721,7 @@ export default function App() {
                     stage.pollen?.length ? "POLLEN BLOOM! +" + stage.pollen.length + "!" :
                      stage.gust?.length ? "LEAF GUST! +" + stage.gust.length + "!" :
                      stage.stardust?.length ? "STARDUST! +" + stage.stardust.length + "!" :
+                     stage.kitchenDish ? "DISH SERVED! " + stage.kitchenDish + "!" :
                      stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
                   <small>+{stage.gained} points ✨</small>
                 </div>
@@ -765,6 +808,7 @@ export default function App() {
                   clearSelection(); setHint(hintFor(game));
                   setMessage(mode==="pumpkin"?"Tap the glowing crop to harvest its row and column!":
                      mode==="moonlight"?"Tap the glowing fruit to gather the moonlit harvest!":
+                     mode==="kitchen"?"Tap the glowing ingredient to continue Grandma's recipe!":
                      "Look for the glowing pieces!");
                 }}>💡 Free hint</button>
               <button type="button" className="action secondary"
