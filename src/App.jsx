@@ -10,7 +10,7 @@ import CardCorner from "./CardCorner.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
-  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, recordJigsawGardenReward,
+  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, playGardenVillageActivity, recordJigsawGardenReward,
   recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel,
   recordMoonlightReward, moonlightPrizeForLevel,
   recordKitchenReward, kitchenPrizeForLevel
@@ -379,6 +379,12 @@ export default function App() {
       return result.valid?{...previous,collection:result.collection}:previous;
     });
   }
+  function playVillageActivity(district,choice){
+    setSaved(previous=>{
+      const result=playGardenVillageActivity(previous.collection,district,choice);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
   function finishBonus(key,moves) {
     setSaved(previous => {
       const result=completeBonus(previous.collection,key,moves);
@@ -613,7 +619,7 @@ export default function App() {
         ) : view === "garden" ? (
           <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
             onToggleDecor={plantDecoration} onPlaceVillage={placeVillageDecoration}
-            onStoreVillage={storeVillageDecoration}
+            onStoreVillage={storeVillageDecoration} onVillageActivity={playVillageActivity}
             onVisitWorld={changeWorld} onVisitPorch={showKitchenNotebook}
             onBonus={openBonus} onBack={leaveGarden} />
         ) : view === "bonus" && activeBonusId ? (

@@ -135,3 +135,72 @@
 @media(max-width:480px){.garden-village-invite{padding:11px}
   .garden-village-invite>div{min-width:0}
   .garden-village-invite button{width:100%}}
+
+
+/* Living Village: visitors and four gentle, untimed three-step activities. */
+.village-activity{
+  margin:14px 0;padding:16px;border-radius:18px;
+  background:linear-gradient(145deg,#f5faed,#fffdf7);
+  border:2px solid #b8d5a9;color:#355f43;
+}
+.village-activity h3{font-size:1.2rem;margin:0 0 9px;color:#2e6340}
+.village-activity>p{line-height:1.45;margin:8px 0 12px}
+.village-activity-progress{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;
+  padding:13px;border:2px solid #8cb58b;border-radius:13px;
+  background:#e7f3e6;color:#27533a;
+}
+.village-activity-progress strong{font-size:1.02rem}
+.village-activity-progress>span{flex:1;min-width:150px;font-weight:850;
+  line-height:1.35;color:#214e38}
+.village-activity-progress small{font-size:.8rem;font-weight:750}
+.village-activity-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;margin-top:12px}
+.village-activity-choices button{
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;
+  min-width:0;min-height:88px;border:2px solid #94bb91;border-radius:14px;
+  background:white;color:#335f42;font:inherit;padding:9px 4px;
+}
+.village-activity-choices button>span{font-size:2rem}
+.village-activity-choices button strong{font-size:.86rem;
+  line-height:1.25;overflow-wrap:anywhere;text-align:center}
+.village-activity-choices button:hover{background:#e8f7e5}
+.village-activity-feedback{margin:12px 0 0!important;
+  background:#f3f9ee;padding:10px;border-radius:10px;
+  min-height:2.8em;font-weight:750;color:#315f42}
+.village-visitors{max-width:620px;margin:12px auto 0;
+  padding:12px;border:2px solid #8cb592;border-radius:14px;
+  background:#fffff5cf;text-align:center;color:#2d6041}
+.village-visitors>strong{display:block;font-size:.93rem;margin-bottom:8px}
+.village-visitors>p{margin:0;font-size:.82rem;line-height:1.4;font-weight:750}
+.village-visitor-buttons{display:flex;justify-content:center;align-items:stretch;gap:9px;flex-wrap:wrap}
+.village-visitor-buttons button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;min-width:110px;min-height:85px;padding:8px;
+  background:#f6fff3;border:2px solid #a0c397;border-radius:12px;
+  font:inherit;color:#305943;
+}
+.village-visitor-buttons button>span{font-size:1.7rem}
+.village-visitor-buttons button>small{font-size:.8rem;font-weight:850}
+.village-visitor-buttons button>em{font-size:.72rem}
+.village-visitor-greeting{font-size:.81rem;margin:9px 0 0!important;
+  font-weight:850;line-height:1.4}
+.village-activity-choices button:focus-visible,
+.village-visitor-buttons button:focus-visible{outline:3px solid #306aaf;outline-offset:2px}
+.high-contrast .village-activity,
+.high-contrast .village-visitors{border-color:#356349;background:#fffefa;color:#263f30}
+.high-contrast .village-activity-progress{border-color:#3e7746;background:#f4ffe7;color:#153e24}
+@media(max-width:400px){
+  .village-activity{padding:10px}
+  .village-activity-progress{gap:6px 9px;padding:9px}
+  .village-activity-choices{gap:6px}
+  .village-activity-choices button{min-height:76px;padding:7px 2px}
+  .village-activity-choices button>span{font-size:1.65rem}
+  .village-activity-choices button strong{font-size:.75rem}
+  .village-visitor-buttons button{min-width:96px;min-height:76px}
+}
+@media(prefers-reduced-motion:reduce){
+  .village-activity *, .village-visitors *{
+    transition:none!important;animation:none!important
+  }
+}

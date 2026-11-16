@@ -6,6 +6,21 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🐾 Garden Village Life: friendly visits and four gentle mini-activities
+
+**New, completely optional and offline:** Mom's Garden Village now has four interactive neighborhood activities. They are not timers, chores or paid unlocks. Tap the requested icon to complete a three-step round, then play again with a slightly different order. Wrong taps never cost lives, coins, points or progress.
+
+- **🏡 Village Square: Fountain Ripples.** Make three ripples using Water Drop, Bubbly Ripple and Fountain Sparkle.
+- **🌷 Flower Lane: Butterfly Watch.** Spot a Butterfly, Ladybug and Friendly Bee.
+- **🍎 Orchard Hill: Fruit Basket.** Collect an Apple, Cherries and Pear for a pretend picnic.
+- **🪷 Pondside Walk: Duck Parade.** Spot the Duckling, Duck and Goose.
+
+Each neighborhood remembers **how many rounds Mom completed and which of the three steps is next**, even if she switches districts or closes the browser. The next round gently rotates the order. Activity progress is stored in the optional validated `collection.villageLife` field, with no change to the original `meeklee-adventures-save-v1` key, existing 80-plot arrangements, eight puzzle worlds, earned ornaments, cards, pets or private Family Porch notes.
+
+**🐾 Visiting rescued friends:** if Mom has unlocked additional rescue companions in the original four worlds, up to **two** of those *actually owned* friends visit each neighborhood. Tap **Wave hello!** for a little greeting. Guests rotate after completing activities; the chosen companion remains Mom's own selected pal, and visiting friends do not grant or fabricate pets. If Mom hasn't earned extra friends yet, friendly wild birds can still be seen. No forced sound, motion, countdown or automatic sharing.
+
+Open **☰ Menu → Garden → Explore Garden Village**. Each activity has three large labeled buttons, screen-reader instructions, a visible step counter, responsive 320px layout and reduced-motion/high-contrast support.
+
 ## 🏘️ Mom's Garden Village: arrange earned treasures and visit your worlds
 
 **Now playable, free, accessible and offline:** Mom's Happy Garden has a new **Explore Garden Village** button that opens a place to arrange **earned** ornaments across four cheerful neighborhoods. The original Garden landscape, chest history, companion selection, show/hide setting and other games are **preserved**.
