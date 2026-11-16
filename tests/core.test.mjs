@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MODES, SIZE, adjacent, connectedGroup, findMatches, hasGroup, hasSwap, makeLevel, playTurn, seedFor } from "../src/core.js";
+import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, hasBouquet, findMatches, hasGroup, hasSwap, makeLevel, playTurn, seedFor } from "../src/core.js";
 
 test("every generated board has 64 legal pieces and no pre-existing matches", () => {
   for (const mode of Object.keys(MODES)) {
@@ -9,7 +9,8 @@ test("every generated board has 64 legal pieces and no pre-existing matches", ()
       assert.equal(game.board.length, SIZE * SIZE);
       assert(game.board.every(p => Number.isInteger(p) && p >= 0 && p < 6));
       assert.equal(findMatches(game.board).size, 0);
-      assert.equal(MODES[mode].mechanic === "tap" ? hasGroup(game.board) : hasSwap(game.board), true);
+      assert.equal(MODES[mode].mechanic === "bouquet" ? hasBouquet(game.board) :
+        MODES[mode].mechanic === "tap" ? hasGroup(game.board) : hasSwap(game.board), true);
       assert(game.target > 0);
     }
   }
@@ -98,10 +99,13 @@ test("a player can complete generated levels without a purchase or a fixed move 
       let game = makeLevel(mode, level), turns = 0;
       while (!game.won && turns < 300) {
         let turn = null;
-        if (MODES[mode].mechanic === "tap") {
-          const i = game.board.findIndex((_, index) => connectedGroup(game.board, index).length >= 2);
-          assert(i >= 0, "no groups in " + mode + "/" + level);
-          turn = playTurn(game, i);
+        if (MODES[mode].mechanic === "tap" || MODES[mode].mechanic === "bouquet") {
+          const bouquet=MODES[mode].mechanic==="bouquet";
+          const i=game.board.findIndex((_,index)=>
+            bouquet?connectedBouquet(game.board,index).length>=3:
+              connectedGroup(game.board,index).length>=2);
+          assert(i>=0,"no playable groups in "+mode+"/"+level);
+          turn=playTurn(game,i);
         } else {
           for (let i = 0; i < 64 && !turn; i++) {
             for (const j of [i + 1, i + SIZE]) {
