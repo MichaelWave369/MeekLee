@@ -6,6 +6,18 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🌙 Garden Village After Dark: Day, Sunset and Night
+
+**Now playable, free, offline and controlled by Mom:** Garden Village has a new **Set the village sky** panel. Tap **☀️ Day**, **🌅 Sunset** or **🌙 Night** to choose the village's appearance. Nothing changes with real-world time: the sky stays exactly how Mom left it until she chooses another preset, even if she closes the browser. The switch only affects Garden Village scenery, not the original Happy Garden or any of the eight puzzle worlds.
+
+At Sunset and Night, two independent decorative switches let Mom choose **🏮 Lanterns On/Off** and **✨ Fireflies On/Off**. Warm lanterns appear along every neighborhood scene; up to seven small fireflies glow amid the garden. Day hides both effects even when the options are enabled, and the preferences are remembered. At Night, **Pondside Walk** additionally shows a soft moon reflection on its water, independently of the lantern/firefly switches. The village scenes, sky icons, landmarks, pet visitors and stored ornaments are still accessible in every preset. These are **free atmospheric graphics**, not unlockable ornaments or purchases.
+
+**Accessibility:** The three sky presets and both glow switches are touch/keyboard buttons with announced pressed states and descriptions. Large controls fit 320px phones. High-contrast outlines and light button backgrounds remain legible under nighttime scenery. Fireflies never require animation to be visible; the subtle optional glimmer is disabled when the existing Motion switch is off or the device prefers reduced motion.
+
+**Save compatibility:** A validated optional `collection.villageAtmosphere` field stores only `{timeOfDay:"day"|"sunset"|"night",lanterns:boolean,fireflies:boolean}`. Previously saved households default safely to Day without losing their original progress. Bad values and unexpected keys are ignored on load. The existing `meeklee-adventures-save-v1` key, 80 village plots, strolling party, neighborhood mini-games, rescued pets, original chest rewards, all puzzle and card saves, and the separate private Family Porch are unchanged.
+
+Find it under **☰ Menu → Garden → Explore Garden Village → Set the village sky**.
+
 ## 🦆 Garden Village Strolls and interactive scenery
 
 **Now playable, free, offline and completely optional:** Garden Village includes a **gentle four-stop walking path** with already-earned rescued friends, plus tappable scenic landmarks. Visitors never walk away on a timer; Mom moves them intentionally by tapping **Take a Gentle Stroll**. The path moves from **Village Square → Flower Lane → Orchard Hill → Pondside Walk → Village Square**, looping forever. Tap a stop to visit that neighborhood without advancing the walking friends. The active stop has a visual highlight, visitor names and familiar pet emoji, and a large touch target. If the family has not unlocked an additional rescue pet beyond the chosen companion, the path simply shows wild birds instead of inventing new pets.

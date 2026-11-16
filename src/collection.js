@@ -4,6 +4,7 @@ import { seedFor, rngFrom } from "./core.js";
 import {normalizeVillagePlacements,placeVillageItem,storeVillageItem} from "./village.js";
 import {normalizeVillageLife,advanceVillageActivity} from "./village-life.js";
 import {normalizeVillageWander,advanceVillageWalk,advanceVillageLandmark} from "./village-wander.js";
+import {normalizeVillageAtmosphere,changeVillageSky,toggleVillageGlow} from "./village-atmosphere.js";
 
 export const GARDEN_DECOR = Object.freeze([
   {id:"sunflower",icon:"🌻",name:"Golden Sunflower"},
@@ -169,10 +170,11 @@ export function normalizeCollection(raw = {}) {
   const villagePlacements=normalizeVillagePlacements(previous.villagePlacements,[...decorIds]);
   const villageLife=normalizeVillageLife(previous.villageLife);
   const villageWander=normalizeVillageWander(previous.villageWander);
+  const villageAtmosphere=normalizeVillageAtmosphere(previous.villageAtmosphere);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife,villageWander};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife,villageWander,villageAtmosphere};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -246,6 +248,19 @@ export function gardenInventory(collection) {
     if(normalized.kitchenPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
+export function setGardenVillageSky(collection,timeOfDay){
+  const current=normalizeCollection(collection);
+  const result=changeVillageSky(current.villageAtmosphere,timeOfDay);
+  return {...result,collection:result.valid?
+    {...current,villageAtmosphere:result.atmosphere}:current};
+}
+export function toggleGardenVillageGlow(collection,feature){
+  const current=normalizeCollection(collection);
+  const result=toggleVillageGlow(current.villageAtmosphere,feature);
+  return {...result,collection:result.valid?
+    {...current,villageAtmosphere:result.atmosphere}:current};
+}
+
 export function strollGardenVillage(collection){
   const current=normalizeCollection(collection);
   const result=advanceVillageWalk(current.villageWander);

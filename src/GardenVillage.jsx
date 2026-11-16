@@ -4,6 +4,7 @@ import {VILLAGE_DISTRICTS,VILLAGE_PLOTS,villagePlotId} from "./village.js";
 import {VILLAGE_ACTIVITIES,villageActivityTarget,advanceVillageActivity,villageVisitingPets} from "./village-life.js";
 import {normalizeVillageWander,villageWalkingParty,nextVillageWalkDistrict,
   advanceVillageWalk,currentLandmarkMoment,advanceVillageLandmark} from "./village-wander.js";
+import {VILLAGE_SKIES,normalizeVillageAtmosphere,villageVisibleGlow} from "./village-atmosphere.js";
 import "./village.css";
 
 const WORLD_PORTALS=Object.freeze([
@@ -18,7 +19,7 @@ const WORLD_PORTALS=Object.freeze([
 ]);
 
 export default function GardenVillage({
-  collection,settings,onPlace,onStore,onActivity,onStroll,onLandmark,onBack,onVisitWorld,onVisitPorch
+  collection,settings,onPlace,onStore,onActivity,onStroll,onLandmark,onSky,onGlow,onBack,onVisitWorld,onVisitPorch
 }){
   const [districtId,setDistrictId]=useState("square");
   const [chosenId,setChosenId]=useState(null);
@@ -48,6 +49,9 @@ export default function GardenVillage({
   const nextNeighborhood=VILLAGE_DISTRICTS.find(d=>d.id===nextWalkingDistrict);
   const walkingNeighborhood=VILLAGE_DISTRICTS.find(d=>d.id===walking.district);
   const landmarkMoment=currentLandmarkMoment(wander,district.id);
+  const atmosphere=normalizeVillageAtmosphere(collection.villageAtmosphere);
+  const glow=villageVisibleGlow(atmosphere);
+  const sky=VILLAGE_SKIES.find(entry=>entry.id===atmosphere.timeOfDay);
 
   function interact(choice){
     const result=advanceVillageActivity(villageLife,district.id,choice);
@@ -123,6 +127,39 @@ export default function GardenVillage({
       <strong>🪴 {visible.length} ready to plant</strong>
     </div>
 
+    <section className="village-atmosphere" data-village-lighting={atmosphere.timeOfDay}
+      aria-labelledby="village-atmosphere-heading">
+      <h3 id="village-atmosphere-heading">🌤️ Set the village sky</h3>
+      <p>Choose the time of day yourself. Nothing changes on a clock.
+        Your choice is remembered on this device, and changing the sky won't
+        change a single ornament or saved game.</p>
+      <div className="village-sky-choices" role="group" aria-label="Village time of day">
+        {VILLAGE_SKIES.map(option=><button key={option.id} type="button"
+          data-village-sky={option.id} aria-pressed={atmosphere.timeOfDay===option.id}
+          className={atmosphere.timeOfDay===option.id?"chosen":""}
+          onClick={()=>onSky(option.id)}>
+          <span aria-hidden="true">{option.icon}</span><strong>{option.name}</strong>
+        </button>)}
+      </div>
+      <div className="village-glow-choices" role="group" aria-label="Village decorative lights">
+        <button type="button" data-village-glow="lanterns"
+          aria-pressed={atmosphere.lanterns} onClick={()=>onGlow("lanterns")}>
+          <span aria-hidden="true">🏮</span>
+          <span>Lanterns <strong>{atmosphere.lanterns?"On":"Off"}</strong></span>
+        </button>
+        <button type="button" data-village-glow="fireflies"
+          aria-pressed={atmosphere.fireflies} onClick={()=>onGlow("fireflies")}>
+          <span aria-hidden="true">✨</span>
+          <span>Fireflies <strong>{atmosphere.fireflies?"On":"Off"}</strong></span>
+        </button>
+      </div>
+      <p className="village-sky-description" role="status">
+        {sky.description} Lanterns and fireflies appear at Sunset or Night,
+        when their switches are on. Decorative lights are free scenery,
+        not earned garden items.
+      </p>
+    </section>
+
     <section className="village-stroll-section" aria-labelledby="village-stroll-heading">
       <h3 id="village-stroll-heading">🐾 A gentle walk around the village</h3>
       <p>Follow your rescued friends from neighborhood to neighborhood.
@@ -171,10 +208,35 @@ export default function GardenVillage({
           <small>{Object.values(placements).filter(s=>s.startsWith(d.id+":")).length}/{VILLAGE_PLOTS} placed</small>
         </button>)}
       </div>
-      <div className={"village-scene village-scene-"+district.id}>
+      <div className={"village-scene village-scene-"+district.id+
+        " village-time-"+atmosphere.timeOfDay+
+        (glow.lanterns?" village-lanterns-on":"")+
+        (glow.fireflies?" village-fireflies-on":"")}
+        data-village-scene-time={atmosphere.timeOfDay}>
         <div className="village-sky" aria-hidden="true">
-          <span>☁️</span><span>{district.id==="pond"?"🌤️":"☀️"}</span><span>☁️</span>
+          {atmosphere.timeOfDay==="night"?
+            <><span>✦</span><span>🌙</span><span>✧</span></>:
+            atmosphere.timeOfDay==="sunset"?
+            <><span>☁️</span><span>🌅</span><span>✨</span></>:
+            <><span>☁️</span><span>{district.id==="pond"?"🌤️":"☀️"}</span><span>☁️</span></>}
         </div>
+        {glow.lanterns&&
+          <div className="village-ambient-lanterns" data-village-lanterns
+            role="img" aria-label="Decorative village lanterns glowing">
+            <span aria-hidden="true">🏮</span><span aria-hidden="true">🏮</span>
+            <span aria-hidden="true">🏮</span>
+          </div>}
+        {glow.fireflies&&
+          <div className={"village-ambient-fireflies"+(settings?.motion?" moving":"")}
+            data-village-fireflies role="img" aria-label="Friendly fireflies glowing">
+            {Array.from({length:7},(_,i)=><span key={i} aria-hidden="true"
+              className={"village-firefly village-firefly-"+i}>✦</span>)}
+          </div>}
+        {district.id==="pond"&&glow.moonlitPond&&
+          <div className="village-moonlit-pond" data-village-moon-pond
+            role="img" aria-label="Moonlight reflecting on the quiet duck pond">
+            <span aria-hidden="true">🌙</span><span aria-hidden="true">〰 〰 〰</span>
+          </div>}
         <button type="button" className="village-landmark village-landmark-interactive"
           data-village-landmark={district.id}
           onClick={touchLandmark}
