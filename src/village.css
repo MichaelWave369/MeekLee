@@ -454,3 +454,81 @@
     animation:none!important;transition:none!important;
   }
 }
+
+
+/* Seasons are user-selected, static, free environmental decorations.
+   They layer with the existing independent Day/Sunset/Night setting. */
+.village-season-picker {
+  margin:14px 0;padding:15px;border:2px solid #b7d0ae;
+  border-radius:17px;background:linear-gradient(125deg,#f5fbea,#fff9f0);color:#315d42;
+}
+.village-season-picker h3 {font-size:1.2rem;margin:0 0 8px}
+.village-season-picker p {margin:7px 0 12px;line-height:1.45;font-size:.92rem}
+.village-season-choices {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.village-season-choices button {
+  min-height:76px;min-width:0;padding:8px 5px;
+  display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:center;
+  border:2px solid #9fbc9f;border-radius:12px;
+  font:inherit;color:#27563d;background:#fffefa;
+}
+.village-season-choices button>span {font-size:1.7rem}
+.village-season-choices button>strong {font-size:.9rem}
+.village-season-choices button.chosen {background:#e0f1e0;border-color:#387c55;
+  box-shadow:inset 0 0 0 2px #acd3a7}
+.village-season-description {margin:12px 0 0!important;
+  padding:10px;border-radius:11px;background:#f0f6e9;color:#355b43}
+.village-season-picker button:focus-visible {outline:3px solid #3469ad;outline-offset:2px}
+.village-season-ornaments {
+  display:flex;align-items:center;justify-content:space-around;
+  gap:4px;width:min(100%,630px);margin:2px auto 5px;
+  position:relative;z-index:2;pointer-events:none;
+}
+.village-season-ornaments span {font-size:clamp(1.2rem,4vw,1.75rem);
+  filter:drop-shadow(0 2px 2px #10291837)}
+.village-season-caption {
+  position:relative;z-index:2;margin:4px auto 12px;
+  max-width:550px;padding:7px 11px;border-radius:10px;
+  background:#fffef1e8;color:#284e3a;text-align:center;
+  font-size:.82rem;font-weight:800;line-height:1.38;
+}
+.village-scene.village-season-spring:not(.village-time-night):not(.village-time-sunset) {
+  background:linear-gradient(180deg,#dbeeff 0%,#ffeff6 35%,#b7dea5 75%,#8bbf88 100%);
+}
+.village-scene.village-season-autumn:not(.village-time-night):not(.village-time-sunset) {
+  background:linear-gradient(180deg,#d7e6f3 0%,#f8d8aa 36%,#b98453 80%,#8f9d61 100%);
+}
+.village-scene.village-season-winter:not(.village-time-night):not(.village-time-sunset) {
+  background:linear-gradient(180deg,#bddef2 0%,#ecf5ff 36%,#c7dbe5 78%,#e5eef7 100%);
+}
+.village-scene.village-season-autumn.village-time-sunset {
+  background:linear-gradient(180deg,#78668d 0%,#dd8864 36%,#a56b49 75%,#655b52 100%);
+}
+.village-scene.village-season-winter.village-time-sunset {
+  background:linear-gradient(180deg,#7985b4 0%,#e7bdc3 39%,#c6d7ee 79%,#b0d0e2 100%);
+}
+.village-scene.village-season-spring.village-time-sunset {
+  background:linear-gradient(180deg,#8d7caf 0%,#e4b6c7 42%,#a8cf9b 90%);
+}
+.village-scene.village-season-winter.village-time-night {
+  background:linear-gradient(180deg,#111c45 0%,#344f75 41%,#8babc0 80%,#d3e1ed 100%);
+}
+.village-scene.village-season-autumn.village-time-night {
+  background:linear-gradient(180deg,#121b42 0%,#363a59 39%,#5d5a58 74%,#806752 100%);
+}
+.village-scene.village-season-spring.village-time-night {
+  background:linear-gradient(180deg,#18214b 0%,#343e68 39%,#687a8d 76%,#7c9e81 100%);
+}
+.high-contrast .village-season-picker {background:#fffdf7;color:#182e21;border-color:#245437}
+.high-contrast .village-season-choices button.chosen {background:#edf9e4;color:#19412b;border-color:#205c39}
+@media(max-width:400px) {
+  .village-season-picker {padding:10px}
+  .village-season-choices {gap:5px}
+  .village-season-choices button {min-height:69px;padding:5px 1px}
+  .village-season-choices button>span {font-size:1.35rem}
+  .village-season-choices button>strong {font-size:.73rem}
+}
+@media(prefers-reduced-motion:reduce) {
+  .village-season-ornaments *, .village-season-picker * {
+    animation:none!important;transition:none!important;
+  }
+}
