@@ -10,7 +10,7 @@ import CardCorner from "./CardCorner.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
-  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, playGardenVillageActivity, recordJigsawGardenReward,
+  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, playGardenVillageActivity, strollGardenVillage, interactGardenVillageLandmark, recordJigsawGardenReward,
   recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel,
   recordMoonlightReward, moonlightPrizeForLevel,
   recordKitchenReward, kitchenPrizeForLevel
@@ -385,6 +385,18 @@ export default function App() {
       return result.valid?{...previous,collection:result.collection}:previous;
     });
   }
+  function strollVillage(){
+    setSaved(previous=>{
+      const result=strollGardenVillage(previous.collection);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
+  function interactVillageLandmark(district){
+    setSaved(previous=>{
+      const result=interactGardenVillageLandmark(previous.collection,district);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
   function finishBonus(key,moves) {
     setSaved(previous => {
       const result=completeBonus(previous.collection,key,moves);
@@ -620,6 +632,7 @@ export default function App() {
           <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
             onToggleDecor={plantDecoration} onPlaceVillage={placeVillageDecoration}
             onStoreVillage={storeVillageDecoration} onVillageActivity={playVillageActivity}
+            onVillageStroll={strollVillage} onVillageLandmark={interactVillageLandmark}
             onVisitWorld={changeWorld} onVisitPorch={showKitchenNotebook}
             onBonus={openBonus} onBack={leaveGarden} />
         ) : view === "bonus" && activeBonusId ? (

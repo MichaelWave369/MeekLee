@@ -204,3 +204,114 @@
     transition:none!important;animation:none!important
   }
 }
+
+
+/* Strolling rescued companions and interactive scenery. Movement is always
+   user-initiated, even when the gentle optional CSS animation is enabled. */
+.village-stroll-section {
+  margin:14px 0;padding:15px;border:2px solid #add1bb;border-radius:18px;
+  background:linear-gradient(140deg,#eaf6eb,#fffaf0);color:#345d46;
+}
+.village-stroll-section h3{font-size:1.19rem;margin:1px 0 9px}
+.village-stroll-section>p{font-size:.91rem;line-height:1.48;margin:7px 0 14px}
+.village-stroll-path{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;
+  position:relative;margin:13px 0;padding:5px 0;align-items:stretch;
+}
+.village-stroll-path::before{
+  content:"";position:absolute;top:42px;left:12.5%;width:75%;height:5px;
+  background:repeating-linear-gradient(90deg,#96bc91 0 15px,transparent 15px 23px);
+  z-index:0;border-radius:5px;pointer-events:none;
+}
+.village-stroll-stop{
+  position:relative;z-index:1;min-width:0;min-height:102px;
+  padding:10px 4px;border:2px solid #a5c5aa;border-radius:13px;
+  background:#fffdf6;color:#315d42;font:inherit;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+}
+.village-stroll-stop.current{
+  border-color:#367650;background:#e3f6d9;
+  box-shadow:inset 0 0 0 2px #b0dbab;
+}
+.village-stroll-stop>span:first-child{font-size:1.55rem}
+.village-stroll-stop strong{font-size:.81rem;line-height:1.2;text-align:center;
+  overflow-wrap:anywhere}
+.village-walking-crew{
+  min-height:28px;display:inline-flex;justify-content:center;
+  align-items:center;gap:4px;font-size:1.3rem;
+}
+.village-walking-crew.moving{
+  animation:village-walker-sway 3.5s ease-in-out infinite;
+}
+@keyframes village-walker-sway{
+  0%,100%{transform:translateX(-2px)}
+  50%{transform:translateX(3px)}
+}
+.village-stroll-action{
+  display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;
+  background:#f7fff2;border-radius:13px;padding:12px;
+  border:2px solid #b6d5a9;
+}
+.village-stroll-action p{flex:1;min-width:170px;margin:0;font-weight:800;
+  font-size:.91rem;line-height:1.4}
+.village-stroll-action button{
+  padding:11px 14px;min-height:48px;border:2px solid #377b51;border-radius:12px;
+  background:#fffdf9;color:#286046;font:inherit;font-weight:850;
+}
+.village-stroll-action button:hover{background:#e5f5df}
+.village-stroll-section .village-stroll-help{
+  margin:9px 0 0;font-size:.8rem;color:#496b54
+}
+.village-landmark-interactive{
+  font:inherit;cursor:pointer;background:#ffffffaf;
+  border:2px solid #8eb993;border-radius:17px;
+  width:min(100%,560px);margin:3px auto 10px;padding:10px;
+  min-height:112px;color:#2d5e47;
+}
+.village-landmark-interactive:hover{background:#f1ffe9}
+.village-landmark-interactive .village-landmark-icon.moving{
+  animation:village-landmark-sway 4s ease-in-out infinite;
+}
+@keyframes village-landmark-sway{
+  0%,100%{transform:rotate(-2deg)}
+  50%{transform:rotate(3deg)}
+}
+.village-landmark-interactive em{
+  font-size:.78rem;font-weight:800;color:#386e50;
+  font-style:normal;margin-top:4px;
+}
+.village-landmark-feedback{
+  max-width:590px;margin:0 auto 14px;
+  padding:10px 12px;border:2px solid #a6c99e;
+  border-radius:12px;background:#fffdf5;
+  color:#336044;text-align:center;font-weight:850;
+  font-size:.89rem;line-height:1.38;
+}
+.village-stroll-section button:focus-visible,
+.village-landmark-interactive:focus-visible {
+  outline:3px solid #306aaf;outline-offset:2px;
+}
+.high-contrast .village-stroll-section,
+.high-contrast .village-landmark-interactive{
+  background:#fffdf8;color:#263f30;border-color:#306947;
+}
+.high-contrast .village-stroll-stop.current{
+  border-color:#1a512d;background:#f4ffe5;color:#163b26;
+}
+@media(max-width:420px){
+  .village-stroll-section{padding:9px}
+  .village-stroll-path{gap:5px}
+  .village-stroll-stop{min-height:97px;padding:7px 2px}
+  .village-stroll-stop>span:first-child{font-size:1.35rem}
+  .village-stroll-stop strong{font-size:.68rem}
+  .village-walking-crew{font-size:1.1rem;gap:1px}
+  .village-stroll-action{padding:9px}
+  .village-stroll-action button{width:100%;font-size:.86rem}
+  .village-landmark-interactive{padding:9px 5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .village-walking-crew.moving,
+  .village-landmark-interactive .village-landmark-icon.moving{
+    animation:none!important;transition:none!important;
+  }
+}

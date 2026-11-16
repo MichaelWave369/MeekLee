@@ -3,6 +3,7 @@
 import { seedFor, rngFrom } from "./core.js";
 import {normalizeVillagePlacements,placeVillageItem,storeVillageItem} from "./village.js";
 import {normalizeVillageLife,advanceVillageActivity} from "./village-life.js";
+import {normalizeVillageWander,advanceVillageWalk,advanceVillageLandmark} from "./village-wander.js";
 
 export const GARDEN_DECOR = Object.freeze([
   {id:"sunflower",icon:"🌻",name:"Golden Sunflower"},
@@ -167,10 +168,11 @@ export function normalizeCollection(raw = {}) {
     if(kitchenPrizes.includes(item.id))decorIds.add(item.id);
   const villagePlacements=normalizeVillagePlacements(previous.villagePlacements,[...decorIds]);
   const villageLife=normalizeVillageLife(previous.villageLife);
+  const villageWander=normalizeVillageWander(previous.villageWander);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife,villageWander};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -244,6 +246,18 @@ export function gardenInventory(collection) {
     if(normalized.kitchenPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
+export function strollGardenVillage(collection){
+  const current=normalizeCollection(collection);
+  const result=advanceVillageWalk(current.villageWander);
+  return {...result,collection:{...current,villageWander:result.wander}};
+}
+export function interactGardenVillageLandmark(collection,district){
+  const current=normalizeCollection(collection);
+  const result=advanceVillageLandmark(current.villageWander,district);
+  return {...result,collection:result.valid?
+    {...current,villageWander:result.wander}:current};
+}
+
 export function playGardenVillageActivity(collection,district,choice){
   const current=normalizeCollection(collection);
   const result=advanceVillageActivity(current.villageLife,district,choice);

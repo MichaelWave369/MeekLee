@@ -6,6 +6,18 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🦆 Garden Village Strolls and interactive scenery
+
+**Now playable, free, offline and completely optional:** Garden Village includes a **gentle four-stop walking path** with already-earned rescued friends, plus tappable scenic landmarks. Visitors never walk away on a timer; Mom moves them intentionally by tapping **Take a Gentle Stroll**. The path moves from **Village Square → Flower Lane → Orchard Hill → Pondside Walk → Village Square**, looping forever. Tap a stop to visit that neighborhood without advancing the walking friends. The active stop has a visual highlight, visitor names and familiar pet emoji, and a large touch target. If the family has not unlocked an additional rescue pet beyond the chosen companion, the path simply shows wild birds instead of inventing new pets.
+
+**Real companion ownership:** the walking party is derived exclusively from existing `gardenInventory(collection).pets`, excludes the current selected companion, and can contain up to two actually earned rescue friends. Friends stay together for one loop and rotate on the next lap. Strolling does not add or move any owned pet, change which pet Mom chose, or grant chest prizes. Subtle movement is decorative CSS only, conditioned on the existing **Motion** setting and completely disabled for users preferring reduced motion.
+
+**Four interactive landmark stories:** tap the **Village Fountain**, **Butterfly Garden**, **Orchard Tree** or **Duck Pond** to see one of three little scene changes. The landmark icon and a short description change with each tap. Every district remembers its own visit count independently, and reopening the app shows the last moment. No puzzles, time pressure, paid items, accounts, online services or new assets are required.
+
+**Safe saved progress:** validated optional `collection.villageWander` stores only `{step,scenery:{square,meadow,orchard,pond}}`. Bad counts and unknown districts are discarded on load. The existing `meeklee-adventures-save-v1` key, previous four village mini-games and their saved rounds, 80-place ornament arrangement, all eight puzzle worlds, cards, seasonal rewards and private Family Porch remain unchanged.
+
+**Where:** ☰ Menu → Garden → Explore Garden Village. Walkway and landmarks have labeled keyboard/touch controls, fit 320px phones, and respect high-contrast/reduced-motion settings.
+
 ## 🐾 Garden Village Life: friendly visits and four gentle mini-activities
 
 **New, completely optional and offline:** Mom's Garden Village now has four interactive neighborhood activities. They are not timers, chores or paid unlocks. Tap the requested icon to complete a three-step round, then play again with a slightly different order. Wrong taps never cost lives, coins, points or progress.
