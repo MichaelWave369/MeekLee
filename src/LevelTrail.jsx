@@ -6,7 +6,8 @@ export const WORLD_TRAILS = {
   sweets: { icon: "🍬", title: "Sugar Trail", marker: "🍭", scenery: ["🍩","🍒","🧁","🍬"] },
   rescue: { icon: "🐾", title: "Critter Path", marker: "🐞", scenery: ["🌲","🦊","🍄","🌿"] },
   bubbles: { icon: "🫧", title: "Lagoon Journey", marker: "🐚", scenery: ["🐠","🪸","🐟","⭐"] },
-  meadow: { icon: "🌷", title: "Bouquet Walk", marker: "🌼", scenery: ["🦋","🌻","🐝","🪻"] }
+  meadow: { icon: "🌷", title: "Bouquet Walk", marker: "🌼", scenery: ["🦋","🌻","🐝","🪻"] },
+  pumpkin: { icon: "🎃", title: "Autumn Harvest Walk", marker: "🍁", scenery: ["🌽","🍄","🍂","🦊"] }
 };
 export default function LevelTrail({ mode, page, unlocked, current, medals, onPage, onLevel, onBack, onGarden, companion, settings, chestsReady = 0 }) {
   const world = WORLD_TRAILS[mode];
@@ -55,9 +56,9 @@ export default function LevelTrail({ mode, page, unlocked, current, medals, onPa
                 aria-label={"Level " + level + ", " + status + (status === "current" ? ", play now" : "")}>
                 {status === "current" && <span className="trail-marker" aria-hidden="true">{world.marker}</span>}
                 <span className="trail-number">{level}</span>
-                {level % 10 === 0 && mode!=="meadow" && <span className="trail-milestone" aria-hidden="true">🎁</span>}
-                {mode==="meadow"&&level%3===0&&level<=18&&
-                  <span className="trail-milestone" aria-label="Meadow decoration milestone">🌷</span>}
+                {level % 10 === 0 && mode!=="meadow" && mode!=="pumpkin" && <span className="trail-milestone" aria-hidden="true">🎁</span>}
+                {(mode==="meadow"||mode==="pumpkin")&&level%3===0&&level<=18&&
+                  <span className="trail-milestone" aria-label={mode==="pumpkin"?"Pumpkin decoration milestone":"Meadow decoration milestone"}>{mode==="pumpkin"?"🎃":"🌷"}</span>}
                 {status === "completed" && medals?.[level] > 0 &&
                   <span className="trail-medals" aria-label={medals[level] + " stars earned"}>
                     {"★".repeat(Math.min(3, medals[level]))}
@@ -77,7 +78,7 @@ export default function LevelTrail({ mode, page, unlocked, current, medals, onPa
       <button className="trail-play" type="button" onClick={() => onLevel(unlocked)}>
         {world.marker} Play Level {unlocked} →
       </button>
-      <p className="trail-footnote">Completed levels can be replayed for free. New pages unlock as you finish each ten-level journey. {mode==="meadow"?"Collect free Flower Meadow decorations at levels 3, 6, 9, 12, 15 and 18.":""}</p>
+      <p className="trail-footnote">Completed levels can be replayed for free. New pages unlock as you finish each ten-level journey. {mode==="meadow"?"Collect free Flower Meadow decorations at levels 3, 6, 9, 12, 15 and 18.":""} {mode==="pumpkin"?"Earn Pumpkin Patch garden decorations at levels 3, 6, 9, 12, 15 and 18.":""}</p>
     </section>
   );
 }
