@@ -30,6 +30,20 @@ export const JIGSAW_GARDEN_DECOR = Object.freeze([
   {id:"jigsaw_lagoon_5",icon:"🦀",name:"Friendly Crab",scene:"lagoon",size:5}
 ]);
 export const jigsawPrizeKey=(scene,size)=>scene+":"+size;
+
+// Flower Meadow rewards are independent of the original four-world chests.
+// Earn each once, across classic and large-piece mode, with no shop or timer.
+export const MEADOW_GARDEN_DECOR = Object.freeze([
+  {id:"meadow_daisy_wreath",icon:"🌼",name:"Daisy Wreath",level:3},
+  {id:"meadow_flower_chimes",icon:"🎐",name:"Flower Wind Chimes",level:6},
+  {id:"meadow_pollinator_home",icon:"🐝",name:"Pollinator Cottage",level:9},
+  {id:"meadow_lily_walk",icon:"🪷",name:"Lily Walkway",level:12},
+  {id:"meadow_bloom_cart",icon:"🛒",name:"Flower Market Cart",level:15},
+  {id:"meadow_ribbon_arch",icon:"🎀",name:"Ribbon Blossom Arch",level:18}
+]);
+export function meadowPrizeForLevel(level){
+  return MEADOW_GARDEN_DECOR.find(item=>item.level===level)||null;
+}
 export const GARDEN_PETS = Object.freeze([
   {id:"bunny",icon:"🐰",name:"Pip the Bunny"},
   {id:"puppy",icon:"🐶",name:"Biscuit the Puppy"},
@@ -87,10 +101,15 @@ export function normalizeCollection(raw = {}) {
       JIGSAW_GARDEN_DECOR.some(d=>jigsawPrizeKey(d.scene,d.size)===k)))]:[];
   for(const reward of JIGSAW_GARDEN_DECOR)
     if(jigsawPrizes.includes(jigsawPrizeKey(reward.scene,reward.size)))decorIds.add(reward.id);
+  const meadowPrizes=Array.isArray(previous.meadowPrizes)?
+    [...new Set(previous.meadowPrizes.filter(id=>
+      typeof id==="string"&&MEADOW_GARDEN_DECOR.some(item=>item.id===id)))]:[];
+  for(const item of MEADOW_GARDEN_DECOR)
+    if(meadowPrizes.includes(item.id))decorIds.add(item.id);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -154,6 +173,8 @@ export function gardenInventory(collection) {
   }
   for(const reward of JIGSAW_GARDEN_DECOR)if(normalized.jigsawPrizes.includes(
     jigsawPrizeKey(reward.scene,reward.size)))decor.set(reward.id,reward);
+  for(const item of MEADOW_GARDEN_DECOR)
+    if(normalized.meadowPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
 export function selectCompanion(collection,petId) {
@@ -193,6 +214,14 @@ export function completeBonus(collection,key,moves) {
       completedBonuses:{...current.completedBonuses,[key]:best===undefined?moves:Math.min(best,moves)}
     }
   };
+}
+
+export function recordMeadowReward(collection,previousGame,nextGame){
+  const current=normalizeCollection(collection);
+  if(nextGame?.mode!=="meadow"||!nextGame.won||previousGame?.won)return current;
+  const prize=meadowPrizeForLevel(nextGame.level);
+  if(!prize||current.meadowPrizes.includes(prize.id))return current;
+  return normalizeCollection({...current,meadowPrizes:[...current.meadowPrizes,prize.id]});
 }
 
 export function recordJigsawGardenReward(collection,previousGame,nextGame){
