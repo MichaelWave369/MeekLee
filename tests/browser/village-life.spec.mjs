@@ -138,8 +138,8 @@ test("village activities do not disturb Mom's old level 6001, planted ornaments 
   await openVillage(page);
   await district(page,"pond");
   await expect(page.getByText(/Step 2 of 3/)).toBeVisible();
-  await expect(page.getByText(/Find the Duck/)).toBeVisible();
-  await choose(page,0);
+  await expect(page.getByText(/Find the Duckling/)).toBeVisible();
+  await choose(page,1);
   await expect.poll(async()=>(await saved(page)).collection.villageLife.pond.step).toBe(2);
   const state=await saved(page);
   expect(state.easyProgress.harvest).toBe(6001);
