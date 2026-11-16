@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "sourceArchive": "MeekLeeAdventures.zip",
+  "tracks": [
+    {
+      "slot": 0,
+      "name": "Morning in Harvest Valley A.mp3",
+      "file": "01-harvest-valley.mp3",
+      "sha256": "7e3a471643998da2f0a062985995931b514047f593c81701a6c080da5d8d20a5",
+      "size": 3890405
+    },
+    {
+      "slot": 1,
+      "name": "Sugar Mountain Shuffle A.mp3",
+      "file": "02-sugar-mountain.mp3",
+      "sha256": "aa4e262a4ddd9fa198748ffb72f60bbaf933fe17b33c87975df659e900fe088a",
+      "size": 3937444
+    },
+    {
+      "slot": 2,
+      "name": "Little Critter Parade A.mp3",
+      "file": "03-critter-parade.mp3",
+      "sha256": "f616eb60105aac6af5e05c1044b23fc10a28d68a43a2494c4edb1a249b4b15f9",
+      "size": 2906333
+    },
+    {
+      "slot": 3,
+      "name": "Bubbles in the Blue A.mp3",
+      "file": "04-bubble-lagoon.mp3",
+      "sha256": "f190770a8bbece5f50c7922792f34daa55211f48b2ec2dfbc6e45906b2b7577d",
+      "size": 4915508
+    },
+    {
+      "slot": 4,
+      "name": "Pip's Little Garden A.mp3",
+      "file": "05-pips-garden.mp3",
+      "sha256": "5542330d5cd22bc5cd2bf42219faef101d416a047d74231ed5495894751834c5",
+      "size": 3672729
+    },
+    {
+      "slot": 5,
+      "name": "The Family Rook Table A.mp3",
+      "file": "06-family-rook.mp3",
+      "sha256": "5b70837dba9387c85782b71e97c3b547b1cbd192be6de529a88a78f40ca7e346",
+      "size": 3459850
+    },
+    {
+      "slot": 6,
+      "name": "Solitaire Sunday A.mp3",
+      "file": "07-solitaire-sunday.mp3",
+      "sha256": "002206d105d2c3cec22689c852f82026609cb8f366dcdda6b89acce8985cee73",
+      "size": 2840553
+    },
+    {
+      "slot": 7,
+      "name": "Main Theme A · The Welcome.mp3",
+      "file": "08-main-theme.mp3",
+      "sha256": "c5f6e82922aec56ed0d5960e8649d7d8f58638c7e560a337f2df491a8d6ae1f9",
+      "size": 4332237
+    }
+  ]
+}
