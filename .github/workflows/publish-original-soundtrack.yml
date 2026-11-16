@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 jobs:
   prepare-original-music:
     name: Validate all eight MP3s and open a review PR
