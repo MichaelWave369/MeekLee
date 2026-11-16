@@ -37,7 +37,7 @@ async function launch(browser,width=320,raw=null){
 test("Mom gets eight online tracks and one big Play button, without file-import knowledge",async({browser})=>{
   const {context,page}=await launch(browser,320);
   await expect(page.locator("[data-soundtrack-player]")).toBeVisible();
-  await expect(page.getByText(/Eight songs included/).first()).toBeVisible();
+  await expect(page.locator("[data-soundtrack-status]")).toContainText("songs included");
   await expect(page.locator("[data-soundtrack-audio]")).toHaveJSProperty("paused",true);
   await page.locator(".soundtrack-library summary").click();
   await expect(page.locator("[data-soundtrack-play]")).toHaveCount(8);
