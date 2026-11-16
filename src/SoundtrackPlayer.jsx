@@ -50,8 +50,8 @@ export default function SoundtrackPlayer(){
       if(!active)return;
       setTracks(items);
       if(items.some(Boolean))setStatus("Your saved songs are ready. Tap Play whenever you like.");
-      else if(!onlineTracks.some(Boolean))
-        setStatus("Your soundtrack shelf is empty. Import your own eight audio files to fill it.");
+      else setStatus(previous=>previous.includes("songs included!")?
+        previous:"Your soundtrack shelf is empty. Import your own eight audio files to fill it.");
     }).catch(error=>{
       if(active)setStatus("Local audio library unavailable: "+error.message+
         " You can still try importing tracks for this visit.");
