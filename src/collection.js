@@ -5,6 +5,7 @@ import {normalizeVillagePlacements,placeVillageItem,storeVillageItem} from "./vi
 import {normalizeVillageLife,advanceVillageActivity} from "./village-life.js";
 import {normalizeVillageWander,advanceVillageWalk,advanceVillageLandmark} from "./village-wander.js";
 import {normalizeVillageAtmosphere,changeVillageSky,toggleVillageGlow} from "./village-atmosphere.js";
+import {normalizeVillageSeason,changeVillageSeason} from "./village-season.js";
 
 export const GARDEN_DECOR = Object.freeze([
   {id:"sunflower",icon:"🌻",name:"Golden Sunflower"},
@@ -171,10 +172,11 @@ export function normalizeCollection(raw = {}) {
   const villageLife=normalizeVillageLife(previous.villageLife);
   const villageWander=normalizeVillageWander(previous.villageWander);
   const villageAtmosphere=normalizeVillageAtmosphere(previous.villageAtmosphere);
+  const villageSeason=normalizeVillageSeason(previous.villageSeason);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife,villageWander,villageAtmosphere};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife,villageWander,villageAtmosphere,villageSeason};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -248,6 +250,13 @@ export function gardenInventory(collection) {
     if(normalized.kitchenPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
+export function setGardenVillageSeason(collection,season){
+  const current=normalizeCollection(collection);
+  const result=changeVillageSeason(current.villageSeason,season);
+  return {...result,collection:result.valid?
+    {...current,villageSeason:result.season}:current};
+}
+
 export function setGardenVillageSky(collection,timeOfDay){
   const current=normalizeCollection(collection);
   const result=changeVillageSky(current.villageAtmosphere,timeOfDay);
