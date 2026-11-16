@@ -67,3 +67,15 @@
 @media(prefers-reduced-motion:reduce){
   .meeklee-soundtrack *{animation:none!important;transition:none!important}
 }
+
+
+/* Simple listening controls for Mom. Online songs are already available. */
+.soundtrack-continuous{
+  display:flex;align-items:center;gap:9px;margin:10px 0;
+  padding:10px 12px;background:#f0f9ea;border:2px solid #b4cfaa;
+  border-radius:11px;font-size:.9rem;font-weight:800;color:#31583f;
+}
+.soundtrack-continuous input{width:20px;height:20px;accent-color:#42895a}
+.soundtrack-included{display:block;color:#34684b;font-size:.78rem;
+  font-weight:800;margin:5px 0}
+@media(max-width:400px){.soundtrack-continuous{font-size:.83rem;padding:9px}}
