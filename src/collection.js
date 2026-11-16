@@ -2,6 +2,7 @@
 // Every reward is deterministic, once-only per ten-level world chapter.
 import { seedFor, rngFrom } from "./core.js";
 import {normalizeVillagePlacements,placeVillageItem,storeVillageItem} from "./village.js";
+import {normalizeVillageLife,advanceVillageActivity} from "./village-life.js";
 
 export const GARDEN_DECOR = Object.freeze([
   {id:"sunflower",icon:"🌻",name:"Golden Sunflower"},
@@ -165,10 +166,11 @@ export function normalizeCollection(raw = {}) {
   for(const item of KITCHEN_GARDEN_DECOR)
     if(kitchenPrizes.includes(item.id))decorIds.add(item.id);
   const villagePlacements=normalizeVillagePlacements(previous.villagePlacements,[...decorIds]);
+  const villageLife=normalizeVillageLife(previous.villageLife);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements,villageLife};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -242,6 +244,13 @@ export function gardenInventory(collection) {
     if(normalized.kitchenPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
+export function playGardenVillageActivity(collection,district,choice){
+  const current=normalizeCollection(collection);
+  const result=advanceVillageActivity(current.villageLife,district,choice);
+  return {...result,collection:result.valid?
+    {...current,villageLife:result.life}:current};
+}
+
 export function placeGardenVillageDecor(collection,id,plot){
   const current=normalizeCollection(collection);
   const owned=gardenInventory(current).decor.map(item=>item.id);
