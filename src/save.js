@@ -1,4 +1,4 @@
-import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel } from "./core.js";
+import { EASY_SIZE, MODES, SIZE, boardSize, makeLevel, validKitchenState } from "./core.js";
 import { motionSpeed } from "./motion.js";
 import { makeShooterLevel, validShooter, normalizeShooter } from "./shooter.js";
 import { normalizeCollection } from "./collection.js";
@@ -30,7 +30,8 @@ export function validGame(game, mode, size) {
     Number.isFinite(game.target) && game.target > 0 &&
     Number.isFinite(game.cleared) && game.cleared >= 0 &&
     Number.isFinite(game.score) && Number.isFinite(game.moves) &&
-    typeof game.won === "boolean");
+    typeof game.won === "boolean" &&
+    (mode !== "kitchen" || validKitchenState(game)));
 }
 
 function positiveLevel(value, fallback = 1) {

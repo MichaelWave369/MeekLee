@@ -37,7 +37,7 @@ h1 span { color: #e18486; }
 .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
 .section-heading h2 { font-size: 1.35rem; color: #42744b; margin: 0; letter-spacing: -.03em; }
 .section-heading>span { color: #879981; font-size: .85rem; font-weight: 800; }
-.worlds { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 13px; }
+.worlds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
 .world {
   min-width: 0; display: flex; gap: 10px; flex-direction: column; align-items: flex-start; text-align: left;
   background: #fff; border: 2px solid #e4eddb; border-radius: 18px; padding: 15px;
@@ -53,6 +53,7 @@ h1 span { color: #e18486; }
 .world:nth-child(5) .world-icon { background: #e0f3d8; }
 .world:nth-child(6) .world-icon { background: #ffe4b9; }
 .world:nth-child(7) .world-icon { background: #e2e8ff; }
+.world:nth-child(8) .world-icon { background: #f9e4d0; }
 .world-text { display: flex; flex-direction: column; gap: 4px; }
 .world-text strong { font-size: 1rem; color: #435942; line-height: 1.3; }
 .world-text small { color: #798678; font-size: .76rem; line-height: 1.35; min-height: 3em; }
@@ -1398,4 +1399,53 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 }
 @media (prefers-reduced-motion: reduce) {
   .moonlight-phase { transition: none !important; animation: none !important; }
+}
+
+
+/* Grandma's Kitchen: readable, touch-friendly recipe card, no real recipe data. */
+.kitchen-order {
+  margin: 9px 0 15px; padding: 14px; border-radius: 16px;
+  border: 2px solid #d7b595; background: #fff5e9; color: #674b32;
+}
+.kitchen-order-heading {
+  display: flex; flex-wrap: wrap; gap: 9px 15px;
+  justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.kitchen-order-heading > div > span { font-size: 1.5rem; margin-right: 9px; }
+.kitchen-order-heading strong { font-size: 1.05rem; }
+.kitchen-order-heading p { margin: 4px 0 0; font-size: .91rem; }
+.kitchen-notebook-link {
+  border: 2px solid #a26b46; border-radius: 11px;
+  background: #fffefa; color: #654126; padding: 11px 13px;
+  font: inherit; font-weight: 850; min-height: 46px;
+}
+.kitchen-notebook-link:hover { background: #f9e7d4; }
+.kitchen-steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.kitchen-step {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  min-width: 0; padding: 10px 4px; text-align: center;
+  background: #f8e9d8; border: 2px solid #ddc5a8; border-radius: 12px;
+  color: #74573e;
+}
+.kitchen-step > span { font-size: 1.75rem; }
+.kitchen-step strong { font-size: .82rem; line-height: 1.3; }
+.kitchen-step.next { background: #f4fff0; border-color: #3a8156;
+  color: #24563a; box-shadow: inset 0 0 0 2px #c6e6b7; }
+.kitchen-step.gathered { background: #f1f2ea; border-color: #a8c096; color: #4f6e48; }
+.kitchen-order-note { margin: 10px 0 0; font-size: .83rem; line-height: 1.4; }
+.high-contrast .kitchen-order {
+  background: #fffdf8; color: #29221b; border-color: #724a2e;
+}
+.high-contrast .kitchen-step.next {
+  background: #ebffe8; color: #142c1d; border-color: #21613c;
+}
+@media(max-width:395px){
+  .kitchen-order { padding: 10px 8px; }
+  .kitchen-order-heading strong { font-size: .95rem; }
+  .kitchen-notebook-link { width: 100%; font-size: .88rem; }
+  .kitchen-step > span { font-size: 1.4rem; }
+  .kitchen-step strong { font-size: .75rem; }
+}
+@media(prefers-reduced-motion:reduce){
+  .kitchen-step { animation: none !important; transition:none !important; }
 }

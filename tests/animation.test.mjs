@@ -1,12 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MODES, EASY_SIZE, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, moonlightHarvest, moonPhase, findMatches, makeLevel, playTurn } from "../src/core.js";
+import { MODES, EASY_SIZE, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, moonlightHarvest, moonPhase, kitchenNextIngredient, findMatches, makeLevel, playTurn } from "../src/core.js";
 
 function findMove(game) {
   const size = game.size ?? SIZE;
-  if (["tap","bouquet","cross","moon"].includes(MODES[game.mode].mechanic)) {
+  if (["tap","bouquet","cross","moon","recipe"].includes(MODES[game.mode].mechanic)) {
     const mechanic=MODES[game.mode].mechanic;
-    const i=game.board.findIndex((_,j)=>mechanic==="moon"?
+    const i=game.board.findIndex((item,j)=>mechanic==="recipe"?
+      item===kitchenNextIngredient(game):mechanic==="moon"?
       moonlightHarvest(game.board,j,size,moonPhase(game.moves).radius).length>=3:
       mechanic==="cross"?pumpkinHarvest(game.board,j,size).length>=3:
       mechanic==="bouquet"?connectedBouquet(game.board,j,size).length>=3:
@@ -40,7 +41,7 @@ test("every successful move emits pop and gravity frames matching the final boar
           assert.equal(frame.board.length, size * size);
           assert(frame.board.every(p => Number.isInteger(p) && p >= 0 && p < 6));
           if (frame.type === "pop") {
-            assert(frame.matched.length >= 2);
+            assert(frame.matched.length >= (mode==="kitchen"?1:2));
             assert(frame.matched.every(i => Number.isInteger(i) && i >= 0 && i < size * size));
             assert(frame.gained > 0);
           }

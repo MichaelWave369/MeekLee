@@ -72,8 +72,8 @@ const GAMES=[
     detail:"4 seats + spectators • Online room setup"}
 ];
 
-export default function CardCorner({cards,onChange,onBack,settings}){
-  const [active,setActive]=useState(null);
+export default function CardCorner({cards,onChange,onBack,settings,startAt=null}){
+  const [active,setActive]=useState(startAt);
   const chosen=GAMES.find(g=>g.id===active);
   function launch(id){
     if(id==="family"||id==="porch"){setActive(id);return;}
