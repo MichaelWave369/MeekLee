@@ -34,7 +34,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
       <div><p className="trail-eyebrow">🌼 MeekLee's Growing Garden</p>
         <h2>Mom's Happy Garden</h2></div>
     </header>
-    <p className="garden-intro">Every ten completed levels earns a treasure chest.
+    <p className="garden-intro">Every ten completed levels in the four original worlds earns a treasure chest.
       Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!
       Complete picture puzzles to earn nine extra garden treasures, or explore Flower Meadow
       to earn six new decorations at levels 3, 6, 9, 12, 15 and 18!</p>
@@ -67,7 +67,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     <section className="garden-section" aria-labelledby="garden-chest-title">
       <h3 id="garden-chest-title">🎁 Treasure Chests {pendingChests>0?"("+pendingChests+" ready)":""}</h3>
       {chests.length===0 ?
-        <p className="garden-section-help">Your next treasure chest appears after Level 10, 20, 30, and so on in any world.</p> :
+        <p className="garden-section-help">Your next treasure chest appears after Level 10, 20, 30, and so on in the original four worlds. Flower Meadow has its own decorations.</p> :
         <div className="chest-list">
           {chests.slice(0,4).map(reward=>
             <button className="chest-button" type="button" key={reward.key}
