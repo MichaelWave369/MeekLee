@@ -61,7 +61,7 @@ test("harvest of five triggers leaf gust on four neighboring nonmatching crops",
   const r=playTurn(old,7);
   assert(r.valid);
   assert.equal(r.trace[0].groupSize,5);
-  assert.deepEqual([...r.trace[0].gust].sort((a,b)=>a-b,
+  assert.deepEqual([...r.trace[0].gust].sort((a,b)=>a-b),
     [...neighbors(7,size)].sort((a,b)=>a-b));
   assert.equal(r.cleared,9);
   assert.equal(new Set(r.trace[0].matched).size,9);
