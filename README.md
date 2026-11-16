@@ -6,6 +6,20 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🏘️ Mom's Garden Village: arrange earned treasures and visit your worlds
+
+**Now playable, free, accessible and offline:** Mom's Happy Garden has a new **Explore Garden Village** button that opens a place to arrange **earned** ornaments across four cheerful neighborhoods. The original Garden landscape, chest history, companion selection, show/hide setting and other games are **preserved**.
+
+### Four neighborhoods with 80 real planting plots
+**🏡 Village Square** (fountain), **🌷 Flower Lane** (butterfly garden), **🍎 Orchard Hill** (trees) and **🪷 Pondside Walk** (duck pond) each have a **five-column, four-row** grid. Tap an earned ornament in the collection beneath the map, then tap an **empty plot** to place it. The same ornament can be moved between neighborhoods without duplicates; tapping an occupied plot selects its current owner instead of overwriting it. Choose **Return to Collection** to clear a plot, never to lose ownership or a garden prize.
+
+There are no paid plots, town currencies, upgrades or limited-time offers. No starter ornaments are invented; the village shows its scenic landmarks and paths while Mom earns her first decoration. A companion can visit each neighborhood, and the map provides one-touch paths into **all eight existing worlds** plus the **private Family Porch notebook**. All games resume their existing saved progress.
+
+### Save safety
+Placement is stored only under a new optional `collection.villagePlacements` mapping of earned ornament ID to district and plot number. Only real districts, valid 0–19 plot positions, unique occupied plots, and truly unlocked ornaments are accepted during save migration. The existing `meeklee-adventures-save-v1` key, all 8 world saves, star medals, original chest milestones, each seasonal prize, pets, cards and family recipes are unchanged. Hiding an ornament in the original Garden hides it from the village display but **remembers its location**, so replanting it doesn't require rearranging the village; the remembered spot can also be cleared from storage.
+
+**Phone path:** ☰ Menu → 🌷 Garden → **🏡 Explore Garden Village**. Each 320px phone has a five-column touch grid, big neighborhood selectors, tap-to-place and separate world paths. No drag gesture is required, and keyboard play, high contrast and reduced-motion settings remain supported.
+
 ## 🥣 Grandma's Kitchen: eighth world, recipe puzzles and the private Family Porch
 
 **Now playable, free and offline:** Grandma's Kitchen joins the seven existing puzzle worlds as the **eighth world**, with its own 6×6 Easy-to-See and 8×8 classic boards, endless levels, stars, Adventure Path, earned garden decorations and independent progress under the original save key.
