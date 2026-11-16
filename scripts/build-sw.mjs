@@ -9,8 +9,11 @@ async function listFiles(folder) {
   for (const entry of await readdir(folder, { withFileTypes: true })) {
     const path = join(folder, entry.name);
     if (entry.isDirectory()) result = result.concat(await listFiles(path));
-    else if (entry.isFile() && entry.name !== "sw.js")
-      result.push("./" + relative(root, path).split("\\").join("/"));
+    else if (entry.isFile() && entry.name !== "sw.js") {
+      const url = "./" + relative(root, path).split("\\").join("/");
+      // Leave large music files to stream only when a person presses Play.
+      if (!url.startsWith("./audio/") || !url.endsWith(".mp3")) result.push(url);
+    }
   }
   return result;
 }
@@ -36,6 +39,8 @@ const output = [
   "self.addEventListener('fetch', event => {",
   "  const request = event.request;",
   "  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;",
+  "  // Let the browser handle MP3 streaming and Range requests without SW caching.",
+  "  if (new URL(request.url).pathname.includes('/audio/') && new URL(request.url).pathname.endsWith('.mp3')) return;",
   "  if (request.mode === 'navigate') {",
   "    event.respondWith(fetch(request).then(response => {",
   "      if (response.ok) { const copy = response.clone(); caches.open(CACHE).then(cache => cache.put(request, copy)); }",
