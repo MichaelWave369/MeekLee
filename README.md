@@ -6,6 +6,24 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🎵 Built-in original MeekLee soundtrack for everyone, including Mom's phone
+
+**No ZIP, MP3 knowledge, account or PC needed for listeners.** After the original eight MP3s are published with the game, **MeekLee Music Box automatically discovers all eight**, showing a big **▶ Play** button that starts with **Main Theme A · The Welcome**. Songs stream directly from the same GitHub Pages site, one at a time, only after Play is pressed. Once started, the playlist can continue through the remaining songs, with Play/Pause, Previous/Next, an adjustable volume and a **Keep playing the next song** toggle. Private user-imported songs can still override individual built-in songs without altering the public originals.
+
+The existing eight-tracks-only Music Box intentionally stays **below the main game area** so Mom's puzzle controls remain first on a 320px phone. No audio downloads or sound playback happen automatically. The game detects public originals from a build-generated `audio/manifest.json`, **only if all eight original SHA-256 verified MP3 assets are actually present**. Without them, the music player retains the private ZIP and individual-file import fallback and does not pretend songs are online.
+
+### Publisher's one-time ZIP upload (on your PC, never on Mom's device)
+
+1. First review and merge the GitHub PR that introduces built-in music support. The release workflow must exist on `main` before the ZIP is attached.
+2. Open <https://github.com/MichaelWave369/MeekLee/releases/new>. Enter a **new tag** named `meeklee-soundtrack-v1`, targeting `main`. Give the release a descriptive title such as **MeekLee Original Soundtrack v1**.
+3. Attach the original single `MeekLeeAdventures.zip` to that release **before** clicking **Publish release**. It must contain the eight original MP3 recordings supplied by the creator, with unchanged names and bytes. No need to unpack them.
+4. GitHub Actions automatically runs **Stage creator soundtrack from release ZIP**. It downloads the attached ZIP, checks all eight original track names, sizes and SHA-256 digests against `scripts/original-soundtrack.json`, stages the MP3s in `public/audio/`, and opens a separate review PR (or gives a branch link if GitHub blocks actions from opening PRs).
+5. Once the music PR's build and phone checks pass, review and merge it. Existing GitHub Pages deployment then hosts all eight songs automatically; Mom just opens <https://michaelwave369.github.io/MeekLee/> and taps **Play** at the Music Box.
+
+**Important:** The implementation PR contains no audio binaries; it prepares the automatic publishing process, not a prematurely claimed release. The release-upload PR is how the actual MP3s arrive on GitHub Pages. You upload *once*, Mom uploads *nothing*. The project neither stores a music provider key nor needs Suno access. Published audio can be played online, while personal imports stored in IndexedDB still work offline. The game itself stays offline-first; streaming music requires an internet connection unless a personal offline copy has been saved.
+
+**Performance:** The service worker deliberately excludes `audio/*.mp3` from the startup cache and leaves MP3 range requests to the browser. The album is about 30 MB but opening a puzzle does not download it. Integrity checks reject missing, modified or partial public song sets at build time.
+
 ## 🎧 One-click import of the eight original MeekLee Adventures MP3s
 
 The creator supplied a real `MeekLeeAdventures.zip` archive containing eight verified MP3 recordings. **Their actual audio bytes are not yet in the public GitHub repository**, so the Music Box now adds a direct, local **🎼 Import MeekLeeAdventures ZIP** button. This reads the archive in the listener's browser, unpacks the music, recognizes the eight **original track titles in any file order**, and saves them to the existing local IndexedDB library. It never uploads the ZIP, needs no Suno account, and doesn't require manually extracting the files.
