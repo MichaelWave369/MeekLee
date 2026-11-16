@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MODES, SIZE, adjacent, connectedGroup, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
+import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
@@ -10,7 +10,8 @@ import CardCorner from "./CardCorner.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
-  gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward
+  gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward,
+  recordMeadowReward, meadowPrizeForLevel
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
@@ -21,7 +22,8 @@ const WORLDS = [
   { id: "harvest", icon: "🌻", name: "Harvest Valley", desc: "Swap crops to grow a cheerful garden." },
   { id: "sweets", icon: "🍬", name: "Sugar Mountain", desc: "Sweet combinations and cascading treats." },
   { id: "rescue", icon: "🐾", name: "Critter Rescue", desc: "Tap matching groups to help the animals." },
-  { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Aim, bounce and pop colorful bubbles." }
+  { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Aim, bounce and pop colorful bubbles." },
+  { id: "meadow", icon: "🌷", name: "Flower Meadow", desc: "Tap diagonal bouquets of 3+ flowers. Larger clusters scatter pollen!" }
 ];
 
 function initialize() {
@@ -34,10 +36,11 @@ function initialize() {
 
 function hintFor(game) {
   const size = game.size ?? SIZE;
-  if (MODES[game.mode].mechanic === "tap") {
+  if (MODES[game.mode].mechanic === "tap" || MODES[game.mode].mechanic === "bouquet") {
+    const bouquet=MODES[game.mode].mechanic==="bouquet";
     for (let i = 0; i < game.board.length; i++) {
-      const group = connectedGroup(game.board, i);
-      if (group.length >= 2) return group;
+      const group=bouquet?connectedBouquet(game.board,i,size):connectedGroup(game.board,i,size);
+      if(group.length>=(bouquet?3:2))return group;
     }
   } else {
     for (let i = 0; i < game.board.length; i++) {
@@ -95,9 +98,12 @@ export default function App() {
   const percent = Math.min(100, Math.round(game.cleared * 100 / game.target));
   const instruction = rules.mechanic === "tap" ?
     "Tap a group of 2 or more matching critters." :
+    rules.mechanic === "bouquet" ?
+    "Tap 3+ matching flowers touching at edges or corners. Five or more scatter bonus pollen!" :
     mode === "bubbles" ? "Swap neighbors to match 3. Bubbles rise upward!" :
       "Drag a piece onto its neighbor and release, or tap two neighbors to match 3.";
   const mobileInstruction = rules.mechanic === "tap" ? "Tap matching groups of 2+" :
+    rules.mechanic === "bouquet" ? "Tap bouquets of 3+; diagonals count!" :
     mode === "bubbles" ? "Drag & release to match bubbles!" : "Drag & release to match 3";
 
   useEffect(() => {
@@ -117,8 +123,11 @@ export default function App() {
         [result.game.level]: Math.max(existingStars[result.game.level] || 0, worldStars(result.game))
       } : existingStars;
       if (result.game.won) progress[turnMode] = Math.max(progress[turnMode], result.game.level + 1);
+      const collection=turnMode==="meadow"&&result.game.won?
+        recordMeadowReward(previous.collection,previous[turnGameKey]?.[turnMode],result.game):
+        previous.collection;
       return {
-        ...previous,
+        ...previous,collection,
         [turnProgressKey]: progress,
         [turnGameKey]: { ...previous[turnGameKey], [turnMode]: result.game },
         [starsKey]: { ...previous[starsKey], [turnMode]: improvedStars }
@@ -168,6 +177,8 @@ export default function App() {
     if (!result.valid) {
       setMessage(mode === "rescue" ?
         "Find two or more matching neighbors!" :
+        mode === "meadow" ?
+        "Gather 3 or more matching flowers. Corners count, too!" :
         "Try swapping pieces to make a row of three!");
       return;
     }
@@ -202,7 +213,7 @@ export default function App() {
 
   function chooseTile(index) {
     if (game.won || busyRef.current) return;
-    if (rules.mechanic === "tap") { takeTurn(index); return; }
+    if (rules.mechanic === "tap" || rules.mechanic === "bouquet") { takeTurn(index); return; }
     if (selected === null) {
       setSelected(index);
       setHint([]);
@@ -508,7 +519,7 @@ export default function App() {
         <section id="meeklee-worlds" className={"world-section" + (showWorlds ? " open" : "")} aria-labelledby="world-heading">
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
-            <span>4 happy worlds</span>
+            <span>5 happy worlds</span>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
               onClick={showGarden}>🌷 Mom's Garden</button>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
@@ -605,6 +616,10 @@ export default function App() {
                 <div className="victory-garden" aria-hidden="true">🌼 🎉 🌷</div>
                 <h3>Level {game.level} Complete!</h3>
                 <p>Beautifully done! Your marker moved one step farther along the Adventure Path.</p>
+                {mode==="meadow"&&meadowPrizeForLevel(game.level)&&
+                  <button type="button" className="victory-chest" onClick={showGarden}>
+                    {meadowPrizeForLevel(game.level).icon} You've earned the {meadowPrizeForLevel(game.level).name}! Visit Your Garden →
+                  </button>}
                 <div className="victory-stars" aria-label={worldStars(game) + " out of 3 stars"}>
                   {"★".repeat(worldStars(game))}<span>{"☆".repeat(3 - worldStars(game))}</span>
                 </div>
@@ -623,7 +638,8 @@ export default function App() {
                   <span>{stage.powerUsed ? "✨ " + worldPowers?.[stage.powerUsed]?.name + "!" :
                     stage.reward?.big ? worldPowers?.big.icon + " " + worldPowers?.big.name + "!" :
                     stage.reward?.small ? worldPowers?.small.icon + " " + worldPowers?.small.name + "!" :
-                    stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
+                    stage.pollen?.length ? "POLLEN BLOOM! +" + stage.pollen.length + "!" :
+                     stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
                   <small>+{stage.gained} points ✨</small>
                 </div>
               )}
