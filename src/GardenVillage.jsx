@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import {gardenInventory} from "./collection.js";
 import {VILLAGE_DISTRICTS,VILLAGE_PLOTS,villagePlotId} from "./village.js";
+import {VILLAGE_ACTIVITIES,villageActivityTarget,advanceVillageActivity,villageVisitingPets} from "./village-life.js";
 import "./village.css";
 
 const WORLD_PORTALS=Object.freeze([
@@ -15,10 +16,12 @@ const WORLD_PORTALS=Object.freeze([
 ]);
 
 export default function GardenVillage({
-  collection,settings,onPlace,onStore,onBack,onVisitWorld,onVisitPorch
+  collection,settings,onPlace,onStore,onActivity,onBack,onVisitWorld,onVisitPorch
 }){
   const [districtId,setDistrictId]=useState("square");
   const [chosenId,setChosenId]=useState(null);
+  const [activityFeedback,setActivityFeedback]=useState("");
+  const [visitorGreeting,setVisitorGreeting]=useState("");
   const [notice,setNotice]=useState(
     "Choose an earned decoration below, then tap an empty village plot to place it.");
   const district=VILLAGE_DISTRICTS.find(d=>d.id===districtId)||VILLAGE_DISTRICTS[0];
@@ -31,6 +34,20 @@ export default function GardenVillage({
   const placedCount=Object.keys(placements).length;
   const occupied=new Map(Object.entries(placements).map(([id,spot])=>[spot,id]));
   const companion=pets.find(p=>p.id===collection.companion);
+  const activity=VILLAGE_ACTIVITIES[district.id];
+  const villageLife=collection.villageLife||{};
+  const activityState=villageLife[district.id]||{rounds:0,step:0};
+  const targetChoice=villageActivityTarget(villageLife,district.id);
+  const visitors=villageVisitingPets(pets,collection.companion,district.id,villageLife);
+
+  function interact(choice){
+    const result=advanceVillageActivity(villageLife,district.id,choice);
+    setActivityFeedback(result.message);
+    if(result.valid)onActivity(district.id,choice);
+  }
+  function waveVisitor(pet){
+    setVisitorGreeting(pet.name+" waves hello! The whole village feels brighter today.");
+  }
 
   function chooseDecoration(id){
     if(!byId.has(id))return;
@@ -87,7 +104,11 @@ export default function GardenVillage({
         {VILLAGE_DISTRICTS.map(d=><button key={d.id} type="button"
           data-village-district={d.id} aria-pressed={districtId===d.id}
           className={districtId===d.id?"selected":""}
-          onClick={()=>{setDistrictId(d.id);setNotice("Welcome to "+d.name+"!");}}>
+          onClick={()=>{
+            setDistrictId(d.id);
+            setNotice("Welcome to "+d.name+"!");
+            setActivityFeedback("");setVisitorGreeting("");
+          }}>
           <span aria-hidden="true">{d.icon}</span><strong>{d.name}</strong>
           <small>{Object.values(placements).filter(s=>s.startsWith(d.id+":")).length}/{VILLAGE_PLOTS} placed</small>
         </button>)}
@@ -126,7 +147,50 @@ export default function GardenVillage({
           <span aria-hidden="true">{companion?.icon||"🐝"}</span>
           <small>{companion?.name||"A friendly visitor"} says hello!</small>
         </div>
+        <div className="village-visitors" aria-label="Visiting rescue friends">
+          {visitors.length?
+            <>
+              <strong>🐾 Visiting friends</strong>
+              <div className="village-visitor-buttons">
+                {visitors.map(pet=><button type="button" key={pet.id}
+                  data-village-visitor={pet.id}
+                  onClick={()=>waveVisitor(pet)}
+                  aria-label={"Wave hello to "+pet.name}>
+                  <span aria-hidden="true">{pet.icon}</span>
+                  <small>{pet.name}</small>
+                  <em>Wave hello!</em>
+                </button>)}
+              </div>
+            </>:
+            <p>🐦 The birds are visiting. More rescued friends can stop by
+              as you earn them in the original four puzzle worlds!</p>}
+          {visitorGreeting&&<p className="village-visitor-greeting" role="status">
+            {visitorGreeting}</p>}
+        </div>
       </div>
+    </section>
+
+    <section className="village-activity" aria-labelledby="village-activity-heading">
+      <h3 id="village-activity-heading">{activity.icon} {activity.name}</h3>
+      <p>{activity.intro} Tap the friendly picture shown in the prompt.
+        Wrong answers never cost anything, and there's no clock.</p>
+      <div className="village-activity-progress" aria-label="Neighborhood activity progress">
+        <strong>Step {activityState.step+1} of 3</strong>
+        <span>Find the {activity.options[targetChoice].name} {activity.options[targetChoice].icon}</span>
+        <small>{activityState.rounds} {activityState.rounds===1?"round":"rounds"} finished</small>
+      </div>
+      <div className="village-activity-choices" role="group" aria-label={activity.name+" choices"}>
+        {activity.options.map((option,i)=><button type="button" key={i}
+          data-village-activity-choice={i}
+          aria-label={"Choose "+option.name}
+          onClick={()=>interact(i)}>
+          <span aria-hidden="true">{option.icon}</span>
+          <strong>{option.name}</strong>
+        </button>)}
+      </div>
+      <p className="village-activity-feedback" data-village-activity-feedback
+        role="status" aria-live="polite">{activityFeedback||
+          "You can come back anytime. Your place in this activity is saved automatically."}</p>
     </section>
 
     <section className="village-workbench" aria-labelledby="village-decoration-heading">
