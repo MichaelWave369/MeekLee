@@ -67,11 +67,17 @@ Private live family Chess sessions are still future work and require separately 
 
 Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks, one-suit Spider and FreeCell. Optional later difficulties: two/four-suit Spider, additional Solitaire varieties and accessible drag gestures. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
+## New Puzzle World: Flower Meadow
+
+**Now playable and offline:** Flower Meadow is the fifth world, featuring a truly separate **bouquet** mechanic. Players tap a connected set of **at least three same-color flowers**, with connections in all eight directions, including diagonals. This differs from Rescue's orthogonal groups of two and the swapping worlds' match-three runs. Large groups (five or more) release pollen and collect adjacent differently colored flowers around the tapped bloom for extra points. Deterministic generators guarantee an available bouquet on 6×6 and 8×8 boards. Every victory advances an independent meadow Adventure Path and star records.
+
+**Six extra no-cost garden rewards:** complete Flower Meadow levels 3, 6, 9, 12, 15 and 18 to earn Daisy Wreath, Flower Wind Chimes, Pollinator Cottage, Lily Walkway, Flower Market Cart and Ribbon Blossom Arch, once per milestone across both board sizes. The validated `collection.meadowPrizes` field preserves the old chest, companion, hidden decoration and jigsaw prize data. These rewards can be planted or hidden in the existing Garden. **Do not change the four original worlds' milestone chest schedule** or legacy saves. FreeCell and all four older puzzle worlds must remain fully playable.
+
 ## Next: new worlds and more garden life
 
 Prioritize meaningfully distinct mechanics, not a reskinned copy of Harvest Valley:
 
-- **Flower Meadow**: clear bouquet sets, celebrate spring.
+- **Flower Meadow**: now playable with diagonal bouquets, pollen bursts and earned decorations.
 - **Pumpkin Patch**: relaxed seasonal harvest puzzles.
 - **Moonlight Orchard**: gentle evening match puzzles, high-contrast friendly.
 - **Grandma's Kitchen**: ingredient arrangement/cooking puzzles, tied to the recipe notebook.

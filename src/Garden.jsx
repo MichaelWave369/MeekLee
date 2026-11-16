@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  availableChests, totalAvailableChests, gardenInventory
+  availableChests, totalAvailableChests, gardenInventory, MEADOW_GARDEN_DECOR
 } from "./collection.js";
 
 const WORLD_NAMES={
@@ -34,9 +34,10 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
       <div><p className="trail-eyebrow">🌼 MeekLee's Growing Garden</p>
         <h2>Mom's Happy Garden</h2></div>
     </header>
-    <p className="garden-intro">Every ten completed levels earns a treasure chest.
+    <p className="garden-intro">Every ten completed levels in the four original worlds earns a treasure chest.
       Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!
-      Complete picture puzzles to earn nine extra garden treasures, too!</p>
+      Complete picture puzzles to earn nine extra garden treasures, or explore Flower Meadow
+      to earn six new decorations at levels 3, 6, 9, 12, 15 and 18!</p>
 
     <div className="garden-landscape" aria-label="Your collected garden decorations and companion">
       <span className="garden-sun" aria-hidden="true">☀️</span>
@@ -66,7 +67,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     <section className="garden-section" aria-labelledby="garden-chest-title">
       <h3 id="garden-chest-title">🎁 Treasure Chests {pendingChests>0?"("+pendingChests+" ready)":""}</h3>
       {chests.length===0 ?
-        <p className="garden-section-help">Your next treasure chest appears after Level 10, 20, 30, and so on in any world.</p> :
+        <p className="garden-section-help">Your next treasure chest appears after Level 10, 20, 30, and so on in the original four worlds. Flower Meadow has its own decorations.</p> :
         <div className="chest-list">
           {chests.slice(0,4).map(reward=>
             <button className="chest-button" type="button" key={reward.key}
@@ -87,6 +88,23 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
           <p>And you've unlocked a special Treasure Match bonus board!</p>
           <button type="button" onClick={()=>onBonus(reveal.key)}>🎲 Play My Bonus Board →</button>
         </div>}
+    </section>
+
+    <section className="garden-section" aria-labelledby="meadow-prize-title">
+      <h3 id="meadow-prize-title">🌷 Flower Meadow Rewards</h3>
+      <p className="garden-section-help">Gather bouquets in Flower Meadow to earn six extra garden decorations.
+        Each prize is earned once across both board sizes, with no purchases or timers.</p>
+      <div className="garden-collection-grid" aria-label="Flower Meadow earned decorations">
+        {MEADOW_GARDEN_DECOR.map(prize=>{
+          const owned=collection.meadowPrizes?.includes(prize.id);
+          return <div key={prize.id} className={"garden-collectible meadow-prize"+(owned?" showing":"")}
+            aria-label={prize.name+(owned?", earned":", unlock at Meadow level "+prize.level)}>
+            <span aria-hidden="true">{owned?prize.icon:"🌱"}</span>
+            <strong>{prize.name}</strong>
+            <small>{owned?"✓ Earned! Plant from the garden list":"Complete Meadow Level "+prize.level}</small>
+          </div>;
+        })}
+      </div>
     </section>
 
     <section className="garden-section" aria-labelledby="decor-title">

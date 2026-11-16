@@ -6,6 +6,18 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🌷 Flower Meadow: a fifth, genuinely different puzzle world
+
+**Now playable, free and offline:** Flower Meadow joins Harvest Valley, Sugar Mountain, Critter Rescue and Bubble Lagoon as a **fifth world**, with its own endless Adventure Path, 6×6 Big Pieces and 8×8 classic boards, saved high-level progress and star medals.
+
+### Gather bouquets, not swaps
+Tap any **connected group of three or more matching flowers**. Unlike Critter Rescue's orthogonal groups of two, Flower Meadow's bouquets connect **across corners and diagonals**, and require three flowers. Every tapped bouquet is gathered and the meadow gently refills downward. When a bouquet has **five or more** same-color blooms, it also scatters pollen and collects neighboring differently colored blossoms around the tapped flower for extra points. Matches are generated deterministically with no stuck board, no loss of saves, no lives or turn timers.
+
+### Free Meadow decorations
+Complete Flower Meadow levels **3, 6, 9, 12, 15 and 18** to earn six brand-new decorations: Daisy Wreath, Flower Wind Chimes, Pollinator Cottage, Lily Walkway, Flower Market Cart and Ribbon Blossom Arch. Each decoration is earned **once, shared by 6×6 and 8×8 board sizes**, and appears in Mom's existing Garden where it can be planted or hidden. The original four-world 10-level chest schedule, claimed chests, chapter games, pets and all picture puzzle prizes remain unchanged. A victory button links directly to earned garden prizes.
+
+Access: **☰ Menu → 🌍 Worlds → Flower Meadow** on phones, or choose Flower Meadow in the world chooser on desktop. Free hints highlight full diagonal bouquets and reduced-motion/high-contrast settings continue to work. Local data remains under the original `meeklee-adventures-save-v1` key without resetting any earlier worlds, cards or collectibles.
+
 ## 🌼 Solitaire Garden · FreeCell Solitaire
 
 **Now playable, free, and offline:** FreeCell completes the first five-game Solitaire collection (Klondike, Pyramid, TriPeaks, one-suit Spider, and FreeCell). A standard **52-card deck** starts entirely face-up in eight tableau columns, the first four having seven cards and the next four having six. Four separate **temporary free cells** each hold one card; four suit foundations build from Ace upward to King.
