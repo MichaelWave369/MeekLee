@@ -1,6 +1,7 @@
 // Completely free, offline collectible garden and chapter chests for Mom.
 // Every reward is deterministic, once-only per ten-level world chapter.
 import { seedFor, rngFrom } from "./core.js";
+import {normalizeVillagePlacements,placeVillageItem,storeVillageItem} from "./village.js";
 
 export const GARDEN_DECOR = Object.freeze([
   {id:"sunflower",icon:"🌻",name:"Golden Sunflower"},
@@ -163,10 +164,11 @@ export function normalizeCollection(raw = {}) {
       typeof id==="string"&&KITCHEN_GARDEN_DECOR.some(item=>item.id===id)))]:[];
   for(const item of KITCHEN_GARDEN_DECOR)
     if(kitchenPrizes.includes(item.id))decorIds.add(item.id);
+  const villagePlacements=normalizeVillagePlacements(previous.villagePlacements,[...decorIds]);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes,villagePlacements};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -240,6 +242,21 @@ export function gardenInventory(collection) {
     if(normalized.kitchenPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
+export function placeGardenVillageDecor(collection,id,plot){
+  const current=normalizeCollection(collection);
+  const owned=gardenInventory(current).decor.map(item=>item.id);
+  const result=placeVillageItem(current.villagePlacements,id,plot,owned,current.hiddenDecorations);
+  return {valid:result.valid,collection:result.valid?
+    {...current,villagePlacements:result.placements}:current};
+}
+export function storeGardenVillageDecor(collection,id){
+  const current=normalizeCollection(collection);
+  const owned=gardenInventory(current).decor.map(item=>item.id);
+  const result=storeVillageItem(current.villagePlacements,id,owned);
+  return {valid:result.valid,collection:result.valid?
+    {...current,villagePlacements:result.placements}:current};
+}
+
 export function selectCompanion(collection,petId) {
   const current=normalizeCollection(collection);
   if (petId !== null && !gardenInventory(current).pets.some(p=>p.id===petId)) return current;
