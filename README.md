@@ -6,6 +6,25 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🍁 Four Village Seasons and 🎵 Eight-Track MeekLee Music Box
+
+**Now playable, free and offline:** Garden Village has four manually selected seasons: **🌸 Spring**, **☀️ Summer**, **🍂 Autumn** and **❄️ Winter**. Spring adds blossom accents, Summer keeps the familiar green village, Autumn adds golden leaves and harvest colors, and Winter adds frosty scenery and evergreens. Pondside Walk has its own frosty shore in Winter, Butterfly Garden blossoms in Spring, and Orchard Hill fills with golden autumn leaves. Seasonal accents are **environmental decorations only**, not new collectible garden awards. The season is a completely separate setting from **Day / Sunset / Night**, so Mom can enjoy Winter Sunset, Autumn Night or any other combination.
+
+- Open **Garden → Explore Garden Village → Choose the village season**.
+- The **Summer** default retains the old familiar scenery for existing saves. Selection stays exactly where Mom leaves it, even offline, until she chooses another season.
+- An optional validated `collection.villageSeason` stores only `"spring"|"summer"|"autumn"|"winter"`. Invalid old-save values normalize to Summer without disturbing chest rewards, unlocked pets, garden ornaments, 80 plots, animal strolls, eight world progress tracks, or cards.
+
+### Eight-track soundtrack player (no Suno account or downloads required in the app)
+
+**The Music Box is a functional player, not a claim that the eight audio files are already included.** Since the real audio files have not been supplied to the repository yet, the game starts with **eight empty slots**, one for each existing puzzle world. On the same device that holds your own recordings, scroll to **🎵 MeekLee Music Box** below the game, open the music shelf, and choose **Import up to eight tracks**. Accepts **MP3, WAV, OGG, M4A, AAC, FLAC** recordings up to **60 MB each**, subject to the browser's playback support and local storage quota. The importer fills the eight named slots in selection order. Each slot has separate **Play, Replace/Add and Remove** controls, plus a Pause/Play bar, Previous/Next and adjustable volume (initially 45%).
+
+- Music **never starts automatically**. A person must press Play. The player remains mounted across puzzles, Garden, Village and Card Corner, so a playing recording can accompany exploration. The entire player sits **after the main game content** to preserve the original above-the-fold phone puzzle controls.
+- Imported recordings are saved as `Blob` objects in separate browser **IndexedDB** database `meeklee-local-soundtrack-v1`, not base64 text in the puzzle save. When permitted by browser storage/quota, they remain available after closing and reopening the game, including offline. If storage is blocked, an error explains that the file may only remain for this visit. Browsers vary in supported codecs.
+- Audio files are **never uploaded** to GitHub, Suno or any other provider. The local library does not automatically transfer from your computer to Mom's phone. For a **publicly bundled soundtrack for everyone**, add the eight actual audio files to the project in a future change, after confirming distribution rights. This implementation cannot invent or retrieve tracks from an unavailable Suno download allowance.
+- A family can remove imported recordings at any time without affecting their saved levels, pets, decorations, private notebook or local Garden Village. The soundtrack storage has **no direct connection** to the separate Family Porch notebook or original `meeklee-adventures-save-v1` key.
+
+**Access:** scroll below the game to **🎵 MeekLee Music Box**, expand the music shelf, import local files, then tap ▶ Play. The music player and season controls are large, high-contrast and work on a 320px phone. Music is always optional and muted until the user chooses playback; visuals respect reduced-motion settings.
+
 ## 🌙 Garden Village After Dark: Day, Sunset and Night
 
 **Now playable, free, offline and controlled by Mom:** Garden Village has a new **Set the village sky** panel. Tap **☀️ Day**, **🌅 Sunset** or **🌙 Night** to choose the village's appearance. Nothing changes with real-world time: the sky stays exactly how Mom left it until she chooses another preset, even if she closes the browser. The switch only affects Garden Village scenery, not the original Happy Garden or any of the eight puzzle worlds.
