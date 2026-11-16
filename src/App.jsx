@@ -643,7 +643,6 @@ export default function App() {
             ))}
           </div>}
         </section>
-        <SoundtrackPlayer />
         {view === "cards" ? (
           <CardCorner key={cardStartAt||"shelf"} startAt={cardStartAt}
             cards={saved.cards} onChange={saveCardGame}
@@ -894,6 +893,7 @@ export default function App() {
         </section>
         )}
       </main>
+      <SoundtrackPlayer />
       <footer>MeekLee Adventures · Made with love, not microtransactions. ❤️</footer>
     </div>
   );
