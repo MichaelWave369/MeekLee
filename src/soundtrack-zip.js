@@ -86,9 +86,23 @@ export async function extractSoundtrackZip(file){
       try{
         const expanded=new Blob([packed]).stream()
           .pipeThrough(new DecompressionStream("deflate-raw"));
-        data=new Uint8Array(await new Response(expanded).arrayBuffer());
+        const reader=expanded.getReader(),chunks=[];
+        let total=0;
+        while(true){
+          const {value,done}=await reader.read();
+          if(done)break;
+          total+=value.byteLength;
+          if(total>size||total>MAX_AUDIO_BYTES){
+            await reader.cancel();
+            throw new Error("The ZIP's stated audio size is incorrect.");
+          }
+          chunks.push(value);
+        }
+        data=new Uint8Array(total);
+        let written=0;
+        for(const chunk of chunks){data.set(chunk,written);written+=chunk.length;}
       }catch{
-        throw new Error("This browser couldn't decompress the audio ZIP. Try extracting the MP3 files first.");
+        throw new Error("This browser couldn't safely decompress the audio ZIP. Try extracting the MP3 files first.");
       }
     }
     if(data.length!==size||zipAudioCrc32(data)!==crc)
