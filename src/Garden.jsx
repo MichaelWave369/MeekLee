@@ -19,7 +19,7 @@ export function CompanionBadge({collection,settings}) {
     </span> : null;
 }
 
-export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onPlaceVillage, onStoreVillage, onVillageActivity, onVillageStroll, onVillageLandmark, onVillageSky, onVillageGlow, onVisitWorld, onVisitPorch, onBonus, onBack}) {
+export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onPlaceVillage, onStoreVillage, onVillageActivity, onVillageStroll, onVillageLandmark, onVillageSky, onVillageGlow, onVillageSeason, onVisitWorld, onVisitPorch, onBonus, onBack}) {
   const [reveal,setReveal]=useState(null);
   const [allBonus,setAllBonus]=useState(false);
   const [villageOpen,setVillageOpen]=useState(false);
@@ -33,7 +33,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onPl
   if(villageOpen)return <GardenVillage collection={collection} settings={saved.settings}
     onPlace={onPlaceVillage} onStore={onStoreVillage} onActivity={onVillageActivity}
     onStroll={onVillageStroll} onLandmark={onVillageLandmark}
-    onSky={onVillageSky} onGlow={onVillageGlow}
+    onSky={onVillageSky} onGlow={onVillageGlow} onSeason={onVillageSeason}
     onVisitWorld={onVisitWorld} onVisitPorch={onVisitPorch}
     onBack={()=>setVillageOpen(false)}/>;
   return <section className="garden-home" aria-label="Mom's collectible garden">
