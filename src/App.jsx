@@ -10,7 +10,7 @@ import CardCorner from "./CardCorner.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
-  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, playGardenVillageActivity, strollGardenVillage, interactGardenVillageLandmark, recordJigsawGardenReward,
+  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, playGardenVillageActivity, strollGardenVillage, interactGardenVillageLandmark, setGardenVillageSky, toggleGardenVillageGlow, recordJigsawGardenReward,
   recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel,
   recordMoonlightReward, moonlightPrizeForLevel,
   recordKitchenReward, kitchenPrizeForLevel
@@ -397,6 +397,18 @@ export default function App() {
       return result.valid?{...previous,collection:result.collection}:previous;
     });
   }
+  function chooseVillageSky(timeOfDay){
+    setSaved(previous=>{
+      const result=setGardenVillageSky(previous.collection,timeOfDay);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
+  function changeVillageGlow(feature){
+    setSaved(previous=>{
+      const result=toggleGardenVillageGlow(previous.collection,feature);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
   function finishBonus(key,moves) {
     setSaved(previous => {
       const result=completeBonus(previous.collection,key,moves);
@@ -633,6 +645,7 @@ export default function App() {
             onToggleDecor={plantDecoration} onPlaceVillage={placeVillageDecoration}
             onStoreVillage={storeVillageDecoration} onVillageActivity={playVillageActivity}
             onVillageStroll={strollVillage} onVillageLandmark={interactVillageLandmark}
+            onVillageSky={chooseVillageSky} onVillageGlow={changeVillageGlow}
             onVisitWorld={changeWorld} onVisitPorch={showKitchenNotebook}
             onBonus={openBonus} onBack={leaveGarden} />
         ) : view === "bonus" && activeBonusId ? (
