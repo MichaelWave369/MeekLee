@@ -2,6 +2,8 @@ import React,{useState} from "react";
 import {gardenInventory} from "./collection.js";
 import {VILLAGE_DISTRICTS,VILLAGE_PLOTS,villagePlotId} from "./village.js";
 import {VILLAGE_ACTIVITIES,villageActivityTarget,advanceVillageActivity,villageVisitingPets} from "./village-life.js";
+import {normalizeVillageWander,villageWalkingParty,nextVillageWalkDistrict,
+  advanceVillageWalk,currentLandmarkMoment,advanceVillageLandmark} from "./village-wander.js";
 import "./village.css";
 
 const WORLD_PORTALS=Object.freeze([
@@ -16,12 +18,13 @@ const WORLD_PORTALS=Object.freeze([
 ]);
 
 export default function GardenVillage({
-  collection,settings,onPlace,onStore,onActivity,onBack,onVisitWorld,onVisitPorch
+  collection,settings,onPlace,onStore,onActivity,onStroll,onLandmark,onBack,onVisitWorld,onVisitPorch
 }){
   const [districtId,setDistrictId]=useState("square");
   const [chosenId,setChosenId]=useState(null);
   const [activityFeedback,setActivityFeedback]=useState("");
   const [visitorGreeting,setVisitorGreeting]=useState("");
+  const [landmarkFeedback,setLandmarkFeedback]=useState("");
   const [notice,setNotice]=useState(
     "Choose an earned decoration below, then tap an empty village plot to place it.");
   const district=VILLAGE_DISTRICTS.find(d=>d.id===districtId)||VILLAGE_DISTRICTS[0];
@@ -39,6 +42,12 @@ export default function GardenVillage({
   const activityState=villageLife[district.id]||{rounds:0,step:0};
   const targetChoice=villageActivityTarget(villageLife,district.id);
   const visitors=villageVisitingPets(pets,collection.companion,district.id,villageLife);
+  const wander=normalizeVillageWander(collection.villageWander);
+  const walking=villageWalkingParty(pets,collection.companion,wander);
+  const nextWalkingDistrict=nextVillageWalkDistrict(wander);
+  const nextNeighborhood=VILLAGE_DISTRICTS.find(d=>d.id===nextWalkingDistrict);
+  const walkingNeighborhood=VILLAGE_DISTRICTS.find(d=>d.id===walking.district);
+  const landmarkMoment=currentLandmarkMoment(wander,district.id);
 
   function interact(choice){
     const result=advanceVillageActivity(villageLife,district.id,choice);
@@ -47,6 +56,22 @@ export default function GardenVillage({
   }
   function waveVisitor(pet){
     setVisitorGreeting(pet.name+" waves hello! The whole village feels brighter today.");
+  }
+  function goDistrict(id){
+    setDistrictId(id);
+    setNotice("Welcome to "+VILLAGE_DISTRICTS.find(d=>d.id===id).name+"!");
+    setActivityFeedback("");setVisitorGreeting("");setLandmarkFeedback("");
+  }
+  function takeStroll(){
+    const result=advanceVillageWalk(wander);
+    onStroll();
+    goDistrict(result.district);
+  }
+  function touchLandmark(){
+    const result=advanceVillageLandmark(wander,district.id);
+    if(!result.valid)return;
+    onLandmark(district.id);
+    setLandmarkFeedback(result.moment.message);
   }
 
   function chooseDecoration(id){
@@ -98,17 +123,50 @@ export default function GardenVillage({
       <strong>🪴 {visible.length} ready to plant</strong>
     </div>
 
+    <section className="village-stroll-section" aria-labelledby="village-stroll-heading">
+      <h3 id="village-stroll-heading">🐾 A gentle walk around the village</h3>
+      <p>Follow your rescued friends from neighborhood to neighborhood.
+        Their little walk is saved, and they only move when you tap the stroll button.
+        No clock, chores or pet needs.</p>
+      <div className="village-stroll-path" role="group" aria-label="Four village walking stops">
+        {VILLAGE_DISTRICTS.map(d=><button type="button" key={d.id}
+          data-village-walk-stop={d.id}
+          aria-pressed={walking.district===d.id}
+          className={"village-stroll-stop"+(walking.district===d.id?" current":"")}
+          onClick={()=>goDistrict(d.id)}>
+          <span aria-hidden="true">{d.icon}</span>
+          <strong>{d.name}</strong>
+          {walking.district===d.id&&
+            <span className={"village-walking-crew"+(settings?.motion?" moving":"")}
+              aria-label="Visitors are strolling here">
+              {walking.pets.length?
+                walking.pets.map(pet=><span key={pet.id} aria-label={pet.name}
+                  title={pet.name}>{pet.icon}</span>):
+                <span aria-label="Wild birds">🐦</span>}
+            </span>}
+        </button>)}
+      </div>
+      <div className="village-stroll-action">
+        <p data-village-walk-status role="status">
+          {walking.pets.length?
+            walking.pets.map(p=>p.name).join(" and ")+" are strolling through "+walkingNeighborhood.name+".":
+            "The wild birds are exploring "+walkingNeighborhood.name+"."}
+        </p>
+        <button type="button" data-village-stroll onClick={takeStroll}>
+          🚶 Take a Gentle Stroll to {nextNeighborhood.name}
+        </button>
+      </div>
+      <p className="village-stroll-help">Tap a neighborhood on the path to visit it
+        without moving your walking friends.</p>
+    </section>
+
     <section className="village-map-section" aria-labelledby="village-neighborhood-heading">
       <h3 id="village-neighborhood-heading">🏘️ Explore four neighborhoods</h3>
       <div className="village-district-tabs" role="group" aria-label="Choose a village neighborhood">
         {VILLAGE_DISTRICTS.map(d=><button key={d.id} type="button"
           data-village-district={d.id} aria-pressed={districtId===d.id}
           className={districtId===d.id?"selected":""}
-          onClick={()=>{
-            setDistrictId(d.id);
-            setNotice("Welcome to "+d.name+"!");
-            setActivityFeedback("");setVisitorGreeting("");
-          }}>
+          onClick={()=>goDistrict(d.id)}>
           <span aria-hidden="true">{d.icon}</span><strong>{d.name}</strong>
           <small>{Object.values(placements).filter(s=>s.startsWith(d.id+":")).length}/{VILLAGE_PLOTS} placed</small>
         </button>)}
@@ -117,12 +175,19 @@ export default function GardenVillage({
         <div className="village-sky" aria-hidden="true">
           <span>☁️</span><span>{district.id==="pond"?"🌤️":"☀️"}</span><span>☁️</span>
         </div>
-        <div className="village-landmark" role="img"
-          aria-label={district.landmarkName}>
-          <span aria-hidden="true">{district.landmark}</span>
-          <strong>{district.name}</strong>
+        <button type="button" className="village-landmark village-landmark-interactive"
+          data-village-landmark={district.id}
+          onClick={touchLandmark}
+          aria-label={"Explore "+district.landmarkName}>
+          <span className={"village-landmark-icon"+(settings?.motion?" moving":"")}
+            aria-hidden="true">{landmarkMoment?.icon||district.landmark}</span>
+          <strong>{district.landmarkName}</strong>
           <small>{district.description}</small>
-        </div>
+          <em>Tap the landmark to discover a little moment</em>
+        </button>
+        {(landmarkFeedback||landmarkMoment)&&
+          <p className="village-landmark-feedback" role="status"
+            data-village-landmark-feedback>{landmarkFeedback||landmarkMoment.message}</p>}
         <div className="village-plots" aria-label={district.name+" planting plots"}>
           {Array.from({length:VILLAGE_PLOTS},(_,i)=>{
             const plot=villagePlotId(district.id,i);
