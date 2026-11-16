@@ -5,6 +5,8 @@ import {VILLAGE_ACTIVITIES,villageActivityTarget,advanceVillageActivity,villageV
 import {normalizeVillageWander,villageWalkingParty,nextVillageWalkDistrict,
   advanceVillageWalk,currentLandmarkMoment,advanceVillageLandmark} from "./village-wander.js";
 import {VILLAGE_SKIES,normalizeVillageAtmosphere,villageVisibleGlow} from "./village-atmosphere.js";
+import {VILLAGE_SEASONS,VILLAGE_SEASON_DECOR,normalizeVillageSeason,
+  seasonalVillageDescription} from "./village-season.js";
 import "./village.css";
 
 const WORLD_PORTALS=Object.freeze([
@@ -19,7 +21,7 @@ const WORLD_PORTALS=Object.freeze([
 ]);
 
 export default function GardenVillage({
-  collection,settings,onPlace,onStore,onActivity,onStroll,onLandmark,onSky,onGlow,onBack,onVisitWorld,onVisitPorch
+  collection,settings,onPlace,onStore,onActivity,onStroll,onLandmark,onSky,onGlow,onSeason,onBack,onVisitWorld,onVisitPorch
 }){
   const [districtId,setDistrictId]=useState("square");
   const [chosenId,setChosenId]=useState(null);
@@ -52,6 +54,7 @@ export default function GardenVillage({
   const atmosphere=normalizeVillageAtmosphere(collection.villageAtmosphere);
   const glow=villageVisibleGlow(atmosphere);
   const sky=VILLAGE_SKIES.find(entry=>entry.id===atmosphere.timeOfDay);
+  const season=normalizeVillageSeason(collection.villageSeason);
 
   function interact(choice){
     const result=advanceVillageActivity(villageLife,district.id,choice);
@@ -126,6 +129,23 @@ export default function GardenVillage({
       <strong>🏡 {placedCount} placed in the village</strong>
       <strong>🪴 {visible.length} ready to plant</strong>
     </div>
+
+    <section className="village-season-picker" aria-labelledby="village-season-heading">
+      <h3 id="village-season-heading">🍁 Choose the village season</h3>
+      <p>Your village can be in Spring, Summer, Autumn or Winter whenever you like.
+        Seasons are free scenery and never change the weather outside or your earned treasures.</p>
+      <div className="village-season-choices" role="group" aria-label="Village season">
+        {VILLAGE_SEASONS.map(item=><button type="button" key={item.id}
+          data-village-season={item.id} aria-pressed={season===item.id}
+          className={season===item.id?"chosen":""} onClick={()=>onSeason(item.id)}>
+          <span aria-hidden="true">{item.icon}</span><strong>{item.name}</strong>
+        </button>)}
+      </div>
+      <p className="village-season-description" role="status">
+        {VILLAGE_SEASONS.find(item=>item.id===season).description}
+        {" "}Season and time of day can be mixed, even Winter Sunset!
+      </p>
+    </section>
 
     <section className="village-atmosphere" data-village-lighting={atmosphere.timeOfDay}
       aria-labelledby="village-atmosphere-heading">
@@ -209,10 +229,12 @@ export default function GardenVillage({
         </button>)}
       </div>
       <div className={"village-scene village-scene-"+district.id+
+        " village-season-"+season+
         " village-time-"+atmosphere.timeOfDay+
         (glow.lanterns?" village-lanterns-on":"")+
         (glow.fireflies?" village-fireflies-on":"")}
-        data-village-scene-time={atmosphere.timeOfDay}>
+        data-village-scene-time={atmosphere.timeOfDay}
+        data-village-scene-season={season}>
         <div className="village-sky" aria-hidden="true">
           {atmosphere.timeOfDay==="night"?
             <><span>✦</span><span>🌙</span><span>✧</span></>:
@@ -220,6 +242,13 @@ export default function GardenVillage({
             <><span>☁️</span><span>🌅</span><span>✨</span></>:
             <><span>☁️</span><span>{district.id==="pond"?"🌤️":"☀️"}</span><span>☁️</span></>}
         </div>
+        <div className="village-season-ornaments" data-village-season-ornaments={season}
+          aria-label={"Seasonal scenery: "+season} role="img">
+          {VILLAGE_SEASON_DECOR[season].map((item,i)=>
+            <span key={i} aria-hidden="true">{item}</span>)}
+        </div>
+        <p className="village-season-caption" data-village-season-caption>
+          {seasonalVillageDescription(season,district.id)}</p>
         {glow.lanterns&&
           <div className="village-ambient-lanterns" data-village-lanterns
             role="img" aria-label="Decorative village lanterns glowing">
