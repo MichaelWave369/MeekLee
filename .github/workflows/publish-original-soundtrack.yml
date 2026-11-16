@@ -72,4 +72,11 @@ jobs:
             echo "GitHub may require Settings → Actions → General → Allow GitHub Actions to create pull requests." >> "$GITHUB_STEP_SUMMARY"
             echo "Open https://github.com/$GITHUB_REPOSITORY/compare/main...$BRANCH?expand=1 to create the PR yourself." >> "$GITHUB_STEP_SUMMARY"
           fi
+          # A push/PR created using GITHUB_TOKEN doesn't always trigger CI.
+          # Explicit workflow_dispatch starts the same comprehensive test suite.
+          if gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH"; then
+            echo "Triggered full checks for the music review branch." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Run the MeekLee puzzle checks manually on the branch before merging." >> "$GITHUB_STEP_SUMMARY"
+          fi
           echo "Once the PR is merged, the normal main-branch Pages publish automatically deploys the eight MP3s." >> "$GITHUB_STEP_SUMMARY"
