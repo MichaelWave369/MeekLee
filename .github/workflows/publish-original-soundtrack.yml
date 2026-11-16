@@ -1,0 +1,74 @@
+name: Stage creator soundtrack from release ZIP
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag containing MeekLeeAdventures.zip"
+        required: true
+        type: string
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  prepare-original-music:
+    name: Validate all eight MP3s and open a review PR
+    if: startsWith(github.event.release.tag_name || inputs.tag, 'meeklee-soundtrack-')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Checkout reviewable main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Download the single creator-uploaded ZIP from the release
+        run: |
+          mkdir -p "$RUNNER_TEMP/meeklee-music"
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern "MeekLeeAdventures.zip" --dir "$RUNNER_TEMP/meeklee-music"
+          test -s "$RUNNER_TEMP/meeklee-music/MeekLeeAdventures.zip"
+      - name: Verify every original track's SHA-256 and stage public audio
+        run: python3 scripts/install-original-soundtrack.py "$RUNNER_TEMP/meeklee-music/MeekLeeAdventures.zip"
+      - name: Ensure manifest and all eight files pass the existing Vite build
+        run: |
+          node --version
+          node scripts/build-soundtrack-index.mjs
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path("public/audio/manifest.json").read_text())
+          assert len(data["tracks"])==8, "Must publish exactly eight verified recordings"
+          print("Verified 8 published songs and manifest.")
+          PY
+      - name: Commit verified MP3s to a separate review branch
+        id: commit
+        run: |
+          BRANCH="feat/publish-meeklee-soundtrack-${GITHUB_RUN_ID}"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add public/audio/
+          git diff --cached --quiet && { echo "Nothing new to publish."; exit 1; }
+          git commit -m "music: publish eight verified MeekLee original MP3s"
+          git push origin "$BRANCH"
+          echo "Published review branch: $BRANCH"
+      - name: Open review PR without merging unverified music
+        env:
+          BRANCH: ${{ steps.commit.outputs.branch }}
+        run: |
+          if gh pr create --repo "$GITHUB_REPOSITORY" \
+            --head "$BRANCH" --base main \
+            --title "🎵 Publish all eight original MeekLee MP3s for Mom's one-tap music" \
+            --body "The original MeekLeeAdventures.zip release asset was checked against the eight pinned SHA-256 digests. This PR adds the real files to public/audio and regenerates its manifest so the already-built Music Box streams them on demand. No autoplay, no extra paid music, and no changes to saved games. Review CI, then merge manually."; then
+            echo "### Public music PR created" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### Review branch is ready" >> "$GITHUB_STEP_SUMMARY"
+            echo "GitHub may require Settings → Actions → General → Allow GitHub Actions to create pull requests." >> "$GITHUB_STEP_SUMMARY"
+            echo "Open https://github.com/$GITHUB_REPOSITORY/compare/main...$BRANCH?expand=1 to create the PR yourself." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "Once the PR is merged, the normal main-branch Pages publish automatically deploys the eight MP3s." >> "$GITHUB_STEP_SUMMARY"
