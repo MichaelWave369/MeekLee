@@ -72,6 +72,20 @@ export const MOONLIGHT_GARDEN_DECOR=Object.freeze([
 export function moonlightPrizeForLevel(level){
   return MOONLIGHT_GARDEN_DECOR.find(item=>item.level===level)||null;
 }
+
+// Grandma's Kitchen decorations are earned from cooking levels, not from
+// anyone's private Family Porch notes or the original four-world chests.
+export const KITCHEN_GARDEN_DECOR=Object.freeze([
+  {id:"kitchen_herb_basket",icon:"🌿",name:"Grandma's Herb Basket",level:3},
+  {id:"kitchen_berry_planter",icon:"🍓",name:"Strawberry Window Planter",level:6},
+  {id:"kitchen_flour_sack",icon:"🌾",name:"Farmhouse Flour Sack",level:9},
+  {id:"kitchen_tea_table",icon:"🫖",name:"Afternoon Tea Table",level:12},
+  {id:"kitchen_picnic_bench",icon:"🧺",name:"Family Picnic Bench",level:15},
+  {id:"kitchen_homestead_porch",icon:"🏡",name:"Grandma's Cozy Porch",level:18}
+]);
+export function kitchenPrizeForLevel(level){
+  return KITCHEN_GARDEN_DECOR.find(item=>item.level===level)||null;
+}
 export const GARDEN_PETS = Object.freeze([
   {id:"bunny",icon:"🐰",name:"Pip the Bunny"},
   {id:"puppy",icon:"🐶",name:"Biscuit the Puppy"},
@@ -144,10 +158,15 @@ export function normalizeCollection(raw = {}) {
       typeof id==="string"&&MOONLIGHT_GARDEN_DECOR.some(item=>item.id===id)))]:[];
   for(const item of MOONLIGHT_GARDEN_DECOR)
     if(moonlightPrizes.includes(item.id))decorIds.add(item.id);
+  const kitchenPrizes=Array.isArray(previous.kitchenPrizes)?
+    [...new Set(previous.kitchenPrizes.filter(id=>
+      typeof id==="string"&&KITCHEN_GARDEN_DECOR.some(item=>item.id===id)))]:[];
+  for(const item of KITCHEN_GARDEN_DECOR)
+    if(kitchenPrizes.includes(item.id))decorIds.add(item.id);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes,moonlightPrizes,kitchenPrizes};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -217,6 +236,8 @@ export function gardenInventory(collection) {
     if(normalized.pumpkinPrizes.includes(item.id))decor.set(item.id,item);
   for(const item of MOONLIGHT_GARDEN_DECOR)
     if(normalized.moonlightPrizes.includes(item.id))decor.set(item.id,item);
+  for(const item of KITCHEN_GARDEN_DECOR)
+    if(normalized.kitchenPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
 export function selectCompanion(collection,petId) {
@@ -256,6 +277,14 @@ export function completeBonus(collection,key,moves) {
       completedBonuses:{...current.completedBonuses,[key]:best===undefined?moves:Math.min(best,moves)}
     }
   };
+}
+
+export function recordKitchenReward(collection,previousGame,nextGame){
+  const current=normalizeCollection(collection);
+  if(nextGame?.mode!=="kitchen"||!nextGame.won||previousGame?.won)return current;
+  const prize=kitchenPrizeForLevel(nextGame.level);
+  if(!prize||current.kitchenPrizes.includes(prize.id))return current;
+  return normalizeCollection({...current,kitchenPrizes:[...current.kitchenPrizes,prize.id]});
 }
 
 export function recordMoonlightReward(collection,previousGame,nextGame){
