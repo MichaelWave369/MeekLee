@@ -4,6 +4,16 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <meta name="theme-color" content="#f9e8b3"/>
+  <script>
+    // Apply the saved appearance before the app paints to avoid a bright flash.
+    (() => {
+      let preference;
+      try { preference = localStorage.getItem("meeklee-appearance"); } catch {}
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.meekleeTheme =
+        preference === "dark" || (preference !== "light" && systemDark) ? "dark" : "light";
+    })();
+  </script>
   <meta name="description" content="MeekLee Adventures: four endless, free, colorful puzzle worlds. No payments, timers, or limits. Made with love for Mom."/>
   <link rel="icon" type="image/svg+xml" href="%BASE_URL%icon.svg"/>
   <link rel="manifest" href="%BASE_URL%manifest.webmanifest"/>

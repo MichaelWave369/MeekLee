@@ -1,0 +1,271 @@
+/* Cozy Night: display-only colors. Never alter game pieces, card faces, or saves.
+   Imported last so the light-mode game sheets remain untouched. */
+:root[data-meeklee-theme="dark"] {
+  color-scheme: dark;
+  color: #e5efe8;
+  background: #111d24;
+}
+:root[data-meeklee-theme="dark"] body { background: #111d24; }
+.app-root.dark-mode {
+  --night-panel: #213038;
+  --night-raised: #2b4044;
+  --night-border: #4b6d69;
+  --night-text: #e5efe8;
+  --night-muted: #c5d8cf;
+  --night-accent: #b1e5b6;
+  color: var(--night-text);
+  background: #111d24;
+}
+.app-root.dark-mode button:focus-visible {
+  outline: 3px solid #ffe28b;
+  outline-offset: 3px;
+}
+.app-root.dark-mode .hero {
+  background: linear-gradient(160deg, #1a2b3c, #26423d 72%, #234038);
+  border-color: #4b6d69;
+}
+.app-root.dark-mode .hero::before { background: #263f3b; }
+.app-root.dark-mode .hero::after { background: #1c3430; }
+.app-root.dark-mode .eyebrow,
+.app-root.dark-mode .tagline { color: #c5dfcc; }
+.app-root.dark-mode h1 {
+  color: #c5efd0;
+  text-shadow: 0 2px 0 #0f2024;
+}
+.app-root.dark-mode h1 span,
+.app-root.dark-mode .mobile-menu-brand > span { color: #ffc1c9; }
+.app-root.dark-mode .promise span {
+  background: #304748;
+  border-color: #59766d;
+  color: #e2efdd;
+  box-shadow: none;
+}
+.app-root.dark-mode .mobile-menu-trigger { color: #e4f0e6; }
+.app-root.dark-mode .mobile-menu-action {
+  background: #304549;
+  color: #e5efe8;
+  border-color: #72958a;
+}
+.app-root.dark-mode :is(
+  .comfort-bar, .world, .game-panel, .side-note, .trail-screen,
+  .shooter-panel, .garden-home, .bonus-screen, .garden-village,
+  .card-corner, .cardgame, .family-table-page, .family-mini-game,
+  .meeklee-soundtrack
+) {
+  background: var(--night-panel);
+  border-color: var(--night-border);
+  color: var(--night-text);
+  box-shadow: 0 5px 0 #101c20, 0 12px 25px #070f1355;
+}
+.app-root.dark-mode .world:hover { box-shadow: 0 8px 0 #102022; }
+.app-root.dark-mode .world.active,
+.app-root.dark-mode .comfort-button[aria-pressed="true"],
+.app-root.dark-mode .quick-toggle[aria-pressed="true"] {
+  background: #315345;
+  border-color: #9ed9a7;
+  color: #f2fff2;
+}
+.app-root.dark-mode .world-icon,
+.app-root.dark-mode .world:nth-child(n) .world-icon {
+  background: #364e49;
+}
+.app-root.dark-mode :is(
+  .world-text strong, .section-heading h2, .comfort-heading strong,
+  .game-heading h2, .trail-heading h2, .garden-heading h2,
+  .bonus-heading h2, .garden-section h3, .cardgame-top h2,
+  .corner-game-text strong, .side-note h2, .family-table-page h2,
+  .family-mini-game h3, .village-workbench h3
+) { color: #beeac5; }
+.app-root.dark-mode :is(
+  .world-text small, .world-text em, .section-heading > span,
+  .comfort-heading span, .instruction, .goal-heading, .game-bottom,
+  .message, .garden-intro, .garden-section-help, .garden-empty,
+  .bonus-instructions, .trail-eyebrow, .trail-help, .trail-footnote,
+  .cardgame-help, .cardgame-foot, .corner-game-text small,
+  .corner-game-text em, .family-mini-tip, .family-intro,
+  .shooter-goal, .shooter-goal strong, .shooter-instruction,
+  .shooter-footnote, .shooter-next, .rook-turn-tip
+) { color: var(--night-muted); }
+.app-root.dark-mode :is(
+  .comfort-button, .world-chooser, .quick-toggle, .trail-back,
+  .trail-controls button, .map-shortcut, .desktop-garden-shortcut,
+  .action.secondary, .kitchen-notebook-link
+) {
+  background: #304649;
+  color: #e6f5e9;
+  border-color: #71958b;
+  box-shadow: none;
+}
+.app-root.dark-mode :is(
+  .comfort-button, .world-chooser, .quick-toggle, .trail-back,
+  .trail-controls button, .action.secondary
+):hover { background: #395b50; }
+.app-root.dark-mode :is(.score-chip, .trail-badge, .world-power strong) {
+  background: #344842;
+  color: #f3e5af;
+}
+.app-root.dark-mode .progress-track {
+  background: #14282c;
+  border-color: #4b6d69;
+}
+.app-root.dark-mode .board-wrap {
+  background: linear-gradient(155deg,#1c3436,#294a42);
+  border-color: #52736a;
+}
+.app-root.dark-mode .game-board.floaty { background: #213c4d; }
+/* Keep colorful emoji and matching-game shapes crisp, not filtered or inverted. */
+.app-root.dark-mode .tile,
+.app-root.dark-mode .game-board .tile:disabled:hover {
+  background: linear-gradient(145deg,#344a4c,#253b3e);
+  border-color: #66847d;
+  box-shadow: 0 3px 0 #172d30, inset 0 0 5px #101e1f;
+  color: #f3f4e6;
+}
+.app-root.dark-mode .tile:hover { background: #41605b; }
+.app-root.dark-mode .tile.selected,
+.app-root.dark-mode.high-contrast .tile.selected {
+  background: #74532f;
+  border-color: #e5b867;
+  outline: 3px solid #ffdc80;
+}
+.app-root.dark-mode .tile.hint,
+.app-root.dark-mode.high-contrast .tile.hint {
+  background: #2b536f;
+  border-color: #97d2ef;
+  outline: 3px solid #9cdbfb;
+}
+.app-root.dark-mode.high-contrast .tile {
+  background: #25393e;
+  border: 2px solid #a3c9c5;
+}
+.app-root.dark-mode :is(.win-panel, .trail-victory, .chest-reveal, .bonus-success) {
+  background: #3a382e;
+  border-color: #a38c5c;
+  color: #f2e6cc;
+}
+.app-root.dark-mode :is(.win-panel h3, .win-panel p, .trail-victory h3, .trail-victory p) {
+  color: #f4e5b8;
+}
+.app-root.dark-mode .side-note {
+  background: linear-gradient(160deg,#3b303a,#252f36);
+  color: #f2dbe3;
+}
+.app-root.dark-mode .note-quote { background: #493843; color: #ffd3da; }
+.app-root.dark-mode footer { background: #20392f; color: #d6eeda; }
+.app-root.dark-mode .trail-landscape {
+  background: linear-gradient(170deg,#294257,#375c4e 70%,#396044);
+}
+.app-root.dark-mode .trail-node:not(.current):not(.completed) {
+  background: #354c50; color: #d4e7dc; border-color: #638078;
+}
+.app-root.dark-mode .trail-node.completed { background: #366448; }
+.app-root.dark-mode .trail-node.current { background: #b48b47; }
+.app-root.dark-mode .shooter-panel {
+  background: linear-gradient(#1c303d,#203a40);
+}
+.app-root.dark-mode :is(
+  .shooter-return, .shooter-retry, .shooter-rainbow, .shooter-controls button:not(.shooter-fire),
+  .world-power, .garden-more, .chest-button, .garden-bonus-button,
+  .garden-collectible, .garden-totals span, .chest-prizes span
+) {
+  background: #2d4649;
+  color: #e5f1e8;
+  border-color: #628a7f;
+}
+.app-root.dark-mode .garden-landscape {
+  background: linear-gradient(180deg,#20364b 5%,#375f55 70%,#44734f);
+}
+.app-root.dark-mode .garden-meadow { background: #37664f; }
+.app-root.dark-mode .garden-collectible.showing { background: #305b42; }
+.app-root.dark-mode :is(.card-corner-choice, .cardgame-score span,
+  .rook-round-info span, .parade-score-strip span, .cardgame-win,
+  .rook-score-summary, .rook-prompt, .parade-wild-picker,
+  .rook-record-grid > div, .rook-kitchen-welcome) {
+  background: #304749;
+  border-color: #658b7d;
+  color: #e6f3e8;
+  box-shadow: none;
+}
+.app-root.dark-mode .card-corner-choice:hover { background: #3c5b50; }
+.app-root.dark-mode .rook-prompt :is(h3,p),
+.app-root.dark-mode .parade-wild-picker > strong { color: #e6f3e8; }
+/* Playing cards remain white so black/red suit semantics stay unmistakable. */
+.app-root.dark-mode .playing-card:not(.back),
+.app-root.dark-mode .rook-card:not(.back) { color-scheme: light; }
+.app-root.dark-mode :is(
+  .family-setup-note, .family-preview-notice, .family-preview-chat p,
+  .family-live-top, .family-seat, .family-game-score > div, .family-match-meta span,
+  .family-chat-heading, .family-mini-notice, .family-war-score > *,
+  .family-stack-info > *, .family-stack-stock, .family-stack-build,
+  .family-jigsaw-reference, .family-jigsaw-confirm,
+  .family-porch-kinds label, .family-porch-post,
+  .soundtrack-slot, .soundtrack-library summary
+) {
+  background: #2b4345;
+  border-color: #5d8178;
+  color: #e1efe7;
+}
+.app-root.dark-mode :is(
+  .family-mini-actions > button:not(.family-mini-primary),
+  .family-stack-new button, .family-jigsaw-guidance button,
+  .family-jigsaw-options button, .family-jigsaw-confirm button,
+  .soundtrack-transport button, .soundtrack-slot-actions button,
+  .soundtrack-file-label
+) {
+  background: #34514d;
+  color: #ebf5ed;
+  border-color: #749b85;
+}
+.app-root.dark-mode :is(.soundtrack-library summary, .soundtrack-now small,
+  .family-mini-tip, .family-setup-note strong) { color: #d5e4d7; }
+.app-root.dark-mode :is(
+  .village-season-picker, .village-sky-picker, .village-stroll,
+  .village-workbench, .village-portals, .village-activity,
+  .village-walk, .village-available, .village-visitors,
+  .village-activity-progress, .village-activity-status
+) {
+  background: #263c3f;
+  border-color: #5b7d74;
+  color: #e4f1e8;
+}
+.app-root.dark-mode :is(
+  .village-district-tabs button, .village-season-choices button,
+  .village-sky-choices button, .village-glow-choices button,
+  .village-stroll-path button, .village-activity-choices button,
+  .village-available button, .village-portal-grid button,
+  .village-stroll-action button
+) {
+  background: #31504c;
+  border-color: #698e83;
+  color: #e6f3e9;
+}
+.app-root.dark-mode :is(.village-season-choices button.chosen,
+  .village-district-tabs button.selected,
+  .village-sky-choices button.chosen) {
+  background: #3c624e;
+  border-color: #ace0ac;
+}
+.app-root.dark-mode .village-plot:not(.filled) {
+  background: #324d43cc;
+  color: #edf3e9;
+  border-color: #8fb197;
+}
+/* Keep village day/night and chess boards as distinct game mechanics. */
+.app-root.dark-mode .kitchen-order {
+  background: #3a332e;
+  color: #f0e4d8;
+  border-color: #a18468;
+}
+.app-root.dark-mode .kitchen-step { background: #4a3e32; color: #f7e3cb; border-color: #ac8965; }
+.app-root.dark-mode .kitchen-step.next { background: #305743; color: #e8f6e7; }
+.app-root.dark-mode .kitchen-step.gathered { background: #3e4a41; color: #dce8dc; }
+.app-root.dark-mode.high-contrast :is(.comfort-bar, .game-panel, .world) {
+  border-color: #b3d9b7;
+}
+@media (max-width: 600px) {
+  .app-root.dark-mode .hero {
+    background: linear-gradient(100deg,#1d343c,#29493f);
+    border-bottom-color: #628f7b;
+  }
+  .app-root.dark-mode .quick-toggle { color: #e6f3e9; background: #304a4a; }
+}
