@@ -38,7 +38,7 @@ export function parseBundledSoundtrack(payload,base="/MeekLee/"){
  * HTTP cache:no-store cannot by itself bypass an older SW's cache-first fetch.
  */
 export function soundtrackManifestUrl(base="/MeekLee/",nonce=Date.now()){
-  if(typeof base!=="string"||!/^\/[a-zA-Z0-9/_-]*\/$/.test(base))
+  if(typeof base!=="string"||!/^\/(?:[a-zA-Z0-9_-]+\/)*$/.test(base))
     return null;
   return base+"audio/manifest.json?refresh="+encodeURIComponent(String(nonce));
 }
