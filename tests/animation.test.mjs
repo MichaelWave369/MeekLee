@@ -1,12 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MODES, EASY_SIZE, SIZE, adjacent, connectedGroup, findMatches, makeLevel, playTurn } from "../src/core.js";
+import { MODES, EASY_SIZE, SIZE, adjacent, connectedGroup, connectedBouquet, findMatches, makeLevel, playTurn } from "../src/core.js";
 
 function findMove(game) {
   const size = game.size ?? SIZE;
-  if (MODES[game.mode].mechanic === "tap") {
-    const i = game.board.findIndex((_, j) => connectedGroup(game.board, j).length >= 2);
-    return i >= 0 ? playTurn(game, i) : null;
+  if (MODES[game.mode].mechanic === "tap" || MODES[game.mode].mechanic === "bouquet") {
+    const bouquet=MODES[game.mode].mechanic==="bouquet";
+    const i=game.board.findIndex((_,j)=>bouquet?
+      connectedBouquet(game.board,j,size).length>=3:
+      connectedGroup(game.board,j,size).length>=2);
+    return i>=0?playTurn(game,i):null;
   }
   for (let i = 0; i < game.board.length; i++) {
     for (const j of [i + 1, i + size]) {
@@ -51,7 +54,7 @@ test("every successful move emits pop and gravity frames matching the final boar
             }
           }
         }
-        if (mode !== "rescue") {
+        if (MODES[mode].mechanic === "swap") {
           assert.equal(turn.trace[0].type, "swap");
           assert.equal(findMatches(turn.game.board).size, 0);
         }
