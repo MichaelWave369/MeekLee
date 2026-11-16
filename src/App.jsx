@@ -612,7 +612,7 @@ export default function App() {
             })}/>
         ) : (
         <section className="play-section" aria-labelledby="level-heading">
-          <div className="game-panel" style={{ "--world-accent": rules.color }}>
+          <div className={"game-panel"+(mode==="moonlight"?" moonlight-panel":"")} style={{ "--world-accent": rules.color }}>
             <div className="game-heading">
               <div>
                 <p className="eyebrow world-label">{rules.name}</p>
