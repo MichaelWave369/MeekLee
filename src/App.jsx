@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
+import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
@@ -11,7 +11,7 @@ import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward,
-  recordMeadowReward, meadowPrizeForLevel
+  recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
@@ -23,7 +23,8 @@ const WORLDS = [
   { id: "sweets", icon: "🍬", name: "Sugar Mountain", desc: "Sweet combinations and cascading treats." },
   { id: "rescue", icon: "🐾", name: "Critter Rescue", desc: "Tap matching groups to help the animals." },
   { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Aim, bounce and pop colorful bubbles." },
-  { id: "meadow", icon: "🌷", name: "Flower Meadow", desc: "Tap diagonal bouquets of 3+ flowers. Larger clusters scatter pollen!" }
+  { id: "meadow", icon: "🌷", name: "Flower Meadow", desc: "Tap diagonal bouquets of 3+ flowers. Larger clusters scatter pollen!" },
+  { id: "pumpkin", icon: "🎃", name: "Pumpkin Patch", desc: "Gather matching crops across rows and columns; big harvests create leaf gusts!" }
 ];
 
 function initialize() {
@@ -36,11 +37,13 @@ function initialize() {
 
 function hintFor(game) {
   const size = game.size ?? SIZE;
-  if (MODES[game.mode].mechanic === "tap" || MODES[game.mode].mechanic === "bouquet") {
-    const bouquet=MODES[game.mode].mechanic==="bouquet";
+  if (["tap","bouquet","cross"].includes(MODES[game.mode].mechanic)) {
+    const mechanic=MODES[game.mode].mechanic;
     for (let i = 0; i < game.board.length; i++) {
-      const group=bouquet?connectedBouquet(game.board,i,size):connectedGroup(game.board,i,size);
-      if(group.length>=(bouquet?3:2))return group;
+      const group=mechanic==="cross"?pumpkinHarvest(game.board,i,size):
+        mechanic==="bouquet"?connectedBouquet(game.board,i,size):
+        connectedGroup(game.board,i,size);
+      if(group.length>=(mechanic==="tap"?2:3))return group;
     }
   } else {
     for (let i = 0; i < game.board.length; i++) {
@@ -519,7 +522,7 @@ export default function App() {
         <section id="meeklee-worlds" className={"world-section" + (showWorlds ? " open" : "")} aria-labelledby="world-heading">
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
-            <span>5 happy worlds</span>
+            <span>6 happy worlds</span>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
               onClick={showGarden}>🌷 Mom's Garden</button>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
