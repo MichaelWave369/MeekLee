@@ -58,6 +58,12 @@ async function phone(browser,raw=null,notes=null,width=390){
     if(notes&&!localStorage.getItem("meeklee-family-porch-notes-v1"))
       localStorage.setItem("meeklee-family-porch-notes-v1",JSON.stringify(notes));
   },{raw,notes});
+  // These older tests explicitly exercise the local-import fallback, even once
+  // all eight original songs are publicly included with the game.
+  await page.route("**/audio/manifest.json",route=>route.fulfill({
+    status:200,contentType:"application/json",
+    body:JSON.stringify({version:1,tracks:[]})
+  }));
   await page.goto("./");
   await expect(page.locator("[data-soundtrack-player]")).toBeVisible();
   return {context,page};
