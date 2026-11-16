@@ -10,7 +10,7 @@ import CardCorner from "./CardCorner.jsx";
 import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
-  gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward,
+  gardenInventory, selectCompanion, toggleDecoration, placeGardenVillageDecor, storeGardenVillageDecor, recordJigsawGardenReward,
   recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel,
   recordMoonlightReward, moonlightPrizeForLevel,
   recordKitchenReward, kitchenPrizeForLevel
@@ -367,6 +367,18 @@ export default function App() {
   function plantDecoration(id) {
     setSaved(previous => ({...previous,collection:toggleDecoration(previous.collection,id)}));
   }
+  function placeVillageDecoration(id,plot){
+    setSaved(previous=>{
+      const result=placeGardenVillageDecor(previous.collection,id,plot);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
+  function storeVillageDecoration(id){
+    setSaved(previous=>{
+      const result=storeGardenVillageDecor(previous.collection,id);
+      return result.valid?{...previous,collection:result.collection}:previous;
+    });
+  }
   function finishBonus(key,moves) {
     setSaved(previous => {
       const result=completeBonus(previous.collection,key,moves);
@@ -600,7 +612,10 @@ export default function App() {
             settings={settings} onBack={leaveCardCorner}/>
         ) : view === "garden" ? (
           <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
-            onToggleDecor={plantDecoration} onBonus={openBonus} onBack={leaveGarden} />
+            onToggleDecor={plantDecoration} onPlaceVillage={placeVillageDecoration}
+            onStoreVillage={storeVillageDecoration}
+            onVisitWorld={changeWorld} onVisitPorch={showKitchenNotebook}
+            onBonus={openBonus} onBack={leaveGarden} />
         ) : view === "bonus" && activeBonusId ? (
           <BonusBloom key={activeBonusId} bonusId={activeBonusId}
             bestMoves={saved.collection.completedBonuses[activeBonusId]}

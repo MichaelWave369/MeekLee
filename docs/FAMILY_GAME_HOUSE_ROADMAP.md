@@ -93,6 +93,12 @@ Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks,
 
 **Six extra no-cost garden rewards:** complete Flower Meadow levels 3, 6, 9, 12, 15 and 18 to earn Daisy Wreath, Flower Wind Chimes, Pollinator Cottage, Lily Walkway, Flower Market Cart and Ribbon Blossom Arch, once per milestone across both board sizes. The validated `collection.meadowPrizes` field preserves the old chest, companion, hidden decoration and jigsaw prize data. These rewards can be planted or hidden in the existing Garden. **Do not change the four original worlds' milestone chest schedule** or legacy saves. FreeCell and all four older puzzle worlds must remain fully playable.
 
+## Mom's Garden Village: a home for the earned treasures
+
+**Now playable and offline:** Extend the existing Happy Garden with an **optional Garden Village**, not a replacement. Four scenic neighborhoods, **Village Square**, **Flower Lane**, **Orchard Hill** and **Pondside Walk**, provide 20 placeable plots each (5×4, 80 total). Mom can pick any already-earned, currently visible garden decoration, tap an empty plot to place it, relocate it across neighborhoods, or return it to the village collection without losing ownership. Occupied plots select their ornament rather than overwriting another. Hiding a decoration in the original Garden keeps its saved village location but makes its icon invisible until replanted. Each neighborhood displays the chosen rescue companion and a scenic landmark. World portal buttons go to all **eight existing** saved worlds and open the private Family Porch with no note transfer or publishing.
+
+**Data model:** validated `collection.villagePlacements` stores `{decorId: "district:index"}`. Normalize with unlocked decoration IDs from the original Garden collection; discard forged IDs, invalid district/position, duplicate plot claims, corruption and over-capacity. Preserve `meeklee-adventures-save-v1`, claimed chests, earned pet/decor records, hidden decoration settings, 6×6/8×8 puzzle progress, Card Corner, earned Flower/Pumpkin/Moonlight/Kitchen prizes and level 6001+. No paid items, accounts, sync, timed tasks or forced login. Test 320px touch navigation, plot/relocation/storage/reload, hidden-garden semantics, 8 world portals, private Porch, and original Garden regression behavior.
+
 ## Next: new worlds and more garden life
 
 Prioritize meaningfully distinct mechanics, not a reskinned copy of Harvest Valley:
