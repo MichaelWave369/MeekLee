@@ -67,6 +67,12 @@ Private live family Chess sessions are still future work and require separately 
 
 Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks, one-suit Spider and FreeCell. Optional later difficulties: two/four-suit Spider, additional Solitaire varieties and accessible drag gestures. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
+## New Puzzle World: Moonlight Orchard
+
+**Now playable and offline:** The seventh world is built around an original three-phase **moon-halo** mechanic. Tap a chosen fruit to gather **at least three identical fruit inside a square halo** centered on that tile. Matching fruit need not touch. The halo expands with each successful turn: **Crescent** has a 1-square radius (3×3), **Half Moon** has a 2-square radius (5×5), and **Full Moon** has a 3-square radius (7×7); phase then resets to Crescent. A harvest of 5+ matching fruit adds a **stardust** bonus of surrounding nonmatching fruit near the tap point. Generate and refill deterministic 6×6/8×8 boards with a guaranteed Crescent-legal harvest, so all three phases always remain playable. Phone hints illuminate a guaranteed legal center, with phase and next-phase announced accessibly. No timers, lives or paid hints.
+
+**Six more earned nighttime decorations:** complete Moonlight Orchard levels 3, 6, 9, 12, 15 and 18 to earn Moonlit Glow Lantern, Starry Birdbath, Silver Blossom Tree, Firefly Lantern Jar, Moonlit Garden Swing and Moonbeam Garden Arch. Save once per milestone across both board sizes in normalized `collection.moonlightPrizes`, visible and togglable in the existing Garden. **Preserve every older world, the original four chapter chest rules, Meadow/Pumpkin rewards, puzzle medals, companions, jigsaw collectibles, and the entire Card Corner.** Validate deterministic phase progression, radius edges, stardust collection, 6×6/8×8 endless levels, 320px layout and 6001+ legacy saves.
+
 ## New Puzzle World: Pumpkin Patch
 
 **Now playable and offline:** Pumpkin Patch is MeekLee's sixth puzzle world. It uses a separate **cross-harvest** mechanic: tap a crop when at least **three identical crops** occur across the tapped crop's full row or column combined. No adjacency or swapping is required. Each tap collects the matching crops in the tapped row and column. A harvest of five or more earns an additional **leaf gust**, collecting neighboring different crops for more points. The engine generates deterministic 6×6 and 8×8 boards that always allow a legal harvest, maintains its own endless Adventure Path/medals, and uses the existing offline save key.
@@ -84,8 +90,8 @@ Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks,
 Prioritize meaningfully distinct mechanics, not a reskinned copy of Harvest Valley:
 
 - **Flower Meadow**: now playable with diagonal bouquets, pollen bursts and earned decorations.
-- **Pumpkin Patch**: relaxed seasonal harvest puzzles.
-- **Moonlight Orchard**: gentle evening match puzzles, high-contrast friendly.
+- **Pumpkin Patch**: now playable with autumn row-and-column harvests and leaf gusts.
+- **Moonlight Orchard**: now playable with three moon phases, changing halo radius and night garden prizes.
 - **Grandma's Kitchen**: ingredient arrangement/cooking puzzles, tied to the recipe notebook.
 
 More collectible garden ornaments, seasonal flowers, new animal companions and cozy furniture should always be earned, never purchased. Avoid changing existing chest rewards or taking away old pets.
