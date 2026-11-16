@@ -15,7 +15,8 @@ test("Flower Meadow is a real fifth world, distinct from swap or orthogonal Resc
   assert.equal(MODES.meadow.name,"Flower Meadow");
   assert.equal(MODES.meadow.mechanic,"bouquet");
   assert.equal(MODES.meadow.pieces.length,6);
-  assert.deepEqual(Object.keys(MODES),["harvest","sweets","rescue","bubbles","meadow"]);
+  assert.deepEqual(Object.keys(MODES).slice(0,5),["harvest","sweets","rescue","bubbles","meadow"]);
+  assert.equal(MODES.pumpkin.mechanic,"cross");
   assert.equal(CHEST_WORLDS.length,4,"historic chest worlds must remain unchanged");
   assert.equal(chapterKey("meadow",1),null);
   assert.deepEqual(chestReward("harvest",1).decor.id,"sunflower");
