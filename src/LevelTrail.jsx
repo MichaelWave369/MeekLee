@@ -77,7 +77,7 @@ export default function LevelTrail({ mode, page, unlocked, current, medals, onPa
       <button className="trail-play" type="button" onClick={() => onLevel(unlocked)}>
         {world.marker} Play Level {unlocked} →
       </button>
-      <p className="trail-footnote">Completed levels can be replayed for free. New pages unlock as you finish each ten-level journey. Flower Meadow decorations appear at levels 3, 6, 9, 12, 15 and 18.</p>
+      <p className="trail-footnote">Completed levels can be replayed for free. New pages unlock as you finish each ten-level journey. {mode==="meadow"?"Collect free Flower Meadow decorations at levels 3, 6, 9, 12, 15 and 18.":""}</p>
     </section>
   );
 }
