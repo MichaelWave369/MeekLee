@@ -1,0 +1,69 @@
+/* Local-only eight-track music player, always mounted across game views. */
+.meeklee-soundtrack{
+  margin:12px 0 18px;border:2px solid #b9d6ac;border-radius:17px;
+  background:#fffdf6;color:#355840;padding:12px;
+}
+.soundtrack-mini{display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap}
+.soundtrack-now{min-width:0;display:flex;align-items:center;gap:9px;flex:1}
+.soundtrack-now>span{font-size:1.8rem}
+.soundtrack-now>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.soundtrack-now strong{font-size:1.07rem}
+.soundtrack-now small{font-size:.83rem;overflow-wrap:anywhere}
+.soundtrack-transport{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.soundtrack-transport button,.soundtrack-slot-actions button{
+  min-height:44px;min-width:44px;border:2px solid #9dbc99;border-radius:10px;
+  background:#f4faec;color:#27573c;padding:8px 11px;font:inherit;font-weight:800;
+}
+.soundtrack-transport button:disabled{opacity:.46}
+.soundtrack-transport button:not(:disabled):hover,
+.soundtrack-slot-actions button:hover{background:#e2f2d7}
+.soundtrack-library{margin-top:11px;padding-top:9px;border-top:1px solid #d0dfca}
+.soundtrack-library summary{cursor:pointer;min-height:44px;display:flex;
+  align-items:center;flex-wrap:wrap;gap:5px 9px;font-weight:850;color:#2e6544;
+  padding:9px 10px;border-radius:10px;background:#f0f7e9}
+.soundtrack-library summary span{font-weight:700;font-size:.85rem}
+.soundtrack-library>p,.soundtrack-privacy{
+  font-size:.87rem;line-height:1.48;margin:12px 0}
+.soundtrack-import{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0}
+.soundtrack-file-label{position:relative;display:inline-flex;align-items:center;
+  justify-content:center;min-height:48px;cursor:pointer;
+  padding:11px 15px;border-radius:12px;border:2px solid #638f60;
+  color:#2b5e43;background:#f6fff2;font-weight:850}
+.soundtrack-file-label input{position:absolute;inset:0;width:100%;height:100%;
+  opacity:0;cursor:pointer}
+.soundtrack-file-label:focus-within{outline:3px solid #306aaf;outline-offset:2px}
+.soundtrack-volume{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:850}
+.soundtrack-volume input{accent-color:#418254;min-width:100px}
+.soundtrack-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.soundtrack-slot{display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;padding:11px;border:2px solid #d5e5d0;
+  background:#fafef8;border-radius:13px;min-width:0}
+.soundtrack-slot-name{display:flex;align-items:center;flex-wrap:wrap;gap:5px 7px;flex:1;min-width:125px}
+.soundtrack-slot-name>span{font-size:1.45rem}
+.soundtrack-slot-name strong{font-size:.9rem}
+.soundtrack-slot-name small{flex-basis:100%;font-size:.79rem;
+  overflow-wrap:anywhere;color:#4b6854}
+.soundtrack-slot-actions{display:flex;flex-wrap:wrap;gap:5px}
+.soundtrack-slot-actions button{font-size:.81rem;padding:7px 9px}
+.soundtrack-hidden-input{position:absolute;width:1px;height:1px;
+  overflow:hidden;opacity:0;pointer-events:none}
+.soundtrack-status{margin:9px 0 0;font-size:.82rem;line-height:1.35;
+  color:#45684e;font-weight:750}
+.high-contrast .meeklee-soundtrack,.high-contrast .soundtrack-slot{
+  background:#fffef7;color:#1a3826;border-color:#47744e}
+.meeklee-soundtrack button:focus-visible,
+.soundtrack-library summary:focus-visible{outline:3px solid #346ab6;outline-offset:2px}
+@media(max-width:750px){.soundtrack-slots{grid-template-columns:1fr}}
+@media(max-width:400px){
+  .meeklee-soundtrack{padding:9px}
+  .soundtrack-mini{gap:9px}
+  .soundtrack-transport{width:100%;justify-content:center}
+  .soundtrack-now>span{font-size:1.35rem}
+  .soundtrack-file-label{width:100%}
+  .soundtrack-volume{width:100%;justify-content:center}
+  .soundtrack-slot{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .meeklee-soundtrack *{animation:none!important;transition:none!important}
+}
