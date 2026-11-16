@@ -170,7 +170,7 @@ export default function GardenVillage({
       </div>
     </section>
 
-    <section className="village-activity" aria-labelledby="village-activity-heading">
+    <section className="village-activity" data-village-activity={district.id} aria-labelledby="village-activity-heading">
       <h3 id="village-activity-heading">{activity.icon} {activity.name}</h3>
       <p>{activity.intro} Tap the friendly picture shown in the prompt.
         Wrong answers never cost anything, and there's no clock.</p>
