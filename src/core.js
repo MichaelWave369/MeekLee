@@ -13,7 +13,8 @@ export const MODES = Object.freeze({
   harvest: { name: "Harvest Valley", mechanic: "swap", gravity: "down", pieces: ["🍓","🥕","🌽","🍇","🍋","🍎"], color: "#6da74d" },
   sweets: { name: "Sugar Mountain", mechanic: "swap", gravity: "down", pieces: ["🍬","🍭","🍒","🧁","🍫","🍪"], color: "#d56c9e" },
   rescue: { name: "Critter Rescue", mechanic: "tap", gravity: "down", pieces: ["🐶","🐱","🐰","🦊","🐼","🐻"], color: "#df9b53" },
-  bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","⭐","🐚","🐠","🌸","🐙"], color: "#62a5c6" }
+  bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","⭐","🐚","🐠","🌸","🐙"], color: "#62a5c6" },
+  meadow: { name: "Flower Meadow", mechanic: "bouquet", gravity: "down", pieces: ["🌷","🌼","🌸","🪻","🌺","💐"], color: "#88b98b" }
 });
 
 export function seedFor(mode, level) {
@@ -109,6 +110,42 @@ export function connectedGroup(board, index, size = boardSize(board)) {
   return queue;
 }
 
+// Flower Meadow's bouquet mechanic is NOT the Rescue tap mechanic.
+// Blossoms connect through corners as well as edges; three or more make a
+ // bouquet, and a five-flower bouquet releases a nearby pollen burst.
+export function flowerNeighbors(index,size = SIZE) {
+  if(!Number.isInteger(index)||!Number.isInteger(size)||
+    index<0||index>=size*size)return [];
+  const row=Math.floor(index/size),col=index%size,result=[];
+  for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+    if(!dr&&!dc)continue;
+    const r=row+dr,c=col+dc;
+    if(r>=0&&r<size&&c>=0&&c<size)result.push(r*size+c);
+  }
+  return result;
+}
+
+export function connectedBouquet(board,index,size=boardSize(board)) {
+  if(!Array.isArray(board)||!size||!Number.isInteger(index)||
+    index<0||index>=size*size||board[index]==null)return [];
+  const color=board[index],seen=new Set([index]),queue=[index];
+  for(let at=0;at<queue.length;at++){
+    for(const j of flowerNeighbors(queue[at],size)){
+      if(!seen.has(j)&&board[j]===color){
+        seen.add(j);queue.push(j);
+      }
+    }
+  }
+  return queue;
+}
+
+export function hasBouquet(board,size=boardSize(board)){
+  if(!size)return false;
+  for(let i=0;i<board.length;i++)
+    if(connectedBouquet(board,i,size).length>=3)return true;
+  return false;
+}
+
 export function hasGroup(board, size = boardSize(board)) {
   for (let i = 0; i < board.length; i++) {
     if (connectedGroup(board, i, size).length >= 2) return true;
@@ -128,7 +165,8 @@ export function makeBoard(rng, mechanic = "swap", size = SIZE) {
       const options = [0,1,2,3,4,5].filter(p => !banned.has(p));
       board[i] = options[Math.floor(rng() * options.length)];
     }
-    if (mechanic === "tap" ? hasGroup(board, size) : hasSwap(board, size)) return board;
+    if (mechanic === "bouquet" ? hasBouquet(board,size) :
+      mechanic === "tap" ? hasGroup(board, size) : hasSwap(board, size)) return board;
   }
   throw new Error("Could not generate a playable board");
 }
@@ -176,7 +214,10 @@ export function makeLevel(mode, level, size = SIZE) {
   const board = makeBoard(rng, rules.mechanic, size);
   // A gentle repeating difficulty wave, rather than difficulty growing forever.
   const wave = (level - 1) % 9;
-  const target = (size === EASY_SIZE ? (rules.mechanic === "tap" ? 24 : 22) : (rules.mechanic === "tap" ? 36 : 30)) + wave * (size === EASY_SIZE ? 2 : 3);
+  const base=size===EASY_SIZE ?
+    (rules.mechanic==="bouquet"?26:rules.mechanic==="tap"?24:22) :
+    (rules.mechanic==="bouquet"?42:rules.mechanic==="tap"?36:30);
+  const target=base+wave*(size===EASY_SIZE?2:3);
   return { mode, level, size, seed, rngState: rng.getState(), board, target, cleared: 0, score: 0, moves: 0, won: false };
 }
 
@@ -189,16 +230,25 @@ export function playTurn(game, first, second) {
   const board = [...game.board], rng = rngFrom(game.seed, game.rngState);
   let cleared = 0, bonus = 0, cascades = 0;
   const trace = [];
-  if (rules.mechanic === "tap") {
-    const group = connectedGroup(board, first, size);
-    if (group.length < 2) return { valid: false, game };
-    trace.push({ type: "pop", board: [...board], matched: group, combo: 1, gained: group.length * (group.length + 2) * 10 });
-    for (const i of group) board[i] = null;
-    cleared = group.length;
-    bonus = group.length * (group.length + 2) * 10;
-    const movements = [];
-    collapse(board, rng, rules.gravity, size, movements);
-    trace.push({ type: "fall", board: [...board], movements, combo: 1 });
+  if (rules.mechanic === "tap" || rules.mechanic === "bouquet") {
+    const bouquet=rules.mechanic==="bouquet";
+    const group=bouquet?connectedBouquet(board,first,size):connectedGroup(board,first,size);
+    if(group.length<(bouquet?3:2))return {valid:false,game};
+    const groupSet=new Set(group);
+    // A bouquet of five or more flowers releases pollen into its immediate
+    // neighborhood, gathering nearby flowers of other colors as a bonus.
+    const pollen=bouquet&&group.length>=5?
+      flowerNeighbors(first,size).filter(i=>!groupSet.has(i)):[];
+    const collected=[...group,...pollen];
+    const gained=collected.length*(group.length+2)*10;
+    trace.push({type:"pop",board:[...board],matched:collected,
+      pollen,groupSize:group.length,combo:1,gained});
+    for(const i of collected)board[i]=null;
+    cleared=collected.length;
+    bonus=gained;
+    const movements=[];
+    collapse(board,rng,rules.gravity,size,movements);
+    trace.push({type:"fall",board:[...board],movements,combo:1});
   } else {
     if (!adjacent(first, second, size) || board[first] === board[second]) return { valid: false, game };
     [board[first], board[second]] = [board[second], board[first]];
@@ -224,7 +274,8 @@ export function playTurn(game, first, second) {
       trace.push({ type: "shuffle", board: [...board] });
     }
   }
-  if (rules.mechanic === "tap" ? !hasGroup(board, size) : !hasSwap(board, size)) {
+  if (rules.mechanic === "bouquet" ? !hasBouquet(board,size) :
+    rules.mechanic === "tap" ? !hasGroup(board,size) : !hasSwap(board,size)) {
     const fresh = makeBoard(rng, rules.mechanic, size);
     board.splice(0, board.length, ...fresh);
     trace.push({ type: "shuffle", board: [...board] });
