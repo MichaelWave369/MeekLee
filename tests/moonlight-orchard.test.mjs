@@ -15,7 +15,8 @@ import {
 
 const six=EASY_SIZE;
 test("Moonlight Orchard adds a seventh real world without rewriting earlier mechanics",()=>{
-  assert.deepEqual(Object.keys(MODES),["harvest","sweets","rescue","bubbles","meadow","pumpkin","moonlight"]);
+  assert.deepEqual(Object.keys(MODES).slice(0,7),["harvest","sweets","rescue","bubbles","meadow","pumpkin","moonlight"]);
+  assert.equal(MODES.kitchen.mechanic,"recipe");
   assert.equal(MODES.moonlight.name,"Moonlight Orchard");
   assert.equal(MODES.moonlight.mechanic,"moon");
   assert.equal(MODES.moonlight.pieces.length,6);
