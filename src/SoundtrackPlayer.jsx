@@ -219,6 +219,9 @@ export default function SoundtrackPlayer(){
         "All eight original songs are included with the game! Just press Play. The music streams one track at a time, so opening a puzzle does not download the whole album. You can still import a personal version if you wish.":
         "Import MeekLeeAdventures.zip directly to load the original eight songs, or use the individual-file importer. Music starts only when you press Play."}
         Personal recordings are stored in this browser, never uploaded or synced to a server.</p>
+      <p className="soundtrack-storage-note">Files are stored in this browser
+        only when you import your own recordings. Built-in songs are streamed
+        directly from the game on demand.</p>
       <label className="soundtrack-continuous">
         <input type="checkbox" data-soundtrack-continuous
           checked={continuous} onChange={event=>setContinuous(event.target.checked)}/>
