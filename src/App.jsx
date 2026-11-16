@@ -300,12 +300,22 @@ export default function App() {
 
   function showCardCorner() {
     if (busyRef.current) return;
+    setCardStartAt(null);
     clearSelection();
     setMenuOpen(false);setShowSettings(false);setShowWorlds(false);
     setView("cards");
     if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
   }
+  function showKitchenNotebook(){
+    if(busyRef.current)return;
+    clearSelection();
+    setCardStartAt("porch");
+    setMenuOpen(false);setShowSettings(false);setShowWorlds(false);
+    setView("cards");
+    if(typeof window!=="undefined")window.scrollTo({top:0,behavior:"auto"});
+  }
   function leaveCardCorner() {
+    setCardStartAt(null);
     setView("play");
     if (typeof window !== "undefined") window.scrollTo({top:0,behavior:"auto"});
   }
@@ -585,7 +595,8 @@ export default function App() {
           </div>}
         </section>
         {view === "cards" ? (
-          <CardCorner cards={saved.cards} onChange={saveCardGame}
+          <CardCorner key={cardStartAt||"shelf"} startAt={cardStartAt}
+            cards={saved.cards} onChange={saveCardGame}
             settings={settings} onBack={leaveCardCorner}/>
         ) : view === "garden" ? (
           <Garden saved={saved} onClaim={claimChest} onSelectPet={changeCompanion}
