@@ -20,7 +20,7 @@ async function launch(browser,width=320,raw=null){
   const data={version:1,tracks:manifest.tracks.map(t=>({
     slot:t.slot,name:t.name,path:"audio/"+t.file,bytes:t.size,sha256:t.sha256
   }))};
-  await page.route("**/audio/manifest.json",route=>route.fulfill({
+  await page.route("**/audio/manifest.json*",route=>route.fulfill({
     status:200,contentType:"application/json",body:JSON.stringify(data)
   }));
   await page.route("**/audio/*.mp3",route=>route.fulfill({
