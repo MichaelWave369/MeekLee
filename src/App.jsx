@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
+import { MODES, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, moonlightHarvest, moonPhase, findMatches, makeBoard, makeLevel, neighbors, playTurn, rngFrom } from "./core.js";
 import { SAVE_KEY, createSaveState } from "./save.js";
 import { dragPreview } from "./drag.js";
 import LevelTrail from "./LevelTrail.jsx";
@@ -11,7 +11,8 @@ import {recordRookTransition} from "./rook-night.js";
 import {
   isChestClaimable, totalAvailableChests, claimChapterChest, completeBonus,
   gardenInventory, selectCompanion, toggleDecoration, recordJigsawGardenReward,
-  recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel
+  recordMeadowReward, meadowPrizeForLevel, recordPumpkinReward, pumpkinPrizeForLevel,
+  recordMoonlightReward, moonlightPrizeForLevel
 } from "./collection.js";
 import { nextShooterLevel, retryShooter } from "./shooter.js";
 import { pageForLevel } from "./trail.js";
@@ -24,7 +25,8 @@ const WORLDS = [
   { id: "rescue", icon: "🐾", name: "Critter Rescue", desc: "Tap matching groups to help the animals." },
   { id: "bubbles", icon: "🫧", name: "Bubble Lagoon", desc: "Aim, bounce and pop colorful bubbles." },
   { id: "meadow", icon: "🌷", name: "Flower Meadow", desc: "Tap diagonal bouquets of 3+ flowers. Larger clusters scatter pollen!" },
-  { id: "pumpkin", icon: "🎃", name: "Pumpkin Patch", desc: "Gather matching crops across rows and columns; big harvests create leaf gusts!" }
+  { id: "pumpkin", icon: "🎃", name: "Pumpkin Patch", desc: "Gather matching crops across rows and columns; big harvests create leaf gusts!" },
+  { id: "moonlight", icon: "🌙", name: "Moonlight Orchard", desc: "Gather fruits within a growing moonlit halo. Crescent, half and full moon!" }
 ];
 
 function initialize() {
@@ -37,13 +39,16 @@ function initialize() {
 
 function hintFor(game) {
   const size = game.size ?? SIZE;
-  if (["tap","bouquet","cross"].includes(MODES[game.mode].mechanic)) {
+  if (["tap","bouquet","cross","moon"].includes(MODES[game.mode].mechanic)) {
     const mechanic=MODES[game.mode].mechanic;
     for (let i = 0; i < game.board.length; i++) {
-      const group=mechanic==="cross"?pumpkinHarvest(game.board,i,size):
+      const group=mechanic==="moon"?
+        moonlightHarvest(game.board,i,size,moonPhase(game.moves).radius):
+        mechanic==="cross"?pumpkinHarvest(game.board,i,size):
         mechanic==="bouquet"?connectedBouquet(game.board,i,size):
         connectedGroup(game.board,i,size);
-      if(group.length>=(mechanic==="tap"?2:3))return mechanic==="cross"?[i]:group;
+      if(group.length>=(mechanic==="tap"?2:3))
+        return (mechanic==="cross"||mechanic==="moon")?[i]:group;
     }
   } else {
     for (let i = 0; i < game.board.length; i++) {
@@ -105,11 +110,14 @@ export default function App() {
     "Tap 3+ matching flowers touching at edges or corners. Five or more scatter bonus pollen!" :
     rules.mechanic === "cross" ?
     "Tap a crop to gather 3+ matching crops along its row and column. Five or more create a leaf gust!" :
+    rules.mechanic === "moon" ?
+    "Tap a fruit to gather 3+ matching fruit within its moonlit halo. The halo grows with each moon phase, then starts again. 5+ add stardust!" :
     mode === "bubbles" ? "Swap neighbors to match 3. Bubbles rise upward!" :
       "Drag a piece onto its neighbor and release, or tap two neighbors to match 3.";
   const mobileInstruction = rules.mechanic === "tap" ? "Tap matching groups of 2+" :
     rules.mechanic === "bouquet" ? "Tap bouquets of 3+; diagonals count!" :
     rules.mechanic === "cross" ? "Tap 3+ matching crops in a row-and-column cross!" :
+    rules.mechanic === "moon" ? "Tap 3+ matching fruit in the moon's glowing halo!" :
     mode === "bubbles" ? "Drag & release to match bubbles!" : "Drag & release to match 3";
 
   useEffect(() => {
@@ -134,6 +142,8 @@ export default function App() {
         recordMeadowReward(previous.collection,previousGame,result.game):
         turnMode==="pumpkin"&&result.game.won?
         recordPumpkinReward(previous.collection,previousGame,result.game):
+        turnMode==="moonlight"&&result.game.won?
+        recordMoonlightReward(previous.collection,previousGame,result.game):
         previous.collection;
       return {
         ...previous,collection,
@@ -190,6 +200,8 @@ export default function App() {
         "Gather 3 or more matching flowers. Corners count, too!" :
         mode === "pumpkin" ?
         "Look for three matching crops across one row and column!" :
+        mode === "moonlight" ?
+        "Choose a fruit with at least three of its kind inside the glowing moon halo!" :
         "Try swapping pieces to make a row of three!");
       return;
     }
@@ -224,7 +236,7 @@ export default function App() {
 
   function chooseTile(index) {
     if (game.won || busyRef.current) return;
-    if (rules.mechanic === "tap" || rules.mechanic === "bouquet" || rules.mechanic === "cross") { takeTurn(index); return; }
+    if (["tap","bouquet","cross","moon"].includes(rules.mechanic)) { takeTurn(index); return; }
     if (selected === null) {
       setSelected(index);
       setHint([]);
@@ -530,7 +542,7 @@ export default function App() {
         <section id="meeklee-worlds" className={"world-section" + (showWorlds ? " open" : "")} aria-labelledby="world-heading">
           <div className="section-heading">
             <h2 id="world-heading">Choose your adventure</h2>
-            <span>6 happy worlds</span>
+            <span>7 happy worlds</span>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
               onClick={showGarden}>🌷 Mom's Garden</button>
             <button type="button" className="desktop-garden-shortcut" disabled={busy}
@@ -622,6 +634,13 @@ export default function App() {
               <span style={{ width: percent + "%" }}/>
             </div>
             <p className="instruction"><span className="desktop-tip">{instruction}</span><span className="mobile-tip">{mobileInstruction}</span></p>
+            {mode==="moonlight"&&
+              <div className="moonlight-phase" role="status" aria-label={"Moon phase: "+moonPhase(game.moves).name}>
+                <span className="moonlight-phase-icon" aria-hidden="true">{moonPhase(game.moves).icon}</span>
+                <strong>{moonPhase(game.moves).name}</strong>
+                <span>Halo reaches {moonPhase(game.moves).radius} {moonPhase(game.moves).radius===1?"space":"spaces"} in every direction.</span>
+                <small>Next: {moonPhase(game.moves+1).icon} {moonPhase(game.moves+1).name}</small>
+              </div>}
             {game.won && !busy ? (
               <div className="trail-victory" role="status">
                 <div className="victory-garden" aria-hidden="true">🌼 🎉 🌷</div>
@@ -634,6 +653,10 @@ export default function App() {
                 {mode==="pumpkin"&&pumpkinPrizeForLevel(game.level)&&
                   <button type="button" className="victory-chest" onClick={showGarden}>
                     {pumpkinPrizeForLevel(game.level).icon} You've earned the {pumpkinPrizeForLevel(game.level).name}! Visit Your Garden →
+                  </button>}
+                {mode==="moonlight"&&moonlightPrizeForLevel(game.level)&&
+                  <button type="button" className="victory-chest" onClick={showGarden}>
+                    {moonlightPrizeForLevel(game.level).icon} You've earned the {moonlightPrizeForLevel(game.level).name}! Visit Your Garden →
                   </button>}
                 <div className="victory-stars" aria-label={worldStars(game) + " out of 3 stars"}>
                   {"★".repeat(worldStars(game))}<span>{"☆".repeat(3 - worldStars(game))}</span>
@@ -655,6 +678,7 @@ export default function App() {
                     stage.reward?.small ? worldPowers?.small.icon + " " + worldPowers?.small.name + "!" :
                     stage.pollen?.length ? "POLLEN BLOOM! +" + stage.pollen.length + "!" :
                      stage.gust?.length ? "LEAF GUST! +" + stage.gust.length + "!" :
+                     stage.stardust?.length ? "STARDUST! +" + stage.stardust.length + "!" :
                      stage.combo >= 2 ? "COMBO ×" + stage.combo + "!" : "Lovely match!"}</span>
                   <small>+{stage.gained} points ✨</small>
                 </div>
@@ -739,7 +763,9 @@ export default function App() {
                 disabled={game.won || busy}
                 onClick={() => {
                   clearSelection(); setHint(hintFor(game));
-                  setMessage(mode==="pumpkin"?"Tap the glowing crop to harvest its row and column!":"Look for the glowing pieces!");
+                  setMessage(mode==="pumpkin"?"Tap the glowing crop to harvest its row and column!":
+                     mode==="moonlight"?"Tap the glowing fruit to gather the moonlit harvest!":
+                     "Look for the glowing pieces!");
                 }}>💡 Free hint</button>
               <button type="button" className="action secondary"
                 disabled={game.won || busy} onClick={shuffle}>🔀 Free shuffle</button>
