@@ -13,7 +13,8 @@ import {
 } from "../src/collection.js";
 
 test("Pumpkin Patch is a distinct sixth world with a row-column cross, not group or swap",()=>{
-  assert.deepEqual(Object.keys(MODES),["harvest","sweets","rescue","bubbles","meadow","pumpkin"]);
+  assert.deepEqual(Object.keys(MODES).slice(0,6),["harvest","sweets","rescue","bubbles","meadow","pumpkin"]);
+  assert.equal(MODES.moonlight.mechanic,"moon");
   assert.equal(MODES.pumpkin.name,"Pumpkin Patch");
   assert.equal(MODES.pumpkin.mechanic,"cross");
   assert.equal(MODES.pumpkin.pieces.length,6);
