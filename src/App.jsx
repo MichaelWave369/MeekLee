@@ -73,6 +73,9 @@ function hintFor(game) {
 
 export default function App() {
   const [saved, setSaved] = useState(initialize);
+  const [theme, setTheme] = useState(() =>
+    document.documentElement.dataset.meekleeTheme === "dark" ? "dark" : "light");
+  const nightMode = theme === "dark";
   const [selected, setSelected] = useState(null);
   const [hint, setHint] = useState([]);
   const [animation, setAnimation] = useState(null);
@@ -136,6 +139,16 @@ export default function App() {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(saved)); }
     catch { /* No storage = still playable. */ }
   }, [saved]);
+
+  // Appearance is a browser preference, separate from puzzle and family saves.
+  useEffect(() => {
+    document.documentElement.dataset.meekleeTheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute(
+      "content", nightMode ? "#111d24" : "#f9e8b3"
+    );
+    try { localStorage.setItem("meeklee-appearance", theme); }
+    catch { /* Private browsing still gets the toggle for this visit. */ }
+  }, [theme, nightMode]);
 
   function clearSelection() { setSelected(null); setHint([]); }
 
@@ -531,7 +544,7 @@ export default function App() {
 
 
   return (
-    <div className={"app-root" + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "") + (settings.motion ? " motion-active" : "")}
+    <div className={"app-root" + (nightMode ? " dark-mode" : "") + (settings.easy ? " easy-see" : "") + (settings.highContrast ? " high-contrast" : "") + (settings.motion ? " motion-active" : "")}
       style={motionCssVariables(visualSpeed)}>
       <header className={"hero" + (menuOpen ? " menu-open" : "")}>
         <button type="button" className="mobile-menu-trigger"
@@ -547,7 +560,7 @@ export default function App() {
           <span className="mobile-menu-action">{menuOpen ? "✕ Close" : "☰ Menu"}</span>
         </button>
         <div className="hero-content">
-        <div className="sun" aria-hidden="true">☀️</div>
+        <div className="sun" aria-hidden="true">{nightMode ? "🌙" : "☀️"}</div>
         <div className="brand-mark" aria-hidden="true">🌼</div>
         <p className="eyebrow">A little world of happiness</p>
         <h1>MeekLee <span>Adventures</span></h1>
@@ -575,6 +588,11 @@ export default function App() {
           </button>
           <button type="button" className="quick-toggle" disabled={busy}
             onClick={showCardCorner}>🃏 Cards</button>
+          <button type="button" className="quick-toggle" aria-pressed={nightMode}
+            aria-label={"Night mode, " + (nightMode ? "on" : "off")}
+            onClick={() => setTheme(current => current === "dark" ? "light" : "dark")}>
+            {nightMode ? "☀️ Day mode" : "🌙 Night mode"}
+          </button>
         </nav>
         <section id="meeklee-visibility" className={"comfort-bar" + (showSettings ? " open" : "")} aria-label="Visibility and animation settings">
           <div className="comfort-heading">
@@ -582,6 +600,11 @@ export default function App() {
             <span>Choose what looks best to you.</span>
           </div>
           <div className="comfort-actions">
+            <button type="button" className="comfort-button" aria-pressed={nightMode}
+              aria-label={"Night mode, " + (nightMode ? "on" : "off")}
+              onClick={() => setTheme(current => current === "dark" ? "light" : "dark")}>
+              🌙 Night mode: <strong>{nightMode ? "ON" : "OFF"}</strong>
+            </button>
             <button type="button" className="comfort-button" disabled={busy}
               aria-pressed={settings.easy}
               aria-label={"Big pieces, " + (settings.easy ? "on" : "off") + ". Switch between six by six and eight by eight puzzle boards."}
