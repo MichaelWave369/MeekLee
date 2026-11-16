@@ -43,7 +43,7 @@ function hintFor(game) {
       const group=mechanic==="cross"?pumpkinHarvest(game.board,i,size):
         mechanic==="bouquet"?connectedBouquet(game.board,i,size):
         connectedGroup(game.board,i,size);
-      if(group.length>=(mechanic==="tap"?2:3))return group;
+      if(group.length>=(mechanic==="tap"?2:3))return mechanic==="cross"?[i]:group;
     }
   } else {
     for (let i = 0; i < game.board.length; i++) {
@@ -739,7 +739,7 @@ export default function App() {
                 disabled={game.won || busy}
                 onClick={() => {
                   clearSelection(); setHint(hintFor(game));
-                  setMessage("Look for the glowing pieces!");
+                  setMessage(mode==="pumpkin"?"Tap the glowing crop to harvest its row and column!":"Look for the glowing pieces!");
                 }}>💡 Free hint</button>
               <button type="button" className="action secondary"
                 disabled={game.won || busy} onClick={shuffle}>🔀 Free shuffle</button>
