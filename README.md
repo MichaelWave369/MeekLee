@@ -6,6 +6,18 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🎃 Pumpkin Patch: sixth world with autumn harvests
+
+**Now playable, free and offline:** Pumpkin Patch joins Flower Meadow and the original four puzzle adventures as MeekLee's **sixth world**, with its own endless Adventure Path, medal progression, and completely separate 6×6 and 8×8 saves.
+
+### A new cross-harvest puzzle mechanic
+Tap any crop to gather **three or more of the same variety across its entire row and column**. Crops do **not** need to touch, unlike Critter Rescue's adjacent pairs or Flower Meadow's diagonal bouquets. The tapped piece is the center of a row-and-column *cross*, so where Mom taps matters. Larger harvests of **five or more** also release a free **leaf gust** that gathers immediately neighboring crops of other varieties. The board refills from above after each turn. Every generated and refilled board offers a legal harvest, and all levels can be played without timers, lives or paywalls.
+
+### Autumn decorations earned, never bought
+Complete Pumpkin Patch levels **3, 6, 9, 12, 15 and 18** to earn these six seasonal prizes: Autumn Pumpkin Lantern, Hay Bale Bench, Friendly Scarecrow, Cornfield Garden Gate, Little Cider Stand and Autumn Leaf Gazebo. A decoration is awarded **exactly once per milestone across both board sizes**, appears in Mom's existing Garden, and can be planted or hidden. Old claimed chests, companions, Flower Meadow rewards, jigsaw decorations, classic puzzles and all Card Corner saves stay unchanged. The four original worlds' chest schedule is not modified.
+
+Access on phones: **☰ Menu → 🌍 Worlds → Pumpkin Patch**. The free hint highlights a guaranteed legal central crop. Select the highlighted crop to gather its row-and-column harvest. Phone-friendly big tiles, reduced-motion settings, contrast settings, and automatic offline saves continue to work.
+
 ## 🌷 Flower Meadow: a fifth, genuinely different puzzle world
 
 **Now playable, free and offline:** Flower Meadow joins Harvest Valley, Sugar Mountain, Critter Rescue and Bubble Lagoon as a **fifth world**, with its own endless Adventure Path, 6×6 Big Pieces and 8×8 classic boards, saved high-level progress and star medals.
