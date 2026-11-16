@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import GardenVillage from "./GardenVillage.jsx";
 import {
   availableChests, totalAvailableChests, gardenInventory, MEADOW_GARDEN_DECOR, PUMPKIN_GARDEN_DECOR, MOONLIGHT_GARDEN_DECOR, KITCHEN_GARDEN_DECOR
 } from "./collection.js";
@@ -18,9 +19,10 @@ export function CompanionBadge({collection,settings}) {
     </span> : null;
 }
 
-export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBonus, onBack}) {
+export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onPlaceVillage, onStoreVillage, onVisitWorld, onVisitPorch, onBonus, onBack}) {
   const [reveal,setReveal]=useState(null);
   const [allBonus,setAllBonus]=useState(false);
+  const [villageOpen,setVillageOpen]=useState(false);
   const collection=saved.collection;
   const {decor,pets,rewards}=gardenInventory(collection);
   const chests=availableChests(saved);
@@ -28,6 +30,10 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
   const visible=decor.filter(item=>!collection.hiddenDecorations.includes(item.id));
   const chosen=pets.find(p=>p.id===collection.companion);
   const bonusKeys=Object.keys(collection.claimed).reverse();
+  if(villageOpen)return <GardenVillage collection={collection} settings={saved.settings}
+    onPlace={onPlaceVillage} onStore={onStoreVillage}
+    onVisitWorld={onVisitWorld} onVisitPorch={onVisitPorch}
+    onBack={()=>setVillageOpen(false)}/>;
   return <section className="garden-home" aria-label="Mom's collectible garden">
     <header className="garden-heading">
       <button type="button" className="trail-back" onClick={onBack}>‹ Back to Game</button>
@@ -38,6 +44,12 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
       Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!
       Complete picture puzzles to earn nine extra treasures, explore Flower Meadow for
       six spring decorations, Pumpkin Patch for six autumn decorations, Moonlight Orchard for six evening treasures, or Grandma's Kitchen for six homestead decorations!</p>
+    <div className="garden-village-invite">
+      <div><span aria-hidden="true">🏘️</span><strong>Explore Mom's Garden Village</strong>
+        <small>Arrange your earned treasures across four neighborhoods and follow the paths to every game!</small></div>
+      <button type="button" onClick={()=>setVillageOpen(true)}
+        aria-label="Explore Garden Village">🏡 Explore Garden Village</button>
+    </div>
 
     <div className="garden-landscape" aria-label="Your collected garden decorations and companion">
       <span className="garden-sun" aria-hidden="true">☀️</span>
