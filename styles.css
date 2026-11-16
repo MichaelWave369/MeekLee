@@ -1373,3 +1373,29 @@ footer { text-align: center; background: #d6eccc; color: #587c55; padding: 23px 
 @media(prefers-reduced-motion:reduce){
   .app-root:not(.motion-active) .rook-confetti>span{animation:none!important;}
 }
+
+
+/* Moonlight Orchard: a quiet, readable phase display instead of more timers. */
+.moonlight-panel { border-color: #a9b4db; }
+.moonlight-phase {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 8px 12px; margin: 8px 0 16px; padding: 11px 15px;
+  background: linear-gradient(120deg,#202d58,#42588d);
+  color: #fff; border: 2px solid #8fa5db; border-radius: 15px;
+  box-shadow: 0 3px 12px #26315c25;
+}
+.moonlight-phase-icon { font-size: 1.7rem; line-height: 1; }
+.moonlight-phase strong { font-size: 1.05rem; letter-spacing: .02em; }
+.moonlight-phase > span:not(.moonlight-phase-icon) { font-size: .88rem; }
+.moonlight-phase small { font-size: .77rem; color: #e3eafa; font-weight: 750; }
+.moonlight-panel .game-board { border-color: #94a9d6; }
+.high-contrast .moonlight-phase {
+  background: #111b3e; border-color: #d1dfff; color: #fff;
+}
+@media (max-width: 395px) {
+  .moonlight-phase { gap: 6px 9px; padding: 10px 7px; font-size: .88rem; }
+  .moonlight-phase > span:not(.moonlight-phase-icon) { flex-basis: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .moonlight-phase { transition: none !important; animation: none !important; }
+}
