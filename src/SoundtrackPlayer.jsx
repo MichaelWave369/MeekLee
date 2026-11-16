@@ -1,11 +1,12 @@
 import {useEffect,useRef,useState} from "react";
 import {
   SOUNDTRACK_SLOTS,MAX_SOUNDTRACK_TRACKS,audioFileCheck,
-  soundtrackDisplayName
+  soundtrackDisplayName,assignMeekLeeSlots,meekleeTrackSlot
 } from "./soundtrack.js";
 import {
   loadSoundtrack,saveSoundtrackTrack,removeSoundtrackTrack
 } from "./soundtrack-storage.js";
+import {extractSoundtrackZip} from "./soundtrack-zip.js";
 import "./soundtrack.css";
 
 export default function SoundtrackPlayer(){
@@ -17,6 +18,7 @@ export default function SoundtrackPlayer(){
   const [volume,setVolume]=useState(.45);
   const audioRef=useRef(null),urlRef=useRef(null);
   const bulkRef=useRef(null),singleRef=useRef(null),replaceRef=useRef(0);
+  const [unpackingZip,setUnpackingZip]=useState(false);
   const importBusyRef=useRef(false);
 
   useEffect(()=>{
@@ -92,13 +94,13 @@ export default function SoundtrackPlayer(){
     try{
       const picked=Array.from(list||[]);
       if(!picked.length)return;
-      const items=mode==="bulk"?picked.slice(0,MAX_SOUNDTRACK_TRACKS):picked.slice(0,1);
+      const items=mode==="single"?picked.slice(0,1):picked.slice(0,MAX_SOUNDTRACK_TRACKS);
+      const assignments=mode==="zip"?assignMeekLeeSlots(items):
+        items.map((file,i)=>({file,slot:mode==="single"?replaceRef.current:i}));
       const changed=[...tracks];
       let imported=0,notSaved=0;
       let lastError="";
-      for(let i=0;i<items.length;i++){
-        const file=items[i];
-        const index=mode==="bulk"?i:replaceRef.current;
+      for(const {file,slot:index} of assignments){
         const validation=audioFileCheck(file);
         if(validation){lastError=file.name+": "+validation;continue;}
         if(index===selected&&urlRef.current)stopCurrent();
@@ -108,6 +110,9 @@ export default function SoundtrackPlayer(){
         imported++;
       }
       setTracks(changed);
+      if(imported&&mode==="zip"&&assignments.some(
+        ({file,slot})=>slot===7&&meekleeTrackSlot(file.name)===7))
+        setSelected(7); // Original Welcome theme is ready under the big Play button.
       if(imported){
         setStatus(imported+" recording"+(imported===1?"":"s")+" ready to play."+
           (notSaved?" "+notSaved+" could not be saved for offline reload.":" Saved locally for offline visits.")+
@@ -116,6 +121,23 @@ export default function SoundtrackPlayer(){
       if(picked.length>MAX_SOUNDTRACK_TRACKS&&mode==="bulk")
         setStatus("The jukebox has eight slots. Only the first eight files were considered.");
     }finally{importBusyRef.current=false;}
+  }
+  async function importZip(file){
+    if(!ready||importBusyRef.current||!file)return;
+    importBusyRef.current=true;
+    setUnpackingZip(true);
+    setStatus("Checking your ZIP and unpacking the local audio tracks...");
+    try{
+      const audio=await extractSoundtrackZip(file);
+      // importFiles owns the same exclusive import lock during IndexedDB saves.
+      importBusyRef.current=false;
+      await importFiles(audio,"zip");
+    }catch(error){
+      setStatus("Could not import that ZIP: "+error.message);
+    }finally{
+      importBusyRef.current=false;
+      setUnpackingZip(false);
+    }
   }
   async function removeTrack(index){
     if(!tracks[index])return;
@@ -157,12 +179,25 @@ export default function SoundtrackPlayer(){
     </div>
     <details className="soundtrack-library">
       <summary>🎶 Open my 8-track music shelf <span>({available}/8 loaded)</span></summary>
-      <p>Choose up to eight MP3, WAV, OGG, M4A, AAC or FLAC recordings from
-        this device. Each slot corresponds to a puzzle world. Music plays
-        only when you press Play, and can keep playing as you visit worlds.
-        Files are stored in this browser, never uploaded to a server.
-        They do not sync automatically to another phone or computer.</p>
+      <p>Import <strong>MeekLeeAdventures.zip</strong> directly to load the
+        creator's eight original recordings in the right spots, including the
+        welcome theme, four puzzle themes, Pip's Garden, Rook and Solitaire.
+        Or add up to eight individual MP3, WAV, OGG, M4A, AAC or FLAC files.
+        Music starts only when you press Play. Files are stored in this browser,
+        never uploaded or synced to a server.</p>
       <div className="soundtrack-import">
+        <label className="soundtrack-file-label soundtrack-zip-label">
+          {unpackingZip?"⏳ Unpacking your soundtrack...":"🎼 Import MeekLeeAdventures ZIP"}
+          <input type="file" data-soundtrack-zip
+            aria-label="Import an eight-song MeekLeeAdventures ZIP"
+            accept=".zip,application/zip"
+            disabled={!ready||unpackingZip}
+            onChange={event=>{
+              const file=event.target.files?.[0];
+              void importZip(file);
+              event.target.value="";
+            }}/>
+        </label>
         <label className="soundtrack-file-label">
           📂 Import up to eight tracks
           <input ref={bulkRef} type="file" data-soundtrack-import multiple
@@ -214,7 +249,10 @@ export default function SoundtrackPlayer(){
           void importFiles(picked,"single");
           event.target.value="";
         }}/>
-      <p className="soundtrack-privacy">Local files may take storage space, and
+      <p className="soundtrack-privacy">The original eight MP3s are not yet
+        included in the public website. Upload the ZIP locally once per device.
+        The archive is unpacked in this browser, checked for integrity, and
+        never sent to a server. Local files may take storage space, and
         a private browsing window may forget them. If this browser cannot
         store them, the game will say so. Nothing is sent to Suno, GitHub or
         any other music service. Audio belongs to its creator.</p>

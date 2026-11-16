@@ -1,15 +1,48 @@
-// Eight optional soundtrack slots, one named for each existing puzzle world.
-// All audio files remain in the user's browser. This is not an upload service.
+// Eight optional soundtrack slots from the creator's MeekLeeAdventures.zip.
+// Four songs are puzzle-world themes; four cover the welcome, garden and cards.
+// Keep slot indices 0-7 stable so earlier offline IndexedDB imports survive.
 export const SOUNDTRACK_SLOTS=Object.freeze([
   Object.freeze({id:"harvest",name:"Harvest Valley",icon:"🌻"}),
   Object.freeze({id:"sweets",name:"Sugar Mountain",icon:"🍬"}),
   Object.freeze({id:"rescue",name:"Critter Rescue",icon:"🐾"}),
   Object.freeze({id:"bubbles",name:"Bubble Lagoon",icon:"🫧"}),
-  Object.freeze({id:"meadow",name:"Flower Meadow",icon:"🌷"}),
-  Object.freeze({id:"pumpkin",name:"Pumpkin Patch",icon:"🎃"}),
-  Object.freeze({id:"moonlight",name:"Moonlight Orchard",icon:"🌙"}),
-  Object.freeze({id:"kitchen",name:"Grandma's Kitchen",icon:"🥣"})
+  Object.freeze({id:"garden",name:"Pip's Little Garden",icon:"🌷"}),
+  Object.freeze({id:"rook",name:"The Family Rook Table",icon:"🃏"}),
+  Object.freeze({id:"solitaire",name:"Solitaire Sunday",icon:"♠️"}),
+  Object.freeze({id:"welcome",name:"Main Theme · The Welcome",icon:"🎶"})
 ]);
+// Exact original audio filenames from the supplied ZIP, not fabricated songs.
+export const MEEKLEE_ORIGINAL_TRACKS=Object.freeze([
+  "Morning in Harvest Valley A.mp3",
+  "Sugar Mountain Shuffle A.mp3",
+  "Little Critter Parade A.mp3",
+  "Bubbles in the Blue A.mp3",
+  "Pip's Little Garden A.mp3",
+  "The Family Rook Table A.mp3",
+  "Solitaire Sunday A.mp3",
+  "Main Theme A · The Welcome.mp3"
+]);
+export function meekleeTrackSlot(name){
+  if(typeof name!=="string")return null;
+  const value=name.normalize("NFKC").toLowerCase().trim();
+  const match=MEEKLEE_ORIGINAL_TRACKS.findIndex(
+    title=>title.normalize("NFKC").toLowerCase()===value);
+  return match>=0?match:null;
+}
+export function assignMeekLeeSlots(files){
+  if(!Array.isArray(files))return [];
+  const seen=new Set();
+  const result=[];
+  for(const file of files){
+    const preferred=meekleeTrackSlot(file?.name);
+    let slot=preferred!==null&&!seen.has(preferred)?preferred:null;
+    if(slot===null)slot=SOUNDTRACK_SLOTS.findIndex((_,i)=>!seen.has(i));
+    if(slot<0)break;
+    seen.add(slot);
+    result.push({file,slot});
+  }
+  return result;
+}
 export const MAX_SOUNDTRACK_TRACKS=SOUNDTRACK_SLOTS.length;
 export const MAX_AUDIO_BYTES=60*1024*1024;
 export const AUDIO_EXTENSIONS=Object.freeze(["mp3","wav","ogg","m4a","aac","flac"]);
