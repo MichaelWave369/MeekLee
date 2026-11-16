@@ -2,17 +2,36 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   SOUNDTRACK_SLOTS,MAX_SOUNDTRACK_TRACKS,MAX_AUDIO_BYTES,
-  audioFileCheck,soundtrackSlotIndex,soundtrackDisplayName
+  audioFileCheck,soundtrackSlotIndex,soundtrackDisplayName,
+  MEEKLEE_ORIGINAL_TRACKS,meekleeTrackSlot,assignMeekLeeSlots
 } from "../src/soundtrack.js";
 import {SOUNDTRACK_DB,SOUNDTRACK_STORE} from "../src/soundtrack-storage.js";
 
-test("eight independent world music slots match existing puzzle worlds",()=>{
+test("eight original MeekLee soundtrack slots cover four puzzles, garden, cards and welcome",()=>{
   assert.deepEqual(SOUNDTRACK_SLOTS.map(item=>item.id),
-    ["harvest","sweets","rescue","bubbles","meadow","pumpkin","moonlight","kitchen"]);
+    ["harvest","sweets","rescue","bubbles","garden","rook","solitaire","welcome"]);
   assert.equal(MAX_SOUNDTRACK_TRACKS,8);
   assert.equal(new Set(SOUNDTRACK_SLOTS.map(x=>x.id)).size,8);
   assert(SOUNDTRACK_SLOTS.every(x=>x.icon&&x.name));
 });
+test("all actual eight MP3 names from the creator ZIP map unambiguously",()=>{
+  assert.equal(MEEKLEE_ORIGINAL_TRACKS.length,8);
+  for(const [i,name] of MEEKLEE_ORIGINAL_TRACKS.entries()){
+    assert.equal(meekleeTrackSlot(name),i);
+    assert.equal(meekleeTrackSlot(name.toUpperCase()),i);
+    assert.equal(meekleeTrackSlot(name.normalize("NFD")),i);
+  }
+  assert.equal(meekleeTrackSlot("unrelated.mp3"),null);
+  assert.equal(meekleeTrackSlot(null),null);
+  const shuffled=MEEKLEE_ORIGINAL_TRACKS.map(name=>({name})).reverse();
+  const assigned=assignMeekLeeSlots(shuffled);
+  assert.deepEqual(assigned.map(x=>x.slot),[7,6,5,4,3,2,1,0]);
+  assert.deepEqual(assigned.map(x=>x.file.name),shuffled.map(x=>x.name));
+  assert.deepEqual(assignMeekLeeSlots([]),[]);
+  const unknown=assignMeekLeeSlots([{name:"Unknown_A.mp3"},{name:"Unknown_B.mp3"}]);
+  assert.deepEqual(unknown.map(x=>x.slot),[0,1]);
+});
+
 test("only valid slots 0-7 are accepted for saving/removing audio",()=>{
   for(let i=0;i<8;i++)assert.equal(soundtrackSlotIndex(i),i);
   for(const i of [-1,8,9,null,undefined,"2",1.1,Number.NaN])
