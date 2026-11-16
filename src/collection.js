@@ -44,6 +44,21 @@ export const MEADOW_GARDEN_DECOR = Object.freeze([
 export function meadowPrizeForLevel(level){
   return MEADOW_GARDEN_DECOR.find(item=>item.level===level)||null;
 }
+
+// These are earned only from Pumpkin Patch's own independent milestones.
+// Do not add Pumpkin Patch to CHEST_WORLDS: older chest keys and rewards are
+// immutable, and old progress must never be reinterpreted.
+export const PUMPKIN_GARDEN_DECOR=Object.freeze([
+  {id:"pumpkin_lantern",icon:"🏮",name:"Autumn Pumpkin Lantern",level:3},
+  {id:"pumpkin_hay_bench",icon:"🪑",name:"Hay Bale Bench",level:6},
+  {id:"pumpkin_scarecrow",icon:"🎃",name:"Friendly Scarecrow",level:9},
+  {id:"pumpkin_corn_gate",icon:"🌽",name:"Cornfield Garden Gate",level:12},
+  {id:"pumpkin_cider_stand",icon:"🍎",name:"Little Cider Stand",level:15},
+  {id:"pumpkin_autumn_gazebo",icon:"🍂",name:"Autumn Leaf Gazebo",level:18}
+]);
+export function pumpkinPrizeForLevel(level){
+  return PUMPKIN_GARDEN_DECOR.find(item=>item.level===level)||null;
+}
 export const GARDEN_PETS = Object.freeze([
   {id:"bunny",icon:"🐰",name:"Pip the Bunny"},
   {id:"puppy",icon:"🐶",name:"Biscuit the Puppy"},
@@ -106,10 +121,15 @@ export function normalizeCollection(raw = {}) {
       typeof id==="string"&&MEADOW_GARDEN_DECOR.some(item=>item.id===id)))]:[];
   for(const item of MEADOW_GARDEN_DECOR)
     if(meadowPrizes.includes(item.id))decorIds.add(item.id);
+  const pumpkinPrizes=Array.isArray(previous.pumpkinPrizes)?
+    [...new Set(previous.pumpkinPrizes.filter(id=>
+      typeof id==="string"&&PUMPKIN_GARDEN_DECOR.some(item=>item.id===id)))]:[];
+  for(const item of PUMPKIN_GARDEN_DECOR)
+    if(pumpkinPrizes.includes(item.id))decorIds.add(item.id);
   const hiddenDecorations=Array.isArray(previous.hiddenDecorations) ?
     [...new Set(previous.hiddenDecorations.filter(id=>typeof id==="string" && decorIds.has(id)))]:[];
   const companion=petIds.has(previous.companion) ? previous.companion : null;
-  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes};
+  return {claimed,completedBonuses,hiddenDecorations,companion,jigsawPrizes,meadowPrizes,pumpkinPrizes};
 }
 export function unlockedForMode(saved,mode) {
   if (!CHEST_WORLDS.includes(mode)) return 1;
@@ -175,6 +195,8 @@ export function gardenInventory(collection) {
     jigsawPrizeKey(reward.scene,reward.size)))decor.set(reward.id,reward);
   for(const item of MEADOW_GARDEN_DECOR)
     if(normalized.meadowPrizes.includes(item.id))decor.set(item.id,item);
+  for(const item of PUMPKIN_GARDEN_DECOR)
+    if(normalized.pumpkinPrizes.includes(item.id))decor.set(item.id,item);
   return {decor:[...decor.values()],pets:[...pets.values()],rewards};
 }
 export function selectCompanion(collection,petId) {
@@ -214,6 +236,14 @@ export function completeBonus(collection,key,moves) {
       completedBonuses:{...current.completedBonuses,[key]:best===undefined?moves:Math.min(best,moves)}
     }
   };
+}
+
+export function recordPumpkinReward(collection,previousGame,nextGame){
+  const current=normalizeCollection(collection);
+  if(nextGame?.mode!=="pumpkin"||!nextGame.won||previousGame?.won)return current;
+  const prize=pumpkinPrizeForLevel(nextGame.level);
+  if(!prize||current.pumpkinPrizes.includes(prize.id))return current;
+  return normalizeCollection({...current,pumpkinPrizes:[...current.pumpkinPrizes,prize.id]});
 }
 
 export function recordMeadowReward(collection,previousGame,nextGame){

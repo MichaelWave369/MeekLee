@@ -1,13 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MODES, EASY_SIZE, SIZE, adjacent, connectedGroup, connectedBouquet, findMatches, makeLevel, playTurn } from "../src/core.js";
+import { MODES, EASY_SIZE, SIZE, adjacent, connectedGroup, connectedBouquet, pumpkinHarvest, findMatches, makeLevel, playTurn } from "../src/core.js";
 
 function findMove(game) {
   const size = game.size ?? SIZE;
-  if (MODES[game.mode].mechanic === "tap" || MODES[game.mode].mechanic === "bouquet") {
-    const bouquet=MODES[game.mode].mechanic==="bouquet";
-    const i=game.board.findIndex((_,j)=>bouquet?
-      connectedBouquet(game.board,j,size).length>=3:
+  if (["tap","bouquet","cross"].includes(MODES[game.mode].mechanic)) {
+    const mechanic=MODES[game.mode].mechanic;
+    const i=game.board.findIndex((_,j)=>mechanic==="cross"?
+      pumpkinHarvest(game.board,j,size).length>=3:
+      mechanic==="bouquet"?connectedBouquet(game.board,j,size).length>=3:
       connectedGroup(game.board,j,size).length>=2);
     return i>=0?playTurn(game,i):null;
   }

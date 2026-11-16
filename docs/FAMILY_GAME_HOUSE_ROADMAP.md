@@ -67,6 +67,12 @@ Private live family Chess sessions are still future work and require separately 
 
 Solitaire collection delivered: draw-one/draw-three Klondike, Pyramid, TriPeaks, one-suit Spider and FreeCell. Optional later difficulties: two/four-suit Spider, additional Solitaire varieties and accessible drag gestures. Give each type its own independent save and legible phone layout, with optional drag or tap.
 
+## New Puzzle World: Pumpkin Patch
+
+**Now playable and offline:** Pumpkin Patch is MeekLee's sixth puzzle world. It uses a separate **cross-harvest** mechanic: tap a crop when at least **three identical crops** occur across the tapped crop's full row or column combined. No adjacency or swapping is required. Each tap collects the matching crops in the tapped row and column. A harvest of five or more earns an additional **leaf gust**, collecting neighboring different crops for more points. The engine generates deterministic 6×6 and 8×8 boards that always allow a legal harvest, maintains its own endless Adventure Path/medals, and uses the existing offline save key.
+
+**Six earned autumn garden decorations:** levels 3, 6, 9, 12, 15 and 18 grant Autumn Pumpkin Lantern, Hay Bale Bench, Friendly Scarecrow, Cornfield Garden Gate, Little Cider Stand and Autumn Leaf Gazebo. Prizes are validated under `collection.pumpkinPrizes`, awarded only on the first completed milestone across easy/classic, and can be planted/hidden alongside older ornaments. **No modification to the original four-world chapter chests, Flower Meadow rewards, jigsaw prizes, cards, pets or older progress.** Free hints identify valid cross anchors and are never charged.
+
 ## New Puzzle World: Flower Meadow
 
 **Now playable and offline:** Flower Meadow is the fifth world, featuring a truly separate **bouquet** mechanic. Players tap a connected set of **at least three same-color flowers**, with connections in all eight directions, including diagonals. This differs from Rescue's orthogonal groups of two and the swapping worlds' match-three runs. Large groups (five or more) release pollen and collect adjacent differently colored flowers around the tapped bloom for extra points. Deterministic generators guarantee an available bouquet on 6×6 and 8×8 boards. Every victory advances an independent meadow Adventure Path and star records.

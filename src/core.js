@@ -14,7 +14,8 @@ export const MODES = Object.freeze({
   sweets: { name: "Sugar Mountain", mechanic: "swap", gravity: "down", pieces: ["🍬","🍭","🍒","🧁","🍫","🍪"], color: "#d56c9e" },
   rescue: { name: "Critter Rescue", mechanic: "tap", gravity: "down", pieces: ["🐶","🐱","🐰","🦊","🐼","🐻"], color: "#df9b53" },
   bubbles: { name: "Bubble Lagoon", mechanic: "swap", gravity: "up", pieces: ["🫧","⭐","🐚","🐠","🌸","🐙"], color: "#62a5c6" },
-  meadow: { name: "Flower Meadow", mechanic: "bouquet", gravity: "down", pieces: ["🌷","🌼","🌸","🪻","🌺","💐"], color: "#88b98b" }
+  meadow: { name: "Flower Meadow", mechanic: "bouquet", gravity: "down", pieces: ["🌷","🌼","🌸","🪻","🌺","💐"], color: "#88b98b" },
+  pumpkin: { name: "Pumpkin Patch", mechanic: "cross", gravity: "down", pieces: ["🎃","🍎","🌽","🍁","🍐","🌰"], color: "#bf874a" }
 });
 
 export function seedFor(mode, level) {
@@ -153,6 +154,29 @@ export function hasGroup(board, size = boardSize(board)) {
   return false;
 }
 
+// Pumpkin Patch: tap one harvest crop to gather its matching variety from
+// the entire ROW and COLUMN. Crops need not touch. Unlike Flower Meadow,
+// this is a line-of-sight cross harvest, not a connected group or a swap.
+export function pumpkinHarvest(board,index,size=boardSize(board)) {
+  if(!Array.isArray(board)||!size||!Number.isInteger(index)||
+      index<0||index>=board.length||board[index]===null||
+      !Number.isInteger(board[index]))return [];
+  const kind=board[index],row=Math.floor(index/size),col=index%size;
+  const harvest=[];
+  for(let i=0;i<board.length;i++){
+    if((Math.floor(i/size)===row||i%size===col)&&board[i]===kind)
+      harvest.push(i);
+  }
+  return harvest;
+}
+
+export function hasPumpkinHarvest(board,size=boardSize(board)) {
+  if(!size)return false;
+  for(let i=0;i<board.length;i++)
+    if(pumpkinHarvest(board,i,size).length>=3)return true;
+  return false;
+}
+
 export function makeBoard(rng, mechanic = "swap", size = SIZE) {
   if (size !== SIZE && size !== EASY_SIZE) throw new Error("Invalid board size");
   for (let attempt = 0; attempt < 250; attempt++) {
@@ -165,7 +189,8 @@ export function makeBoard(rng, mechanic = "swap", size = SIZE) {
       const options = [0,1,2,3,4,5].filter(p => !banned.has(p));
       board[i] = options[Math.floor(rng() * options.length)];
     }
-    if (mechanic === "bouquet" ? hasBouquet(board,size) :
+    if (mechanic === "cross" ? hasPumpkinHarvest(board,size) :
+      mechanic === "bouquet" ? hasBouquet(board,size) :
       mechanic === "tap" ? hasGroup(board, size) : hasSwap(board, size)) return board;
   }
   throw new Error("Could not generate a playable board");
@@ -215,8 +240,8 @@ export function makeLevel(mode, level, size = SIZE) {
   // A gentle repeating difficulty wave, rather than difficulty growing forever.
   const wave = (level - 1) % 9;
   const base=size===EASY_SIZE ?
-    (rules.mechanic==="bouquet"?26:rules.mechanic==="tap"?24:22) :
-    (rules.mechanic==="bouquet"?42:rules.mechanic==="tap"?36:30);
+    (rules.mechanic==="bouquet"?26:rules.mechanic==="cross"?25:rules.mechanic==="tap"?24:22) :
+    (rules.mechanic==="bouquet"?42:rules.mechanic==="cross"?39:rules.mechanic==="tap"?36:30);
   const target=base+wave*(size===EASY_SIZE?2:3);
   return { mode, level, size, seed, rngState: rng.getState(), board, target, cleared: 0, score: 0, moves: 0, won: false };
 }
@@ -230,7 +255,25 @@ export function playTurn(game, first, second) {
   const board = [...game.board], rng = rngFrom(game.seed, game.rngState);
   let cleared = 0, bonus = 0, cascades = 0;
   const trace = [];
-  if (rules.mechanic === "tap" || rules.mechanic === "bouquet") {
+  if (rules.mechanic === "cross") {
+    const group=pumpkinHarvest(board,first,size);
+    if(group.length<3)return {valid:false,game};
+    const groupSet=new Set(group);
+    // Large cross harvests stir up a gentle leaf gust, gathering crops
+    // immediately next to the tapped piece, even if they are other kinds.
+    const gust=group.length>=5?
+      neighbors(first,size).filter(i=>!groupSet.has(i)):[];
+    const collected=[...group,...gust];
+    const gained=group.length*(group.length+2)*10+gust.length*35;
+    trace.push({type:"pop",board:[...board],matched:collected,
+      gust,groupSize:group.length,combo:1,gained});
+    for(const i of collected)board[i]=null;
+    cleared=collected.length;
+    bonus=gained;
+    const movements=[];
+    collapse(board,rng,rules.gravity,size,movements);
+    trace.push({type:"fall",board:[...board],movements,combo:1});
+  } else if (rules.mechanic === "tap" || rules.mechanic === "bouquet") {
     const bouquet=rules.mechanic==="bouquet";
     const group=bouquet?connectedBouquet(board,first,size):connectedGroup(board,first,size);
     if(group.length<(bouquet?3:2))return {valid:false,game};
@@ -274,7 +317,8 @@ export function playTurn(game, first, second) {
       trace.push({ type: "shuffle", board: [...board] });
     }
   }
-  if (rules.mechanic === "bouquet" ? !hasBouquet(board,size) :
+  if (rules.mechanic === "cross" ? !hasPumpkinHarvest(board,size) :
+    rules.mechanic === "bouquet" ? !hasBouquet(board,size) :
     rules.mechanic === "tap" ? !hasGroup(board,size) : !hasSwap(board,size)) {
     const fresh = makeBoard(rng, rules.mechanic, size);
     board.splice(0, board.length, ...fresh);
