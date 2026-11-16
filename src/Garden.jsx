@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  availableChests, totalAvailableChests, gardenInventory, MEADOW_GARDEN_DECOR, PUMPKIN_GARDEN_DECOR, MOONLIGHT_GARDEN_DECOR
+  availableChests, totalAvailableChests, gardenInventory, MEADOW_GARDEN_DECOR, PUMPKIN_GARDEN_DECOR, MOONLIGHT_GARDEN_DECOR, KITCHEN_GARDEN_DECOR
 } from "./collection.js";
 
 const WORLD_NAMES={
@@ -37,7 +37,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     <p className="garden-intro">Every ten completed levels in the four original worlds earns a treasure chest.
       Open one to welcome a new garden decoration, an adorable friend, and a special bonus game!
       Complete picture puzzles to earn nine extra treasures, explore Flower Meadow for
-      six spring decorations, Pumpkin Patch for six autumn decorations, or Moonlight Orchard for six evening treasures!</p>
+      six spring decorations, Pumpkin Patch for six autumn decorations, Moonlight Orchard for six evening treasures, or Grandma's Kitchen for six homestead decorations!</p>
 
     <div className="garden-landscape" aria-label="Your collected garden decorations and companion">
       <span className="garden-sun" aria-hidden="true">☀️</span>
@@ -67,7 +67,7 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
     <section className="garden-section" aria-labelledby="garden-chest-title">
       <h3 id="garden-chest-title">🎁 Treasure Chests {pendingChests>0?"("+pendingChests+" ready)":""}</h3>
       {chests.length===0 ?
-        <p className="garden-section-help">Your next chest appears after Level 10, 20, 30, and so on in the original four worlds. Flower Meadow, Pumpkin Patch and Moonlight Orchard have their own decorations.</p> :
+        <p className="garden-section-help">Your next chest appears after Level 10, 20, 30, and so on in the original four worlds. Flower Meadow, Pumpkin Patch, Moonlight Orchard and Grandma's Kitchen have their own decorations.</p> :
         <div className="chest-list">
           {chests.slice(0,4).map(reward=>
             <button className="chest-button" type="button" key={reward.key}
@@ -142,6 +142,26 @@ export default function Garden({saved, onClaim, onSelectPet, onToggleDecor, onBo
             <strong>{prize.name}</strong>
             <small>{owned?"✓ Earned! Plant from the garden list":
               "Complete Orchard Level "+prize.level}</small>
+          </div>;
+        })}
+      </div>
+    </section>
+
+    <section className="garden-section" aria-labelledby="kitchen-prize-title">
+      <h3 id="kitchen-prize-title">🥣 Grandma's Kitchen Rewards</h3>
+      <p className="garden-section-help">Complete cozy ingredient orders and earn six
+        homestead decorations at levels 3, 6, 9, 12, 15 and 18. Each prize is earned
+        once across both board sizes, with no purchases, accounts or timers.</p>
+      <div className="garden-collection-grid" aria-label="Grandma's Kitchen earned decorations">
+        {KITCHEN_GARDEN_DECOR.map(prize=>{
+          const owned=collection.kitchenPrizes?.includes(prize.id);
+          return <div key={prize.id}
+            className={"garden-collectible kitchen-prize"+(owned?" showing":"")}
+            aria-label={prize.name+(owned?", earned":", unlock at Grandma's Kitchen level "+prize.level)}>
+            <span aria-hidden="true">{owned?prize.icon:"🥣"}</span>
+            <strong>{prize.name}</strong>
+            <small>{owned?"✓ Earned! Plant from the garden list":
+              "Complete Kitchen Level "+prize.level}</small>
           </div>;
         })}
       </div>
