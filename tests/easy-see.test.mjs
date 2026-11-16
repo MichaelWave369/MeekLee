@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   MODES, SIZE, EASY_SIZE, adjacent, connectedGroup, findMatches,
-  hasGroup, hasSwap, makeLevel, neighbors, playTurn
+  hasGroup, hasBouquet, connectedBouquet, hasSwap, makeLevel, neighbors, playTurn
 } from "../src/core.js";
 import { createSaveState, validGame } from "../src/save.js";
 
@@ -14,7 +14,8 @@ test("6x6 Easy-to-See boards generate reproducibly and always have a move", () =
       assert.equal(game.size, EASY_SIZE);
       assert.deepEqual(game, makeLevel(mode, level, EASY_SIZE));
       assert.equal(findMatches(game.board).size, 0);
-      assert(MODES[mode].mechanic === "tap" ? hasGroup(game.board) : hasSwap(game.board));
+      assert(MODES[mode].mechanic === "bouquet" ? hasBouquet(game.board) :
+        MODES[mode].mechanic === "tap" ? hasGroup(game.board) : hasSwap(game.board));
     }
   }
 });
@@ -35,10 +36,13 @@ test("each accessible world completes levels through legal turns", () => {
       let turns = 0;
       while (!game.won && turns < 300) {
         let turn = null;
-        if (MODES[mode].mechanic === "tap") {
-          const first = game.board.findIndex((_, i) => connectedGroup(game.board, i).length >= 2);
-          assert(first >= 0, "no critter group " + mode + "/" + level);
-          turn = playTurn(game, first);
+        if (MODES[mode].mechanic === "tap" || MODES[mode].mechanic === "bouquet") {
+          const bouquet=MODES[mode].mechanic==="bouquet";
+          const first=game.board.findIndex((_,i)=>
+            bouquet?connectedBouquet(game.board,i,EASY_SIZE).length>=3:
+              connectedGroup(game.board,i,EASY_SIZE).length>=2);
+          assert(first>=0,"no matching group "+mode+"/"+level);
+          turn=playTurn(game,first);
         } else {
           for (let i = 0; i < game.board.length && !turn; i++) {
             for (const j of [i + 1, i + EASY_SIZE]) {
@@ -51,8 +55,10 @@ test("each accessible world completes levels through legal turns", () => {
         assert(turn?.valid, "no legal turn " + mode + "/" + level);
         assert.equal(turn.game.board.length, 36);
         if (MODES[mode].mechanic === "swap") assert.equal(findMatches(turn.game.board).size, 0);
-        assert.equal(MODES[mode].mechanic === "tap" ?
-          hasGroup(turn.game.board) : hasSwap(turn.game.board), true);
+        assert.equal(MODES[mode].mechanic === "bouquet" ?
+          hasBouquet(turn.game.board) :
+          MODES[mode].mechanic === "tap" ?
+            hasGroup(turn.game.board) : hasSwap(turn.game.board), true);
         game = turn.game;
         turns++;
       }
