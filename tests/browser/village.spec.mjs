@@ -39,7 +39,7 @@ test("320px village is free, fully navigable and preserves the original garden",
   expect(target.width).toBeGreaterThanOrEqual(43);
   expect(target.height).toBeGreaterThanOrEqual(48);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-  await page.getByRole("button",{name:"Back to My Garden"}).click();
+  await page.getByRole("button",{name:/Back to My Garden/}).click();
   await expect(page.getByRole("heading",{name:"Mom's Happy Garden"})).toBeVisible();
   await expect(page.locator(".garden-landscape")).toBeVisible();
   await context.close();
@@ -90,6 +90,8 @@ test("village cannot replace another decoration in an occupied plot",async({brow
   expect(state.collection.villagePlacements.sunflower).toBe("square:0");
   expect(state.collection.villagePlacements.meadow_daisy_wreath).toBeUndefined();
   await expect(page.locator('[data-village-plot="square:0"]')).toContainText("Golden Sunflower");
+  // Occupied spots select their existing owner, rather than replacing it.
+  await page.locator('[data-village-item="meadow_daisy_wreath"]').click();
   await page.locator('[data-village-plot="square:1"]').click();
   await expect.poll(async()=>Object.keys((await saved(page)).collection.villagePlacements).length).toBe(2);
   await context.close();
@@ -108,7 +110,7 @@ test("hidden original garden decoration keeps its location but renders as stored
   await page.locator("[data-village-store]").click();
   await expect.poll(async()=>Object.keys((await saved(page)).collection.villagePlacements).length).toBe(0);
   expect((await saved(page)).collection.hiddenDecorations).toContain("sunflower");
-  await page.getByRole("button",{name:"Back to My Garden"}).click();
+  await page.getByRole("button",{name:/Back to My Garden/}).click();
   await expect(page.getByRole("button",{name:/Golden Sunflower, put away/})).toBeVisible();
   await context.close();
 });
