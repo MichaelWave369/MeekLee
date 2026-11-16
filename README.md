@@ -6,6 +6,31 @@ Named for Mom's maiden name (**Meek**) and middle name (**Lee**). It even sounds
 
 A completely free React puzzle game with four colorful worlds, generated levels, free retries, earned power-ups, hints, shuffles, and individual local saves. No advertising, payment walls, lives, subscriptions, accounts, or APIs.
 
+## 🎧 One-click import of the eight original MeekLee Adventures MP3s
+
+The creator supplied a real `MeekLeeAdventures.zip` archive containing eight verified MP3 recordings. **Their actual audio bytes are not yet in the public GitHub repository**, so the Music Box now adds a direct, local **🎼 Import MeekLeeAdventures ZIP** button. This reads the archive in the listener's browser, unpacks the music, recognizes the eight **original track titles in any file order**, and saves them to the existing local IndexedDB library. It never uploads the ZIP, needs no Suno account, and doesn't require manually extracting the files.
+
+**Exact supplied soundtrack titles, assigned to real gameplay contexts (not invented world themes):**
+
+| Slot | Place to enjoy it | Original song in the uploaded ZIP |
+| --- | --- | --- |
+| 1 | Harvest Valley | `Morning in Harvest Valley A.mp3` |
+| 2 | Sugar Mountain | `Sugar Mountain Shuffle A.mp3` |
+| 3 | Critter Rescue | `Little Critter Parade A.mp3` |
+| 4 | Bubble Lagoon | `Bubbles in the Blue A.mp3` |
+| 5 | Mom's Garden | `Pip's Little Garden A.mp3` |
+| 6 | Card Corner: Rook | `The Family Rook Table A.mp3` |
+| 7 | Card Corner: Solitaire | `Solitaire Sunday A.mp3` |
+| 8 | Welcome / main theme | `Main Theme A · The Welcome.mp3` |
+
+The four later puzzle worlds can use whichever loaded song the family chooses. **No additional world-specific song is claimed or fabricated.** The music shelf stays eight slots, with the same slot numbers and existing local music storage, so older user-selected tracks are not discarded or migrated.
+
+**How to listen:** On the device where the ZIP is saved, open the live game, scroll down to **MeekLee Music Box**, expand the shelf, then choose **🎼 Import MeekLeeAdventures ZIP**. Select the original archive and tap Play. The Welcome theme is selected for the main Play button after a full recognized import. Playback remains manually started, volume-controlled, and available across worlds and Garden visits. The eight tracks are stored only on that device when IndexedDB quota allows; the ZIP needs importing once per browser/device.
+
+ZIP parsing supports ordinary stored or DEFLATE archives, checks each song's CRC-32, ignores unrelated README/macOS folder entries and unsafe nested paths, rejects encrypted/unsupported archives, and caps ZIP size, entry counts and decompressed audio bytes. A browser without DEFLATE support receives directions to extract the ZIP and import the MP3s with the existing file importer.
+
+**Publishing:** The upload in ChatGPT is separate from the public game's server. The public site does **not** serve the eight MP3s automatically in this change. Bundling them for all visitors requires committing or hosting the audio files and confirming the intended public distribution. Until then, **local ZIP import** is free, private, functional and fully offline.
+
 ## 🍁 Four Village Seasons and 🎵 Eight-Track MeekLee Music Box
 
 **Now playable, free and offline:** Garden Village has four manually selected seasons: **🌸 Spring**, **☀️ Summer**, **🍂 Autumn** and **❄️ Winter**. Spring adds blossom accents, Summer keeps the familiar green village, Autumn adds golden leaves and harvest colors, and Winter adds frosty scenery and evergreens. Pondside Walk has its own frosty shore in Winter, Butterfly Garden blossoms in Spring, and Orchard Hill fills with golden autumn leaves. Seasonal accents are **environmental decorations only**, not new collectible garden awards. The season is a completely separate setting from **Day / Sunset / Night**, so Mom can enjoy Winter Sunset, Autumn Night or any other combination.
